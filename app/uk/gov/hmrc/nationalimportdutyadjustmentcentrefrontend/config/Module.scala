@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,15 +12,19 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config
 
-@this(layout: Layout)
+import com.google.inject.AbstractModule
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.{
+  AuthenticatedIdentifierAction,
+  IdentifierAction
+}
 
-@()(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+class Module extends AbstractModule {
 
-@layout(pageTitle = Some("national-import-duty-adjustment-centre-frontend")) {
-    <h1 class="govuk-heading-xl">national-import-duty-adjustment-centre-frontend</h1>
-    <p class="govuk-body">@{messages("service.text")}</p>
+  override def configure(): Unit =
+    bind(classOf[IdentifierAction]).to(classOf[AuthenticatedIdentifierAction]).asEagerSingleton()
+
 }
