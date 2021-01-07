@@ -17,13 +17,13 @@
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions
 
 import com.google.inject.Inject
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.routes
 import play.api.mvc.Results._
 import play.api.mvc._
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.http.{HeaderCarrier, UnauthorizedException}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.routes
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.requests.IdentifierRequest
 import uk.gov.hmrc.play.HeaderCarrierConverter
 
@@ -53,25 +53,6 @@ class AuthenticatedIdentifierAction @Inject() (
         Redirect(config.loginUrl, Map("continue" -> Seq(config.loginContinueUrl)))
       case _: AuthorisationException =>
         Redirect(routes.UnauthorisedController.onPageLoad())
-    }
-  }
-
-}
-
-class SessionIdentifierAction @Inject() (config: AppConfig, val parser: BodyParsers.Default)(implicit
-  val executionContext: ExecutionContext
-) extends IdentifierAction {
-
-  override def invokeBlock[A](request: Request[A], block: IdentifierRequest[A] => Future[Result]): Future[Result] = {
-
-    implicit val hc: HeaderCarrier =
-      HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
-
-    hc.sessionId match {
-      case Some(session) =>
-        block(IdentifierRequest(request, session.value))
-      case None =>
-        Future.successful(Redirect(routes.SessionExpiredController.onPageLoad()))
     }
   }
 
