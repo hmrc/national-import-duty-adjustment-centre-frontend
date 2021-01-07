@@ -18,7 +18,8 @@
 
 @()(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = Some(messages("session_expired.title"))) {
-    <h1 class="govuk-heading-xl">@messages("session_expired.title")</h1>
-    <p class="govuk-body">@messages("session_expired.guidance")</p>
-}
+    @layout(pageTitle = Some(messages("session_expired.title"))) {
+
+        @components.heading(messages("session_expired.title"))
+        @components.paragraph(messages("session_expired.guidance"))
+    }

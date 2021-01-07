@@ -14,12 +14,11 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
-
 @this(layout: Layout)
 
 @()(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = Some(messages("unauthorised.title"))) {
- <h1 class="govuk-heading-xl">@messages("unauthorised.title")</h1>
-}
+    @layout(pageTitle = Some(messages("unauthorised.title"))) {
+
+        @components.heading(messages("unauthorised.title"))
+    }

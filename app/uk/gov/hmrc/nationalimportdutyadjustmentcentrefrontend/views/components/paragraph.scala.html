@@ -14,12 +14,6 @@
  * limitations under the License.
  *@
 
-@this(layout: Layout)
+@(content: String)
 
-@()(implicit request: Request[_], messages: Messages)
-
-    @layout(pageTitle = Some(messages("start_page.title"))) {
-
-        @components.heading(messages("start_page.title"))
-        @components.paragraph(messages("start_page.guidance"))
-    }
+<p class="govuk-body">@{Text(content).asHtml}</p>
