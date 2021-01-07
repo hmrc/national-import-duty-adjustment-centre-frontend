@@ -3,7 +3,6 @@
 ->         /govuk-frontend                     govuk.Routes
 ->         /hmrc-frontend                      hmrcfrontend.Routes
 GET        /                                   uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.StartController.onPageLoad
-GET        /authorised                         uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.StartController.onPageLoadAuthorised
 GET        /unauthorised                       uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.UnauthorisedController.onPageLoad
 GET        /this-service-has-been-reset        uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.SessionExpiredController.onPageLoad
 GET        /language/:lang                     uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.LanguageSwitchController.switchToLanguage(lang: String)

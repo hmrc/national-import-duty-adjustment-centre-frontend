@@ -16,19 +16,14 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
 
-import javax.inject.{Inject, Singleton}
-import play.api.i18n.I18nSupport
-import play.api.mvc._
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.IdentifierAction
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.StartPage
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
+import org.scalatest.BeforeAndAfterEach
+import org.scalatestplus.mockito.MockitoSugar
+import play.api.mvc.AnyContentAsEmpty
+import play.api.test.FakeRequest
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.UnitSpec
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.FakeIdentifierActions
 
-@Singleton
-class StartController @Inject() (mcc: MessagesControllerComponents, identify: IdentifierAction, startPage: StartPage)
-    extends FrontendController(mcc) with I18nSupport {
+trait ControllerSpec extends UnitSpec with MockitoSugar with FakeIdentifierActions with BeforeAndAfterEach {
 
-  val onPageLoad: Action[AnyContent] = identify { implicit request =>
-    Ok(startPage())
-  }
-
+  val fakeGetRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/")
 }

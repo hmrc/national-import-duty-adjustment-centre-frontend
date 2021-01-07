@@ -21,13 +21,12 @@ import org.mockito.Mockito.{reset, when}
 import play.api.http.Status
 import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.IdentifierAction
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.StartPage
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.SessionExpiredPage
 import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
 
-class StartControllerSpec extends ControllerSpec {
+class SessionExpiredControllerSpec extends ControllerSpec {
 
-  val page: StartPage = mock[StartPage]
+  val page: SessionExpiredPage = mock[SessionExpiredPage]
 
   override protected def beforeEach(): Unit = {
     super.beforeEach()
@@ -39,19 +38,13 @@ class StartControllerSpec extends ControllerSpec {
     super.afterEach()
   }
 
-  private def controller(identifyAction: IdentifierAction) =
-    new StartController(stubMessagesControllerComponents(), identifyAction, page)
+  private val controller = new SessionExpiredController(stubMessagesControllerComponents(), page)
 
   "GET" should {
-    "return OK when user is authorised" in {
-      val result = controller(fakeAuthorisedIdentifierAction).onPageLoad(fakeGetRequest)
+    "return OK" in {
+      val result = controller.onPageLoad(fakeGetRequest)
       status(result) mustBe Status.OK
     }
 
-    "redirect when user is unauthorised" in {
-      val result = controller(fakeUnauthorisedIdentifierAction).onPageLoad(fakeGetRequest)
-      status(result) mustBe Status.SEE_OTHER
-      redirectLocation(result) mustBe Some(routes.UnauthorisedController.onPageLoad().url)
-    }
   }
 }
