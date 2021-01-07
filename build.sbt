@@ -42,10 +42,10 @@ lazy val scoverageSettings: Seq[Setting[_]] = Seq(
     "Reverse.*",
     "metrics\\..*",
     "test\\..*",
-    ".*(BuildInfo|Routes|Options).*",
+    ".*(BuildInfo|Routes|Options|LanguageSwitchController|LanguageSelect).*",
     "logger.*\\(.*\\)"
   ).mkString(";"),
-  coverageMinimum := 55,  // TODO - improve this
+  coverageMinimum := 83,
   coverageFailOnMinimum := true,
   coverageHighlighting := true,
   parallelExecution in Test := false
