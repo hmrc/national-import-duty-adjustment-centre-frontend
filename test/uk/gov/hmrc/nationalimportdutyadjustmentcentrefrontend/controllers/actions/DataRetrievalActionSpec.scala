@@ -16,14 +16,18 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions
 
+import java.time.LocalDateTime
+
+import org.joda.time.DateTimeUtils
 import org.mockito.Mockito._
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.UnitSpec
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType.Airworthiness
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.UserAnswers
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.requests.{IdentifierRequest, OptionalDataRequest}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.requests.{DataRequest, IdentifierRequest}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.SessionRepository
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -32,7 +36,7 @@ import scala.concurrent.Future
 class DataRetrievalActionSpec extends UnitSpec with MockitoSugar with ScalaFutures {
 
   class Harness(sessionRepository: SessionRepository) extends DataRetrievalActionImpl(sessionRepository) {
-    def callTransform[A](request: IdentifierRequest[A]): Future[OptionalDataRequest[A]] = transform(request)
+    def callTransform[A](request: IdentifierRequest[A]): Future[DataRequest[A]] = transform(request)
   }
 
   val fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
@@ -41,25 +45,25 @@ class DataRetrievalActionSpec extends UnitSpec with MockitoSugar with ScalaFutur
 
     "there is no data in the cache" must {
 
-      "set userAnswers to 'None' in the request" in {
-
+      "return a new UserAnswers" in {
         val sessionRepository = mock[SessionRepository]
-        when(sessionRepository.get("id")) thenReturn Future(None)
+        when(sessionRepository.get("unknown-id")) thenReturn Future(None)
         val action = new Harness(sessionRepository)
 
-        val futureResult = action.callTransform(IdentifierRequest(fakeRequest, "id"))
+        val futureResult = action.callTransform(IdentifierRequest(fakeRequest, "unknown-id"))
 
         whenReady(futureResult) { result =>
-          result.userAnswers.isEmpty mustBe true
+          result.userAnswers.id mustBe "unknown-id"
         }
       }
     }
 
     "there is data in the cache" must {
 
-      "build a userAnswers object and add it to the request" in {
+      "return cached UserAnswers and add it to the request" in {
 
-        val answers           = UserAnswers("id")
+        val answers =
+          UserAnswers("id", claimType = Some(Airworthiness), lastUpdated = LocalDateTime.now().minusMinutes(5))
         val sessionRepository = mock[SessionRepository]
         when(sessionRepository.get("id")) thenReturn Future(Some(answers))
         val action = new Harness(sessionRepository)
@@ -67,7 +71,7 @@ class DataRetrievalActionSpec extends UnitSpec with MockitoSugar with ScalaFutur
         val futureResult = action.callTransform(IdentifierRequest(fakeRequest, "id"))
 
         whenReady(futureResult) { result =>
-          result.userAnswers mustBe Some(answers)
+          result.userAnswers mustBe answers
         }
       }
     }

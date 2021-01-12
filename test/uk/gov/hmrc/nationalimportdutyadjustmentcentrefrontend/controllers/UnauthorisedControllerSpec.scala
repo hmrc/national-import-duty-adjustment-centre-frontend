@@ -22,7 +22,7 @@ import play.api.http.Status
 import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.ControllerSpec
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.{SessionExpiredPage, UnauthorisedPage}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.UnauthorisedPage
 import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
 
 class UnauthorisedControllerSpec extends ControllerSpec {

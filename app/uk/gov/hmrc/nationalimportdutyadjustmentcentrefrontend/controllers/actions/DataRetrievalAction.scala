@@ -19,7 +19,8 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actio
 import javax.inject.Inject
 import play.api.mvc.ActionTransformer
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.requests.{IdentifierRequest, OptionalDataRequest}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.UserAnswers
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.requests.{DataRequest, IdentifierRequest}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.SessionRepository
 import uk.gov.hmrc.play.HeaderCarrierConverter
 
@@ -29,19 +30,19 @@ class DataRetrievalActionImpl @Inject() (val sessionRepository: SessionRepositor
   val executionContext: ExecutionContext
 ) extends DataRetrievalAction {
 
-  override protected def transform[A](request: IdentifierRequest[A]): Future[OptionalDataRequest[A]] = {
+  override protected def transform[A](request: IdentifierRequest[A]): Future[DataRequest[A]] = {
 
     implicit val hc: HeaderCarrier =
       HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
 
     sessionRepository.get(request.identifier).map {
       case None =>
-        OptionalDataRequest(request.request, request.identifier, None)
+        DataRequest(request.request, request.identifier, UserAnswers(request.identifier))
       case Some(userAnswers) =>
-        OptionalDataRequest(request.request, request.identifier, Some(userAnswers))
+        DataRequest(request.request, request.identifier, userAnswers)
     }
   }
 
 }
 
-trait DataRetrievalAction extends ActionTransformer[IdentifierRequest, OptionalDataRequest]
+trait DataRetrievalAction extends ActionTransformer[IdentifierRequest, DataRequest]

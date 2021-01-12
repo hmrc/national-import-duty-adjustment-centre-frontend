@@ -16,6 +16,8 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages
 
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.queries.{Gettable, Settable}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType
 
-trait QuestionPage[A] extends Gettable[A] with Settable[A]
+trait QuestionPage[A]
+
+case object ClaimTypePage extends QuestionPage[ClaimType]

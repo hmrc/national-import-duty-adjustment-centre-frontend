@@ -24,8 +24,6 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.action
   IdentifierAction
 }
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.ClaimTypeFormProvider
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.UserAnswers
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.ClaimTypePage
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.SessionRepository
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ClaimTypePage
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -46,7 +44,7 @@ class ClaimTypeController @Inject() (
   private val form = formProvider()
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData) { implicit request =>
-    val preparedForm = request.userAnswers.getOrElse(UserAnswers(request.internalId)).get(ClaimTypePage) match {
+    val preparedForm = request.userAnswers.claimType match {
       case None        => form
       case Some(value) => form.fill(value)
     }
@@ -57,13 +55,13 @@ class ClaimTypeController @Inject() (
   def onSubmit(): Action[AnyContent] = (identify andThen getData).async { implicit request =>
     form.bindFromRequest().fold(
       formWithErrors => Future.successful(BadRequest(claimTypePage(formWithErrors))),
-      value =>
-        for {
-          updatedAnswers <- Future.fromTry(
-            request.userAnswers.getOrElse(UserAnswers(request.internalId)) set (ClaimTypePage, value)
-          )
-          _ <- sessionRepository.set(updatedAnswers)
-        } yield Redirect(routes.CheckYourAnswersController.onPageLoad()) // TODO create navigator
+      value => {
+        val updatedAnswers =
+          request.userAnswers.copy(claimType = Some(value))
+        sessionRepository.set(updatedAnswers) map {
+          _ => Redirect(routes.CheckYourAnswersController.onPageLoad()) // TODO create navigator
+        }
+      }
     )
   }
 

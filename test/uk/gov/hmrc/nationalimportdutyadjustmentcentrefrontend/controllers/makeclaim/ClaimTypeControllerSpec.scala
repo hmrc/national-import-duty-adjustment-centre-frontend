@@ -73,7 +73,7 @@ class ClaimTypeControllerSpec extends ControllerSpec {
     }
 
     "display page when cache has answer" in {
-      withCachedData(Some(UserAnswers("id").set(ClaimTypePage, AntiDumping).get))
+      withCachedData(Some(UserAnswers("id", claimType = Some(AntiDumping))))
       val result = controller.onPageLoad()(fakeGetRequest)
       status(result) mustBe Status.OK
 
@@ -98,7 +98,7 @@ class ClaimTypeControllerSpec extends ControllerSpec {
       val result = controller.onSubmit()(validRequest)
       status(result) mustEqual SEE_OTHER
 
-      theUpdatedCache.get(ClaimTypePage) mustBe Some(Tomato147s)
+      theUpdatedCache.claimType mustBe Some(Tomato147s)
     }
 
     "return 400 (BAD REQUEST) when invalid data posted" in {
