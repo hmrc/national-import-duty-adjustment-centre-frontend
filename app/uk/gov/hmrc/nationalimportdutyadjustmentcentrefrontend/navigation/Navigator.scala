@@ -25,12 +25,12 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{ClaimTypePa
 @Singleton
 class Navigator @Inject() () {
 
-  private val normalRoutes: Page => UserAnswers => Call = {
-    case ClaimTypePage => _ => controllers.makeclaim.routes.CheckYourAnswersController.onPageLoad()
-    case _             => _ => controllers.routes.StartController.onPageLoad()
+  private val normalRoutes: (Page, UserAnswers) => Call = {
+    case (ClaimTypePage, _) => controllers.makeclaim.routes.CheckYourAnswersController.onPageLoad()
+    case _                  => controllers.routes.StartController.onPageLoad()
   }
 
   def nextPage(page: Page, userAnswers: UserAnswers): Call =
-    normalRoutes(page)(userAnswers)
+    normalRoutes(page, userAnswers)
 
 }
