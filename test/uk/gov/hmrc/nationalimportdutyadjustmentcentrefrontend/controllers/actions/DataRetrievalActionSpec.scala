@@ -74,5 +74,31 @@ class DataRetrievalActionSpec extends UnitSpec with MockitoSugar with ScalaFutur
         }
       }
     }
+
+    "there is submitted data in the cache" must {
+
+      "return a new UserAnswers" in {
+
+        val submittedAnswers =
+          UserAnswers(
+            "id",
+            claimType = Some(Airworthiness),
+            claimReference = Some("reference"),
+            lastUpdated = LocalDateTime.now().minusMinutes(5)
+          )
+        val sessionRepository = mock[UserAnswersRepository]
+        when(sessionRepository.get("id")) thenReturn Future(Some(submittedAnswers))
+        val action = new Harness(sessionRepository)
+
+        val futureResult = action.callTransform(IdentifierRequest(fakeRequest, "id"))
+
+        whenReady(futureResult) { result =>
+          val answers = result.userAnswers
+          answers.id mustBe "id"
+          answers.claimType mustBe None
+          answers.claimReference mustBe None
+        }
+      }
+    }
   }
 }
