@@ -37,7 +37,7 @@ class SignOutController @Inject() (
 
   val signOut: Action[AnyContent] = identify.async { implicit request =>
     userAnswersRepository.delete(request.identifier) map { _ =>
-      Redirect(appConfig.signOutUrl).withNewSession
+      Redirect(appConfig.signOutUrl)
     }
   }
 
