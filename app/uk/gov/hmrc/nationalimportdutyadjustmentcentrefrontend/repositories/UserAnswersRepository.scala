@@ -57,9 +57,4 @@ class UserAnswersRepository @Inject() (mongoComponent: ReactiveMongoComponent, c
       upsert = true
     ).map(_.value.map(_.as[UserAnswers]))
 
-  def delete(id: String): Future[Unit] =
-    super
-      .remove("id" -> id)
-      .map(_ => Unit)
-
 }
