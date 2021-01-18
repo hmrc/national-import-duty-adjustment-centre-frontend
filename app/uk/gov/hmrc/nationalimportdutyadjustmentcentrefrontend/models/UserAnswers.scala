@@ -16,7 +16,6 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models
 
-import java.time.{Instant, ZoneOffset}
 import java.time.LocalDateTime
 
 import play.api.libs.json._
@@ -30,22 +29,7 @@ final case class UserAnswers(
 
 object UserAnswers {
 
-  implicit private val formatLocalDateTime: OFormat[LocalDateTime] = new OFormat[LocalDateTime] {
-
-    override def writes(datetime: LocalDateTime): JsObject =
-      Json.obj("$date" -> datetime.atZone(ZoneOffset.UTC).toInstant.toEpochMilli)
-
-    override def reads(json: JsValue): JsResult[LocalDateTime] =
-      json match {
-        case JsObject(map) if map.contains("$date") =>
-          map("$date") match {
-            case JsNumber(v) => JsSuccess(LocalDateTime.ofInstant(Instant.ofEpochMilli(v.longValue()), ZoneOffset.UTC))
-            case _           => JsError("Unexpected Date Format. Expected a Number (Epoch Milliseconds)")
-          }
-        case _ => JsError("Unexpected Date Format. Expected an object containing a $date field.")
-      }
-
-  }
+  implicit private val formatLastUpdated: OFormat[LocalDateTime] = JsonFormats.formatLocalDateTime
 
   implicit val formats: OFormat[UserAnswers] = Json.format[UserAnswers]
 }
