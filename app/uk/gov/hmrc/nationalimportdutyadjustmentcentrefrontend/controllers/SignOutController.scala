@@ -42,8 +42,8 @@ class SignOutController @Inject() (
     }
   }
 
-  val signedOut: Action[AnyContent] = Action.async { implicit request =>
-    Future.successful(Ok(signedOutPage()))
+  val signedOut: Action[AnyContent] = Action { implicit request =>
+    Ok(signedOutPage())
   }
 
 }
