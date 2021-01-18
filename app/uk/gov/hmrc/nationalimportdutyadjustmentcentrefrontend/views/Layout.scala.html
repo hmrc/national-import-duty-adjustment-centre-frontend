@@ -14,16 +14,23 @@
  * limitations under the License.
  *@
 
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.requests._
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.Title
 
+@import uk.gov.hmrc.hmrcfrontend.views.html.components.HmrcHeader
+@import uk.gov.hmrc.hmrcfrontend.views.html.components.Header
+@import uk.gov.hmrc.hmrcfrontend.views.viewmodels.language
+
 @this(
-        govukLayout: GovukLayout,
-        head: Head,
-        hmrcStandardFooter: HmrcStandardFooter,
-        languageSelect: LanguageSelect,
-        govukBackLink: GovukBackLink,
-        appConfig: AppConfig
+govukLayout: GovukLayout,
+hmrcHeader: HmrcHeader,
+head: Head,
+hmrcStandardFooter: HmrcStandardFooter,
+languageSelect: LanguageSelect,
+govukBackLink: GovukBackLink,
+appConfig: AppConfig
 )
 @(pageTitle: Title ,
         headBlock: Option[Html] = None,
@@ -43,9 +50,29 @@
     }
 }
 
+@signOutHref = @{
+    if (request.isInstanceOf[IdentifierRequest[_]] || request.isInstanceOf[DataRequest[_]])
+        Some(controllers.routes.SignOutController.signOut().url)
+    else
+        None
+}
+@headerBlock = {
+    @hmrcHeader(Header(
+        homepageUrl = "https://www.gov.uk",
+        serviceName = Some(messages("service.name")),
+        serviceUrl = controllers.routes.StartController.start().url,
+        language = language.En,
+        containerClasses = "govuk-width-container",
+        signOutHref = signOutHref
+    )
+    )
+}
+
+
 @govukLayout(
     pageTitle = Some(pageTitle.create),
     headBlock = Some(head(headBlock)),
+    headerBlock = Some(headerBlock),
     scriptsBlock = scriptsBlock,
     beforeContentBlock = Some(beforeContentBlock),
     footerBlock = Some(hmrcStandardFooter())

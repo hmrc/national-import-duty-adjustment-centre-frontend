@@ -10,6 +10,9 @@ site.title.error = Error: {0} - National Import Duty Adjustment Centre - GOV.UK
 session_expired.title = For your security, this service has been reset
 session_expired.guidance = The details you have given have been deleted because you did not continue the service for 15 minutes.
 
+signed_out.title = You have been signed out
+signed_out.guidance = Your answers have not been saved.
+
 unauthorised.title = You can’t access this service with this account
 
 claim_type.title = What type of claim you are making?
