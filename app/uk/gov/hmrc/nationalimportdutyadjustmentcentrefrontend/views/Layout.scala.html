@@ -52,7 +52,7 @@
 
 @signOutHref = @{
     if(request.isInstanceOf[IdentifierRequest[_]] || request.isInstanceOf[DataRequest[_]])
-        Some(appConfig.signOutUrl)
+        Some(controllers.routes.SignOutController.signOut().url)
     else
         None
 }
