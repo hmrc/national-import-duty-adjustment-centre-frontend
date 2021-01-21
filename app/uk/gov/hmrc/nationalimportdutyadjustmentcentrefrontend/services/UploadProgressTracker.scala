@@ -28,11 +28,11 @@ import scala.concurrent.{ExecutionContext, Future}
 class MongoBackedUploadProgressTracker @Inject() (repository: UploadRepository)(implicit ec: ExecutionContext)
     extends UploadProgressTracker {
 
-  override def requestUpload(uploadId: UploadId, fileReference: Reference): Future[Unit] =
-    repository.insert(UploadDetails(BSONObjectID.generate(), uploadId, fileReference, InProgress)).map(_ => ())
+  override def requestUpload(uploadId: UploadId, fileReference: Reference): Future[Boolean] =
+    repository.add(UploadDetails(BSONObjectID.generate(), uploadId, fileReference, InProgress)).map(_ => true)
 
-  override def registerUploadResult(fileReference: Reference, uploadStatus: UploadStatus): Future[Unit] =
-    repository.updateStatus(fileReference, uploadStatus).map(_ => ())
+  override def registerUploadResult(fileReference: Reference, uploadStatus: UploadStatus): Future[Boolean] =
+    repository.updateStatus(fileReference, uploadStatus).map(_ => true)
 
   override def getUploadResult(id: UploadId): Future[Option[UploadStatus]] =
     for (result <- repository.findByUploadId(id)) yield result.map(_.status)
@@ -42,9 +42,9 @@ class MongoBackedUploadProgressTracker @Inject() (repository: UploadRepository)(
 @ImplementedBy(classOf[MongoBackedUploadProgressTracker])
 trait UploadProgressTracker {
 
-  def requestUpload(uploadId: UploadId, fileReference: Reference): Future[Unit]
+  def requestUpload(uploadId: UploadId, fileReference: Reference): Future[Boolean]
 
-  def registerUploadResult(reference: Reference, uploadStatus: UploadStatus): Future[Unit]
+  def registerUploadResult(reference: Reference, uploadStatus: UploadStatus): Future[Boolean]
 
   def getUploadResult(id: UploadId): Future[Option[UploadStatus]]
 

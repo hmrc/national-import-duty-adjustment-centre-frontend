@@ -43,7 +43,7 @@ class UploadCallbackController @Inject() (
     }
   }
 
-  def handleCallback(callback: UpscanNotification): Future[Unit] = {
+  def handleCallback(callback: UpscanNotification): Future[Boolean] = {
 
     val uploadStatus = callback match {
       case ready: UpscanFileReady =>

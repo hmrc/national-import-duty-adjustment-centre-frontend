@@ -30,7 +30,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.{Fai
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.Navigator
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.UploadPage
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.{CacheDataService, UploadProgressTracker}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.{UploadFormPage, UploadProgresPage}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.{UploadFormPage, UploadProgressPage}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -45,7 +45,7 @@ class UploadFormController @Inject() (
   appConfig: AppConfig,
   navigator: Navigator,
   uploadFormPage: UploadFormPage,
-  uploadProgresPage: UploadProgresPage
+  uploadProgressPage: UploadProgressPage
 )(implicit ec: ExecutionContext)
     extends FrontendController(mcc) with I18nSupport {
 
@@ -67,8 +67,8 @@ class UploadFormController @Inject() (
         }
       case Some(failed: Failed) =>
         Future(Redirect(controllers.makeclaim.routes.UploadFormController.showError(failed.errorCode)))
-      case Some(result) => Future(Ok(uploadProgresPage()))
-      case None         => Future(BadRequest(s"Upload with id $uploadId not found"))
+      case Some(_) => Future(Ok(uploadProgressPage()))
+      case None    => Future(BadRequest(s"Upload with id $uploadId not found"))
     }
   }
 

@@ -99,6 +99,8 @@ class UploadRepository @Inject() (mongoComponent: ReactiveMongoComponent, config
     )
   )
 
+  def add(uploadDetails: UploadDetails): Future[Boolean] = insert(uploadDetails).map(_ => true)
+
   def findByUploadId(uploadId: UploadId): Future[Option[UploadDetails]] =
     find("uploadId" -> Json.toJson(uploadId)).map(_.headOption)
 
