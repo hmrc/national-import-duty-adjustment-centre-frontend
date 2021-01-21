@@ -84,19 +84,10 @@ class ClaimTypeControllerSpec extends ControllerSpec {
 
     val validRequest = postRequest(("claim_type", Tomato147s.toString))
 
-    "redirect when valid answer is submitted" in {
+    "update cache and redurect when valid answer is submitted" in {
 
       val result = controller.onSubmit()(validRequest)
       status(result) mustEqual SEE_OTHER
-
-      redirectLocation(result) mustBe Some(routes.CheckYourAnswersController.onPageLoad().url)
-    }
-
-    "update cache when valid answer is submitted" in {
-
-      val result = controller.onSubmit()(validRequest)
-      status(result) mustEqual SEE_OTHER
-
       theUpdatedCache.claimType mustBe Some(Tomato147s)
     }
 

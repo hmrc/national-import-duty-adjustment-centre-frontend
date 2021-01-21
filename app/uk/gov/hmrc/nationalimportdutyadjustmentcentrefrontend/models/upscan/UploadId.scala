@@ -14,8 +14,18 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan
 
-trait Page
+import java.util.UUID
 
-case object UploadPage extends Page
+import play.api.mvc.QueryStringBindable
+
+case class UploadId(value: String) extends AnyVal
+
+object UploadId {
+  def generate: UploadId = UploadId(UUID.randomUUID().toString)
+
+  implicit def queryBinder(implicit stringBinder: QueryStringBindable[String]): QueryStringBindable[UploadId] =
+    stringBinder.transform(UploadId(_), _.value)
+
+}

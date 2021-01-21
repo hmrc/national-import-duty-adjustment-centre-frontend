@@ -14,8 +14,16 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan
 
-trait Page
+import play.api.libs.json.{Json, OFormat}
 
-case object UploadPage extends Page
+case class UpscanInitiateResponse(
+  fileReference: UpscanFileReference,
+  postTarget: String,
+  formFields: Map[String, String]
+)
+
+object UpscanInitiateResponse {
+  implicit val format: OFormat[UpscanInitiateResponse] = Json.format[UpscanInitiateResponse]
+}

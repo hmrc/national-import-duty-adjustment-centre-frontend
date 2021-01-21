@@ -16,12 +16,20 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base
 
+import java.time.ZonedDateTime
+
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType.AntiDumping
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.UserAnswers
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UploadedFile
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{ClaimType, UserAnswers}
 
 trait TestData {
 
   val emptyAnswers: UserAnswers = UserAnswers()
 
-  val completeAnswers: UserAnswers = UserAnswers(claimType = Some(AntiDumping))
+  val claimTypeAnswer: ClaimType = AntiDumping
+
+  val uploadAnswer: UploadedFile =
+    UploadedFile("reference", "/url", ZonedDateTime.now(), "checksum", "filename", "mime/type")
+
+  val completeAnswers: UserAnswers = UserAnswers(claimType = Some(claimTypeAnswer), uploads = Some(Seq(uploadAnswer)))
 }
