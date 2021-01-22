@@ -18,6 +18,6 @@
 
 @this(govukButton: GovukButton)
 
-@(messageKey: String = "site.continue")(implicit messages: Messages)
+@(messageKey: String = "site.continue", disabled: Boolean = false)(implicit messages: Messages)
 
-@govukButton(Button(content = Text(messages(messageKey)), attributes = Map("id" -> "submit")))
+@govukButton(Button(content = Text(messages(messageKey)), attributes = Map("id" -> "submit"), disabled = disabled))

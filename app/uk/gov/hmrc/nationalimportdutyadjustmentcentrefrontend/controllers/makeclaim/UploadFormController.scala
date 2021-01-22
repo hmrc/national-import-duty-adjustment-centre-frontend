@@ -90,7 +90,13 @@ class UploadFormController @Inject() (
   }
 
   private def addUpload(userAnswers: UserAnswers, successUpload: UploadedFile) = {
-    val uploads: Seq[UploadedFile] = userAnswers.uploads.getOrElse(Seq.empty)
+
+    /**
+      * TODO - when multiple file uploads are supported ...
+      * ...replace code below with
+      * val uploads: Seq[UploadedFile] = userAnswers.uploads.getOrElse(Seq.empty)
+      */
+    val uploads: Seq[UploadedFile] = Seq.empty
     userAnswers.copy(uploads = Some(uploads :+ successUpload))
   }
 

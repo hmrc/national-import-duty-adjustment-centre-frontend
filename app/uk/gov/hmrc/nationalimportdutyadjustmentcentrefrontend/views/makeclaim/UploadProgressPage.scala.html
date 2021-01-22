@@ -17,7 +17,7 @@
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.Title
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html._
 
-@this(layout: Layout)
+@this(layout: Layout, continueButton: components.continueButton)
 
 @()(implicit request: Request[_], messages: Messages)
 
@@ -28,6 +28,8 @@
 @inProgressContent = {
     <p class="govuk-body govuk-!-font-weight-bold">@messages("upload_documents.status.in_progress")</p>
     <p class="govuk-body ccms-loader"></p>
+
+    <div>@continueButton(disabled = true)</div>
 }
 
 @layout(pageTitle = Title(messages("upload_documents.title")), headBlock = Some(refreshHeader)) {

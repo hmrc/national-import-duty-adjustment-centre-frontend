@@ -43,7 +43,6 @@ case class UploadDetails(
 )
 
 object UploadDetails {
-  val status = "status"
 
   import ReactiveMongoFormats.mongoEntity
 
@@ -93,8 +92,8 @@ class UploadRepository @Inject() (mongoComponent: ReactiveMongoComponent, config
 
   override def indexes: Seq[Index] = super.indexes ++ Seq(
     Index(
-      key = Seq("lastUpdated" -> IndexType.Ascending),
-      name = Some("userAnswersExpiry"),
+      key = Seq("created" -> IndexType.Ascending),
+      name = Some("uploadExpiry"),
       options = BSONDocument("expireAfterSeconds" -> config.get[Int]("mongodb.timeToLiveInSeconds"))
     )
   )
@@ -108,7 +107,7 @@ class UploadRepository @Inject() (mongoComponent: ReactiveMongoComponent, config
     for (
       result <- findAndUpdate(
         query = JsObject(Seq("reference" -> Json.toJson(reference))),
-        update = Json.obj("$set" -> Json.obj(status -> Json.toJson(newStatus))),
+        update = Json.obj("$set" -> Json.obj("status" -> Json.toJson(newStatus))),
         upsert = true
       )
     )
