@@ -89,7 +89,7 @@ class ClaimTypeControllerSpec extends ControllerSpec with TestData {
 
       val result = controller.onSubmit()(validRequest)
       status(result) mustEqual SEE_OTHER
-      theUpdatedCache.claimType mustBe Some(Tomato147s)
+      theUpdatedUserAnswers.claimType mustBe Some(Tomato147s)
       redirectLocation(result) mustBe Some(navigator.nextPage(ClaimTypePage, emptyAnswers).url)
     }
 

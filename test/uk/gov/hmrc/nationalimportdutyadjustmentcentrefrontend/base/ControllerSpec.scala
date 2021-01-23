@@ -74,7 +74,7 @@ trait ControllerSpec
     when(dataRepository.get(anyString())).thenReturn(Future.successful(cacheData))
   }
 
-  protected def theUpdatedCache: UserAnswers = {
+  protected def theUpdatedUserAnswers: UserAnswers = {
     val captor = ArgumentCaptor.forClass(classOf[CacheData])
     verify(dataRepository).set(captor.capture())
     val cacheData: CacheData = captor.getValue

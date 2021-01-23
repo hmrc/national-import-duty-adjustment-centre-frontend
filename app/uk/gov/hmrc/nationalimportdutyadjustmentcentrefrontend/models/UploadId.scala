@@ -16,16 +16,16 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models
 
-import play.api.libs.json._
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UploadedFile
+import java.util.UUID
 
-final case class UserAnswers(
-  journeyId: JourneyId = JourneyId.generate,
-  claimType: Option[ClaimType] = None,
-  uploads: Option[Seq[UploadedFile]] = None
-)
+import play.api.mvc.QueryStringBindable
 
-object UserAnswers {
+case class UploadId(value: String)
 
-  implicit val formats: OFormat[UserAnswers] = Json.format[UserAnswers]
+object UploadId {
+  def generate: UploadId = UploadId(UUID.randomUUID().toString)
+
+  implicit def queryBinder(implicit stringBinder: QueryStringBindable[String]): QueryStringBindable[UploadId] =
+    stringBinder.transform(UploadId(_), _.value)
+
 }
