@@ -30,27 +30,35 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, UnitSpec}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.UpscanNotificationSpec
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.UploadProgressTracker
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.UploadRepository
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.{
+  MongoBackedUploadProgressTracker,
+  UploadProgressTracker
+}
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class UploadCallbackControllerSpec
     extends UnitSpec with MockitoSugar with GuiceOneAppPerSuite with BeforeAndAfterEach with TestData {
 
-  private val mockProgressTracker = mock[UploadProgressTracker]
+  implicit val ec: ExecutionContext =
+    scala.concurrent.ExecutionContext.Implicits.global
+
+  private val mockUploadRepository = mock[UploadRepository]
+  private val progressTracker      = new MongoBackedUploadProgressTracker(mockUploadRepository)
 
   override lazy val app: Application = GuiceApplicationBuilder()
-    .overrides(bind[UploadProgressTracker].to(mockProgressTracker))
+    .overrides(bind[UploadProgressTracker].to(progressTracker))
     .build()
 
   override protected def beforeEach(): Unit = {
     super.beforeEach()
 
-    when(mockProgressTracker.registerUploadResult(any(), any(), any())).thenReturn(Future.successful(true))
+    when(mockUploadRepository.updateStatus(any(), any(), any())).thenReturn(Future.successful(uploadInProgress))
   }
 
   override protected def afterEach(): Unit = {
-    reset(mockProgressTracker)
+    reset(mockUploadRepository)
     super.afterEach()
   }
 

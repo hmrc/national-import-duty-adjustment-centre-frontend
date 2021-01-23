@@ -87,6 +87,8 @@ class ClaimTypeControllerSpec extends ControllerSpec with TestData {
 
     "update cache and redirect when valid answer is submitted" in {
 
+      withCacheUserAnswers(Some(emptyAnswers))
+
       val result = controller.onSubmit()(validRequest)
       status(result) mustEqual SEE_OTHER
       theUpdatedUserAnswers.claimType mustBe Some(Tomato147s)

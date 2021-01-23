@@ -28,7 +28,8 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.JourneyId
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UploadStatus
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UpscanNotification.Quarantine
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.UploadPage
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.UploadProgressTracker
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.UploadRepository
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.MongoBackedUploadProgressTracker
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.{UploadFormPage, UploadProgressPage}
 import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
 
@@ -41,13 +42,14 @@ class UploadFormControllerSpec extends ControllerSpec with TestData {
 
   private val mockInitiateConnector = mock[UpscanInitiateConnector]
   private val appConfig             = instanceOf[AppConfig]
-  private val mockProgressTracker   = mock[UploadProgressTracker]
+  private val mockUploadRepository  = mock[UploadRepository]
+  private val progressTracker       = new MongoBackedUploadProgressTracker(mockUploadRepository)
 
   private def controller =
     new UploadFormController(
       stubMessagesControllerComponents(),
       fakeAuthorisedIdentifierAction,
-      mockProgressTracker,
+      progressTracker,
       mockInitiateConnector,
       cacheDataService,
       appConfig,
@@ -65,19 +67,19 @@ class UploadFormControllerSpec extends ControllerSpec with TestData {
       Future.successful(upscanInitiateResponse)
     )
 
-    when(mockProgressTracker.requestUpload(any(), any(), any())).thenReturn(Future.successful(true))
+    when(mockUploadRepository.add(any())).thenReturn(Future.successful(true))
 
     when(formPage.apply(any(), any(), any())(any(), any())).thenReturn(HtmlFormat.empty)
     when(progressPage.apply()(any(), any())).thenReturn(HtmlFormat.empty)
   }
 
   override protected def afterEach(): Unit = {
-    reset(formPage, progressPage, mockInitiateConnector, mockProgressTracker)
+    reset(formPage, progressPage, mockInitiateConnector, mockUploadRepository)
     super.afterEach()
   }
 
-  private def givenUploadStatus(uploadStatus: UploadStatus): Unit =
-    when(mockProgressTracker.getUploadResult(any(), any())).thenReturn(Future.successful(Some(uploadStatus)))
+  private def givenUploadStatus(status: UploadStatus): Unit =
+    when(mockUploadRepository.findUploadDetails(any(), any())).thenReturn(Future.successful(Some(uploadResult(status))))
 
   "onPageLoad" should {
 
@@ -86,7 +88,7 @@ class UploadFormControllerSpec extends ControllerSpec with TestData {
       status(result) mustBe OK
 
       verify(mockInitiateConnector).initiateV2(any(), any(), any())(any())
-      verify(mockProgressTracker).requestUpload(any(), any(), any())
+      verify(mockUploadRepository).add(any())
     }
 
   }
@@ -132,7 +134,7 @@ class UploadFormControllerSpec extends ControllerSpec with TestData {
       status(result) mustBe OK
 
       verify(mockInitiateConnector).initiateV2(any(), any(), any())(any())
-      verify(mockProgressTracker).requestUpload(any(), any(), any())
+      verify(mockUploadRepository).add(any())
     }
 
   }

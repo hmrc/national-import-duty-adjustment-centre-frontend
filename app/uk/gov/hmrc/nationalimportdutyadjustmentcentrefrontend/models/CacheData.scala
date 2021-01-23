@@ -22,6 +22,7 @@ import play.api.libs.json.{Json, OFormat}
 
 final case class CacheData(
   id: String,
+  journeyId: JourneyId = JourneyId.generate,
   answers: Option[UserAnswers] = None,
   createClaimResponse: Option[CreateClaimResponse] = None,
   lastUpdated: LocalDateTime = LocalDateTime.now
