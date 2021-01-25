@@ -61,7 +61,7 @@ class UploadFormControllerSpec extends ControllerSpec with TestData {
   override protected def beforeEach(): Unit = {
     super.beforeEach()
 
-    withCacheUserAnswers(Some(emptyAnswers))
+    withCacheUserAnswers(emptyAnswers)
 
     when(mockInitiateConnector.initiateV2(any[JourneyId], any(), any())(any())).thenReturn(
       Future.successful(upscanInitiateResponse)

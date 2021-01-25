@@ -56,14 +56,14 @@ class UploadFormController @Inject() (
     appConfig.upscan.redirectBase + routes.UploadFormController.onProgress(uploadId).url
 
   def onPageLoad(): Action[AnyContent] = identify.async { implicit request =>
-    data.getCacheData flatMap { cacheData =>
-      initiateForm(cacheData.journeyId)
+    data.getAnswers flatMap { answers =>
+      initiateForm(answers.journeyId)
     }
   }
 
   def onProgress(uploadId: UploadId): Action[AnyContent] = identify.async { implicit request =>
-    data.getCacheData flatMap { cacheData =>
-      uploadProgressTracker.getUploadResult(uploadId, cacheData.journeyId) flatMap {
+    data.getAnswers flatMap { answers =>
+      uploadProgressTracker.getUploadResult(uploadId, answers.journeyId) flatMap {
         case Some(successUpload: UploadedFile) =>
           data.updateAnswers(answers => addUpload(answers, successUpload)) map {
             updatedAnswers => Redirect(navigator.nextPage(UploadPage, updatedAnswers))
@@ -77,8 +77,8 @@ class UploadFormController @Inject() (
   }
 
   def onError(errorCode: String): Action[AnyContent] = identify.async { implicit request =>
-    data.getCacheData flatMap { cacheData =>
-      initiateForm(cacheData.journeyId, Some(mapError(errorCode)))
+    data.getAnswers flatMap { answers =>
+      initiateForm(answers.journeyId, Some(mapError(errorCode)))
     }
   }
 
