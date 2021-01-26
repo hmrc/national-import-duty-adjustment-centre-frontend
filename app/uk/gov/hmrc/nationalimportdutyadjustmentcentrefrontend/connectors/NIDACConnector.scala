@@ -16,11 +16,14 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors
 
+import uk.gov.hmrc.http.logging.RequestId
+
 import javax.inject.Inject
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{CreateClaimRequest, CreateClaimResponse}
 
+import java.util.UUID
 import scala.concurrent.{ExecutionContext, Future}
 
 class NIDACConnector @Inject() (httpClient: HttpClient, appConfig: AppConfig)(implicit ec: ExecutionContext) {
@@ -28,6 +31,15 @@ class NIDACConnector @Inject() (httpClient: HttpClient, appConfig: AppConfig)(im
   private val baseUrl = appConfig.nidacServiceBaseUrl
 
   def submitClaim(request: CreateClaimRequest)(implicit hc: HeaderCarrier): Future[CreateClaimResponse] =
-    httpClient.POST[CreateClaimRequest, CreateClaimResponse](s"$baseUrl/create-claim", request)
+    httpClient.POST[CreateClaimRequest, CreateClaimResponse](
+      s"$baseUrl/create-claim",
+      request,
+      Seq("X-Correlation-Id" -> correlationId(hc))
+    )
+
+  private def correlationId(hc: HeaderCarrier): String = hc.requestId match {
+    case Some(requestId: RequestId) => requestId.value
+    case None                       => UUID.randomUUID().toString
+  }
 
 }
