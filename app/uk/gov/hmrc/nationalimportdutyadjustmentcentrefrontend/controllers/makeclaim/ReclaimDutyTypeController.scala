@@ -44,10 +44,7 @@ class ReclaimDutyTypeController @Inject() (
 
   def onPageLoad(): Action[AnyContent] = identify.async { implicit request =>
     data.getAnswers map { answers =>
-      val preparedForm = answers.reclaimDutyTypes match {
-        case Some(types) => form.fill(types)
-        case None        => form
-      }
+      val preparedForm = answers.reclaimDutyTypes.fold(form)(form.fill)
       Ok(reclaimDutyTypePage(preparedForm))
     }
   }
