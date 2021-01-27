@@ -34,12 +34,7 @@ class NIDACConnector @Inject() (httpClient: HttpClient, appConfig: AppConfig)(im
     httpClient.POST[CreateClaimRequest, CreateClaimResponse](
       s"$baseUrl/create-claim",
       request,
-      Seq("X-Correlation-Id" -> correlationId(hc))
+      Seq("X-Correlation-Id" -> hc.requestId.map(_.value).getOrElse(UUID.randomUUID().toString))
     )
-
-  private def correlationId(hc: HeaderCarrier): String = hc.requestId match {
-    case Some(requestId: RequestId) => requestId.value
-    case None                       => UUID.randomUUID().toString
-  }
 
 }
