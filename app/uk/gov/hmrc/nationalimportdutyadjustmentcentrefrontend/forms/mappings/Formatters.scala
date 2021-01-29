@@ -16,10 +16,14 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.mappings
 
+import java.time.LocalDate
+
 import play.api.data.FormError
 import play.api.data.format.Formatter
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.mappings.DateFields.{dayKey, monthKey, yearKey}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.Enumerable
 
+import scala.util.{Failure, Success, Try}
 import scala.util.control.Exception.nonFatalCatch
 
 trait Formatters {
@@ -99,6 +103,85 @@ trait Formatters {
 
       override def unbind(key: String, value: A): Map[String, String] =
         baseFormatter.unbind(key, value.toString)
+
+    }
+
+  private[mappings] def localDateFormatter(
+    invalidKey: String,
+    requiredKey: String,
+    args: Seq[String] = Seq.empty
+  ): Formatter[LocalDate] =
+    new Formatter[LocalDate] {
+
+      private val dayFormatter =
+        intFormatter(
+          requiredKey = s"$requiredKey.$dayKey",
+          wholeNumberKey = invalidKey,
+          nonNumericKey = invalidKey,
+          args
+        )
+
+      private val monthFormatter =
+        intFormatter(
+          requiredKey = s"$requiredKey.$monthKey",
+          wholeNumberKey = invalidKey,
+          nonNumericKey = invalidKey,
+          args
+        )
+
+      private val yearFormatter =
+        intFormatter(
+          requiredKey = s"$requiredKey.$yearKey",
+          wholeNumberKey = invalidKey,
+          nonNumericKey = invalidKey,
+          args
+        )
+
+      private val fieldKeys: List[String] = List(dayKey, monthKey, yearKey)
+
+      private val multipleMissing = s"$requiredKey.multiple"
+
+      private def toDate(key: String, day: Int, month: Int, year: Int): Either[Seq[FormError], LocalDate] =
+        Try(LocalDate.of(year, month, day)) match {
+          case Success(date) =>
+            Right(date)
+          case Failure(_) =>
+            Left(Seq(FormError(key, invalidKey, args)))
+        }
+
+      private def formatDate(key: String, data: Map[String, String]): Either[Seq[FormError], LocalDate] =
+        for {
+          day   <- dayFormatter.bind(s"$key.$dayKey", data).right
+          month <- monthFormatter.bind(s"$key.$monthKey", data).right
+          year  <- yearFormatter.bind(s"$key.$yearKey", data).right
+          date  <- toDate(key, day, month, year).right
+        } yield date
+
+      override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], LocalDate] = {
+
+        val fields = fieldKeys.map {
+          field =>
+            field -> data.get(s"$key.$field").filter(_.nonEmpty)
+        }.toMap
+
+        val missingFields: List[String] = fields
+          .withFilter(_._2.isEmpty)
+          .map(_._1)
+          .toList
+
+        missingFields.size match {
+          case 3 => Left(List(FormError(key, requiredKey, args)))
+          case 2 => Left(List(FormError(s"$key.${missingFields.head}", multipleMissing, missingFields ++ args)))
+          case _ => formatDate(key, data)
+        }
+      }
+
+      override def unbind(key: String, value: LocalDate): Map[String, String] =
+        Map(
+          s"$key.$dayKey"   -> value.getDayOfMonth.toString,
+          s"$key.$monthKey" -> value.getMonthValue.toString,
+          s"$key.$yearKey"  -> value.getYear.toString
+        )
 
     }
 

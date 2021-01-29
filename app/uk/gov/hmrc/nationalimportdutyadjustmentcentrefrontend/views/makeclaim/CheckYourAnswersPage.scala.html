@@ -39,6 +39,19 @@
         heading = Some(messages("check_answers.claim.title")),
         summaryListRows = Seq(
             Some(SummaryListRow(
+                classes = "entry_details_row",
+                key = Key(
+                    content = Text(messages("check_answers.claim.entryDetails"))
+                ),
+                value = Value(
+                    content = HtmlContent(Seq(
+                        messages("check_answers.claim.entryDetails.epu", claim.entryDetails.entryProcessingUnit),
+                        messages("check_answers.claim.entryDetails.entryNumber",claim.entryDetails.entryNumber)
+                    ).mkString("<br>"))
+                ),
+                actions = None
+            )),
+            Some(SummaryListRow(
                 classes = "claim_type_row",
                 key = Key(
                     content = Text(messages("check_answers.claim.claimType"))
@@ -89,7 +102,11 @@
                         content = Text(messages("check_answers.payment.bankDetails"))
                     ),
                     value = Value(
-                        content = HtmlContent(Seq(bankDetails.accountName, bankDetails.sortCode, bankDetails.accountNumber).mkString("<br>"))
+                        content = HtmlContent(Seq(
+                            bankDetails.accountName,
+                            bankDetails.sortCode,
+                            bankDetails.accountNumber
+                        ).mkString("<br>"))
                     ),
                     actions = None
                 )

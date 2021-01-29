@@ -14,21 +14,11 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.mappings
 
-import play.api.libs.json._
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UploadedFile
+object DateFields {
 
-final case class UserAnswers(
-  journeyId: JourneyId = JourneyId.generate,
-  claimType: Option[ClaimType] = None,
-  reclaimDutyTypes: Option[Set[ReclaimDutyType]] = None,
-  bankDetails: Option[BankDetails] = None,
-  entryDetails: Option[EntryDetails] = None,
-  uploads: Option[Seq[UploadedFile]] = None
-)
-
-object UserAnswers {
-
-  implicit val formats: OFormat[UserAnswers] = Json.format[UserAnswers]
+  val dayKey   = "day"
+  val monthKey = "month"
+  val yearKey  = "year"
 }

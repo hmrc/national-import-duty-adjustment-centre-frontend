@@ -16,19 +16,12 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models
 
-import play.api.libs.json._
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UploadedFile
+import java.time.LocalDate
 
-final case class UserAnswers(
-  journeyId: JourneyId = JourneyId.generate,
-  claimType: Option[ClaimType] = None,
-  reclaimDutyTypes: Option[Set[ReclaimDutyType]] = None,
-  bankDetails: Option[BankDetails] = None,
-  entryDetails: Option[EntryDetails] = None,
-  uploads: Option[Seq[UploadedFile]] = None
-)
+import play.api.libs.json.{Json, OFormat}
 
-object UserAnswers {
+case class EntryDetails(entryProcessingUnit: String, entryNumber: String, entryDate: LocalDate)
 
-  implicit val formats: OFormat[UserAnswers] = Json.format[UserAnswers]
+object EntryDetails {
+  implicit val format: OFormat[EntryDetails] = Json.format[EntryDetails]
 }
