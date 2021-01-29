@@ -29,7 +29,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.Uploa
 
 trait TestData {
 
-  val fixedDate: LocalDate = LocalDate.now()
+  val fixedDate: LocalDate         = LocalDate.now()
   val fixedDateTime: LocalDateTime = LocalDateTime.now()
 
   // UserAnswers
@@ -55,7 +55,7 @@ trait TestData {
   )
 
   // Upscan
-  val uploadId: UploadId = UploadId.generate
+  val uploadId: UploadId   = UploadId.generate
   val journeyId: JourneyId = JourneyId.generate
 
   val upscanInitiateResponse: UpscanInitiateResponse =

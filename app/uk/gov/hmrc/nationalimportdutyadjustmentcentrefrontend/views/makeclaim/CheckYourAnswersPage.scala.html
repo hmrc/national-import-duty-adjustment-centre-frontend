@@ -20,6 +20,7 @@
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.Title
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html._
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components._
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.DateFormatter
 
 @this(
         layout: Layout,
@@ -46,7 +47,8 @@
                 value = Value(
                     content = HtmlContent(Seq(
                         messages("check_answers.claim.entryDetails.epu", claim.entryDetails.entryProcessingUnit),
-                        messages("check_answers.claim.entryDetails.entryNumber",claim.entryDetails.entryNumber)
+                        messages("check_answers.claim.entryDetails.entryNumber",claim.entryDetails.entryNumber),
+                        messages("check_answers.claim.entryDetails.entryDate", DateFormatter.format(claim.entryDetails.entryDate))
                     ).mkString("<br>"))
                 ),
                 actions = None

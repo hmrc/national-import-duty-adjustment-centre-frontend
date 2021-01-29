@@ -25,15 +25,14 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages._
 @Singleton
 class Navigator @Inject() () {
 
-  val firstPage: Call = controllers.makeclaim.routes.ClaimTypeController.onPageLoad()
-
   private val normalRoutes: (Page, UserAnswers) => Call = {
+    case (FirstPage, _)           => controllers.makeclaim.routes.EntryDetailsController.onPageLoad()
     case (EntryDetailsPage, _)    => controllers.makeclaim.routes.ClaimTypeController.onPageLoad()
     case (ClaimTypePage, _)       => controllers.makeclaim.routes.UploadFormController.onPageLoad()
     case (UploadPage, _)          => controllers.makeclaim.routes.ReclaimDutyTypeController.onPageLoad()
     case (ReclaimDutyTypePage, _) => controllers.makeclaim.routes.BankDetailsController.onPageLoad()
     case (BankDetailsPage, _)     => controllers.makeclaim.routes.CheckYourAnswersController.onPageLoad()
-    case _                        => firstPage
+    case _                        => controllers.routes.StartController.start()
   }
 
   def nextPage(page: Page, userAnswers: UserAnswers): Call =
