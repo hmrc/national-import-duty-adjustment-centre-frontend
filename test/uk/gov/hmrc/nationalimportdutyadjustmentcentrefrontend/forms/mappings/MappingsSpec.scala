@@ -158,7 +158,7 @@ class MappingsSpec extends UnitSpec with OptionValues with Mappings {
     }
   }
 
-  "localData" must {
+  "localDate" must {
 
     val date      = LocalDate.of(2020, 10, 28)
     val validData = Map("value" -> "28", "value.month" -> "10", "value.year" -> "2020")
