@@ -161,7 +161,7 @@ class MappingsSpec extends UnitSpec with OptionValues with Mappings {
   "localData" must {
 
     val date      = LocalDate.of(2020, 10, 28)
-    val validData = Map("value.day" -> "28", "value.month" -> "10", "value.year" -> "2020")
+    val validData = Map("value" -> "28", "value.month" -> "10", "value.year" -> "2020")
 
     val testForm: Form[LocalDate] =
       Form("value" -> localDate("date.invalid", "date.required"))
@@ -182,13 +182,13 @@ class MappingsSpec extends UnitSpec with OptionValues with Mappings {
     }
 
     "not bind an invalid day format" in {
-      val result = testForm.bind(validData + ("value.day" -> "xx"))
-      result.errors must contain(FormError("value.day", "error.number.nonNumeric"))
+      val result = testForm.bind(validData + ("value" -> "xx"))
+      result.errors must contain(FormError("value", "error.number.nonNumeric"))
     }
 
     "not bind an invalid day number" in {
-      val result = testForm.bind(validData + ("value.day" -> "32"))
-      result.errors must contain(FormError("value.day", "date.error.day"))
+      val result = testForm.bind(validData + ("value" -> "32"))
+      result.errors must contain(FormError("value", "date.error.day"))
     }
 
     "not bind an invalid month format" in {
@@ -207,8 +207,8 @@ class MappingsSpec extends UnitSpec with OptionValues with Mappings {
     }
 
     "not bind missing day" in {
-      val result = testForm.bind(validData - "value.day")
-      result.errors must contain(FormError("value.day", "date.required.day"))
+      val result = testForm.bind(validData - "value")
+      result.errors must contain(FormError("value", "date.required.day"))
     }
 
     "not bind missing month" in {
@@ -222,23 +222,23 @@ class MappingsSpec extends UnitSpec with OptionValues with Mappings {
     }
 
     "not bind missing day and month" in {
-      val result = testForm.bind(validData - "value.day" - "value.month")
-      result.errors must contain(FormError("value.day", "date.required.day.month", List("day", "month")))
+      val result = testForm.bind(validData - "value" - "value.month")
+      result.errors must contain(FormError("value", "date.required.day.month"))
     }
 
     "not bind missing day and year" in {
-      val result = testForm.bind(validData - "value.day" - "value.year")
-      result.errors must contain(FormError("value.day", "date.required.day.year", List("day", "year")))
+      val result = testForm.bind(validData - "value" - "value.year")
+      result.errors must contain(FormError("value", "date.required.day.year"))
     }
 
     "not bind missing month and year" in {
       val result = testForm.bind(validData - "value.month" - "value.year")
-      result.errors must contain(FormError("value.month", "date.required.month.year", List("month", "year")))
+      result.errors must contain(FormError("value.month", "date.required.month.year"))
     }
 
     "unbind a valid value" in {
       val result = testForm.fill(date)
-      result.apply("value.day").value.value mustEqual "28"
+      result.apply("value").value.value mustEqual "28"
       result.apply("value.month").value.value mustEqual "10"
       result.apply("value.year").value.value mustEqual "2020"
     }

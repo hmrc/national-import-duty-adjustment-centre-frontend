@@ -37,7 +37,7 @@ class EntryDetailsFormProviderSpec extends StringFieldBehaviours {
     (
       epu.map(_ => "entryProcessingUnit" -> epu.get) ++
         entryNumber.map(_ => "entryNumber" -> entryNumber.get) ++
-        day.map(_ => "entryDate.day" -> day.get) ++
+        day.map(_ => "entryDate" -> day.get) ++
         month.map(_ => "entryDate.month" -> month.get) ++
         year.map(_ => "entryDate.year" -> year.get)
     ).toMap

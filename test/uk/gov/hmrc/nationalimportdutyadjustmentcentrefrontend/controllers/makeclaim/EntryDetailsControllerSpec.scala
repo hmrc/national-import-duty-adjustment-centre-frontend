@@ -85,7 +85,7 @@ class EntryDetailsControllerSpec extends ControllerSpec with TestData {
     val validRequest = postRequest(
       "entryProcessingUnit" -> entryDetailsAnswer.entryProcessingUnit,
       "entryNumber"         -> entryDetailsAnswer.entryNumber,
-      "entryDate.day"       -> entryDetailsAnswer.entryDate.getDayOfMonth.toString,
+      "entryDate"           -> entryDetailsAnswer.entryDate.getDayOfMonth.toString,
       "entryDate.month"     -> entryDetailsAnswer.entryDate.getMonthValue.toString,
       "entryDate.year"      -> entryDetailsAnswer.entryDate.getYear.toString
     )

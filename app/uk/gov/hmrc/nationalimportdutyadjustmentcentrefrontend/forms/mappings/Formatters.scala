@@ -143,10 +143,6 @@ trait Formatters {
       private val yearFormatter =
         intFormatter(requiredKey = s"$requiredKey.$yearKey", args = args)
 
-      private val fieldKeys: List[String] = List(dayKey, monthKey, yearKey)
-
-      private def multipleMissing(missingFields: List[String]) = s"$requiredKey.${missingFields.mkString(".")}"
-
       private def toDate(key: String, day: Int, month: Int, year: Int): Either[Seq[FormError], LocalDate] =
         Try(LocalDate.of(year, month, day)) match {
           case Success(date) =>
@@ -157,7 +153,7 @@ trait Formatters {
 
       private def formatDate(key: String, data: Map[String, String]): Either[Seq[FormError], LocalDate] =
         for {
-          day   <- dayFormatter.bind(s"$key.$dayKey", data).right
+          day   <- dayFormatter.bind(key, data).right
           month <- monthFormatter.bind(s"$key.$monthKey", data).right
           year  <- yearFormatter.bind(s"$key.$yearKey", data).right
           date  <- toDate(key, day, month, year).right
@@ -165,9 +161,9 @@ trait Formatters {
 
       override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], LocalDate] = {
 
-        val fields = fieldKeys.map {
+        val fields = List(key, s"$key.$monthKey", s"$key.$yearKey").map {
           field =>
-            field -> data.get(s"$key.$field").filter(_.nonEmpty)
+            field -> data.get(field).filter(_.nonEmpty)
         }.toMap
 
         val missingFields: List[String] = fields
@@ -175,17 +171,22 @@ trait Formatters {
           .map(_._1)
           .toList
 
+        def multipleMissing =
+          s"$requiredKey.${missingFields.map { field =>
+            if (field == key) dayKey else field.replace(s"$key.", "")
+          }.mkString(".")}"
+
         missingFields.size match {
           case 3 => Left(List(FormError(key, requiredKey, args)))
           case 2 =>
-            Left(List(FormError(s"$key.${missingFields.head}", multipleMissing(missingFields), missingFields ++ args)))
+            Left(List(FormError(missingFields.head, multipleMissing, args)))
           case _ => formatDate(key, data)
         }
       }
 
       override def unbind(key: String, value: LocalDate): Map[String, String] =
         Map(
-          s"$key.$dayKey"   -> value.getDayOfMonth.toString,
+          s"$key"           -> value.getDayOfMonth.toString,
           s"$key.$monthKey" -> value.getMonthValue.toString,
           s"$key.$yearKey"  -> value.getYear.toString
         )

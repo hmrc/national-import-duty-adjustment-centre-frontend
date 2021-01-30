@@ -26,18 +26,23 @@
   hintKey: Option[String] = None
 )(implicit messages: Messages)
 
-@dateField = @{form(fieldName)}
-@dayField = @{form(s"$fieldName.$dayKey")}
+@dayField = @{form(fieldName)}
 @monthField = @{form(s"$fieldName.$monthKey")}
 @yearField = @{form(s"$fieldName.$yearKey")}
 
 @errorMessages = @{
-  val errors = (dateField.errors ++ dayField.errors ++ monthField.errors ++ yearField.errors).map(err => messages(err.message, err.args:_*)).mkString("<br>")
+  val errors = (dayField.errors ++ monthField.errors ++ yearField.errors).map(err => messages(err.message, err.args:_*)).mkString("<br>")
   if(errors.nonEmpty) Some(ErrorMessage(content = HtmlContent(errors))) else None
 }
 
-@inputClasses(field: Field, width: String) = @{
-    s"govuk-input govuk-date-input__input govuk-input--width-$width ${if(dateField.hasErrors || field.hasErrors) "govuk-input--error"}"
+@isDateError = @{
+    dayField.error.exists(err => err.key == fieldName && !err.message.contains(dayKey))
+}
+@containsErrorForKey(key: String) = @{
+    form.errors.exists(err => err.message.contains(s".$key"))
+}
+@inputClasses(field: Field, key: String, width: String) = @{
+    s"govuk-input govuk-date-input__input govuk-input--width-$width ${if(isDateError || field.hasErrors || containsErrorForKey(key)) "govuk-input--error"}"
 }
 
 @dateInput(DateInput(
@@ -47,31 +52,31 @@
       content = Text(messages(labelKey)),
       classes = "govuk-fieldset__legend--m"
     )),
-      attributes = Map("id" -> fieldName)
+      attributes = Map("id" -> s"$fieldName-fieldset")
   )),
   hint = hintKey.map(h => Hint(content = Text(messages(h)))),
   errorMessage = errorMessages,
   items = Seq(
     InputItem(
-      id = s"${fieldName}_$dayKey",
+      id = dayField.id,
       name = dayField.name,
       label = Some(messages("date.day")),
       value = dayField.value,
-      classes = inputClasses(dayField, "2")
+      classes = inputClasses(dayField, dayKey, "2")
     ),
     InputItem(
-      id = s"${fieldName}_$monthKey",
+      id = monthField.id,
       name = monthField.name,
       label = Some(messages("date.month")),
       value = monthField.value,
-      classes = inputClasses(monthField, "2")
+      classes = inputClasses(monthField, monthKey, "2")
     ),
     InputItem(
-      id = s"${fieldName}_$yearKey",
+      id = yearField.id,
       name = yearField.name,
       label = Some(messages("date.year")),
       value = yearField.value,
-      classes = inputClasses(yearField, "4")
+      classes = inputClasses(yearField, yearKey, "4")
     )
   )
 ))

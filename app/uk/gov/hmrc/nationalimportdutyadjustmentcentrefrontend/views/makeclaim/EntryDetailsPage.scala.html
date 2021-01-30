@@ -36,7 +36,7 @@
 @layout(pageTitle = Title(form, messages("entryDetails.title"))) {
 
     @formHelper(action = EntryDetailsController.onSubmit(), 'autoComplete -> "off") {
-        @errorSummary(form.errors, focusOverrides = Map("entryDate" -> "entryDate_day"))
+        @errorSummary(form.errors)
 
         @fieldSet(
             legend = "entryDetails.title",

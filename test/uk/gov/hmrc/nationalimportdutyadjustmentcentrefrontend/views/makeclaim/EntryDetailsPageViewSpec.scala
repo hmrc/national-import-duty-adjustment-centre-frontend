@@ -69,7 +69,7 @@ class EntryDetailsPageViewSpec extends UnitViewSpec with TestData {
 
       filledView.getElementById("entryProcessingUnit") must haveValue(entryDetailsAnswer.entryProcessingUnit)
       filledView.getElementById("entryNumber") must haveValue(entryDetailsAnswer.entryNumber)
-      filledView.getElementById("entryDate_day") must haveValue(entryDetailsAnswer.entryDate.getDayOfMonth.toString)
+      filledView.getElementById("entryDate") must haveValue(entryDetailsAnswer.entryDate.getDayOfMonth.toString)
       filledView.getElementById("entryDate_month") must haveValue(entryDetailsAnswer.entryDate.getMonthValue.toString)
       filledView.getElementById("entryDate_year") must haveValue(entryDetailsAnswer.entryDate.getYear.toString)
     }
@@ -79,7 +79,7 @@ class EntryDetailsPageViewSpec extends UnitViewSpec with TestData {
       val answers = Map(
         "entryProcessingUnit" -> "007",
         "entryNumber"         -> "654321Q",
-        "entryDate.day"       -> "13",
+        "entryDate"           -> "13",
         "entryDate.month"     -> "8",
         "entryDate.year"      -> "2020"
       )
