@@ -27,7 +27,8 @@ case class CreateClaimRequest(
   claimType: ClaimType,
   uploads: Seq[UploadedFile],
   reclaimDutyTypes: Set[ReclaimDutyType],
-  bankDetails: Option[BankDetails]
+  bankDetails: Option[BankDetails],
+  entryDetails: EntryDetails
 )
 
 object CreateClaimRequest {
@@ -41,7 +42,8 @@ object CreateClaimRequest {
       claimType = userAnswers.claimType.getOrElse(missing(ClaimTypePage)),
       uploads = userAnswers.uploads.getOrElse(missing(UploadPage)),
       reclaimDutyTypes = userAnswers.reclaimDutyTypes.getOrElse(missing(ReclaimDutyTypePage)),
-      bankDetails = userAnswers.bankDetails
+      bankDetails = userAnswers.bankDetails,
+      entryDetails = userAnswers.entryDetails.getOrElse(missing(EntryDetailsPage))
     )
 
   private def missing(answer: Page) =

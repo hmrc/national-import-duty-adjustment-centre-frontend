@@ -20,26 +20,23 @@ import javax.inject.{Inject, Singleton}
 import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.IdentifierAction
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.{
-  BankDetailsFormProvider,
-  ContactDetailsFormProvider
-}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.EntryDetailsFormProvider
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.Navigator
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{BankDetailsPage, ContactDetailsPage}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.EntryDetailsPage
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.CacheDataService
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.{BankDetailsPage, ContactDetailsPage}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.EntryDetailsPage
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ContactDetailsController @Inject() (
+class EntryDetailsController @Inject() (
   identify: IdentifierAction,
   data: CacheDataService,
-  formProvider: ContactDetailsFormProvider,
+  formProvider: EntryDetailsFormProvider,
   val controllerComponents: MessagesControllerComponents,
   navigator: Navigator,
-  contactDetailsPage: ContactDetailsPage
+  entryDetailsPage: EntryDetailsPage
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController with I18nSupport {
 
@@ -47,17 +44,17 @@ class ContactDetailsController @Inject() (
 
   def onPageLoad(): Action[AnyContent] = identify.async { implicit request =>
     data.getAnswers map { answers =>
-      val preparedForm = answers.contactDetails.fold(form)(form.fill)
-      Ok(contactDetailsPage(preparedForm))
+      val preparedForm = answers.entryDetails.fold(form)(form.fill)
+      Ok(entryDetailsPage(preparedForm))
     }
   }
 
   def onSubmit(): Action[AnyContent] = identify.async { implicit request =>
     form.bindFromRequest().fold(
-      formWithErrors => Future(BadRequest(contactDetailsPage(formWithErrors))),
+      formWithErrors => Future(BadRequest(entryDetailsPage(formWithErrors))),
       value =>
-        data.updateAnswers(answers => answers.copy(contactDetails = Some(value))) map {
-          updatedAnswers => Redirect(navigator.nextPage(ContactDetailsPage, updatedAnswers))
+        data.updateAnswers(answers => answers.copy(entryDetails = Some(value))) map {
+          updatedAnswers => Redirect(navigator.nextPage(EntryDetailsPage, updatedAnswers))
         }
     )
   }

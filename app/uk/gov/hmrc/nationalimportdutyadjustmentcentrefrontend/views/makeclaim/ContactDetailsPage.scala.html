@@ -47,9 +47,7 @@
                 id = "firstName",
                 name = "firstName",
                 label = "contactDetails.firstName.heading",
-                isPageHeading = false,
-                isInFieldset = true,
-                attributes = Map("autocomplete" -> "off")
+                autocomplete = Some("given-name")
             )
 
             @inputText(
@@ -57,9 +55,7 @@
                 id = "lastName",
                 name = "lastName",
                 label = "contactDetails.lastName.heading",
-                isPageHeading = false,
-                isInFieldset = true,
-                attributes = Map("autocomplete" -> "off")
+                autocomplete = Some("family-name")
             )
 
             @inputText(
@@ -68,9 +64,7 @@
                 name = "emailAddress",
                 inputType = "email",
                 label = "contactDetails.emailAddress.heading",
-                isPageHeading = false,
-                isInFieldset = true,
-                attributes = Map("autocomplete" -> "off")
+                autocomplete = Some("email")
             )
 
             @inputText(
@@ -79,9 +73,7 @@
                 name = "telephoneNumber",
                 label = "contactDetails.telephoneNumber.heading",
                 classes = Some("govuk-input--width-20"),
-                isPageHeading = false,
-                isInFieldset = true,
-                attributes = Map("autocomplete" -> "off")
+                autocomplete = Some("tel")
             )
         }
 

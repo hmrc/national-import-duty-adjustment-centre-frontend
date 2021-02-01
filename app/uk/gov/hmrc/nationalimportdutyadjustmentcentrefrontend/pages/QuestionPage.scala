@@ -16,12 +16,7 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages
 
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{
-  BankDetails,
-  ClaimType,
-  ContactDetails,
-  ReclaimDutyType
-}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models._
 
 trait QuestionPage[A] extends Page
 
@@ -29,3 +24,4 @@ case object ClaimTypePage       extends QuestionPage[ClaimType]
 case object ContactDetailsPage  extends QuestionPage[ContactDetails]
 case object ReclaimDutyTypePage extends QuestionPage[Set[ReclaimDutyType]]
 case object BankDetailsPage     extends QuestionPage[BankDetails]
+case object EntryDetailsPage    extends QuestionPage[EntryDetails]
