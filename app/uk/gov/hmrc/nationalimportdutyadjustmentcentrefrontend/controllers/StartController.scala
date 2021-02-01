@@ -28,7 +28,7 @@ class StartController @Inject() (mcc: MessagesControllerComponents, identify: Id
     extends FrontendController(mcc) with I18nSupport {
 
   val start: Action[AnyContent] = identify { implicit request =>
-    Redirect(controllers.makeclaim.routes.ClaimTypeController.onPageLoad())
+    Redirect(controllers.makeclaim.routes.ContactDetailsController.onPageLoad())
   }
 
 }

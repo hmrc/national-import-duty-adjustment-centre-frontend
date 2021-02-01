@@ -51,6 +51,23 @@ reclaimDutyType.02 = VAT
 reclaimDutyType.03 = Another type of duty
 reclaimDutyType.error.required = Select what you want to reclaim
 
+contactDetails.title = How should we contact you about this claim?
+contactDetails.hint = We may need to contact you to discuss this claim.
+contactDetails.firstName.heading = First name
+contactDetails.firstName.error.required = Enter a first name
+contactDetails.firstName.error.length = First name must be 40 characters or fewer
+contactDetails.lastName.heading = Last name
+contactDetails.lastName.error.required = Enter a last name
+contactDetails.lastName.error.length = Last name must be 40 characters or fewer
+contactDetails.emailAddress.heading = Email address
+contactDetails.emailAddress.error.required = Enter an email address
+contactDetails.emailAddress.error.invalid = Enter an email address in the correct format, like name@example.com
+contactDetails.emailAddress.error.length = Email must be 85 characters or fewer
+contactDetails.telephoneNumber.heading = UK telephone number
+contactDetails.telephoneNumber.error.required = Enter a telephone number
+contactDetails.telephoneNumber.error.invalid = Telephone number must be 11 numbers
+
+
 bankDetails.title = Enter your UK bank details
 bankDetails.hint = This must be a UK business account. The bank must also accept Bacs payments.
 bankDetails.name.heading = Name on the business account
@@ -78,6 +95,8 @@ error.file-upload.try-again=The selected file could not be uploaded - try again
 check_answers.title = Check your answers before sending your application
 check_answers.change = Change
 check_answers.submit = Accept and send
+check_answers.yourDetails.title = Your details
+check_answers.yourDetails.contactDetails = Contact details
 check_answers.claim.title = About your claim
 check_answers.claim.claimType = Claim type
 check_answers.claim.uploaded = Supporting documents
