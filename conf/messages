@@ -147,6 +147,7 @@ check_answers.change = Change
 check_answers.submit = Accept and send
 check_answers.yourDetails.title = Your details
 check_answers.yourDetails.contactDetails = Contact details
+check_answers.yourDetails.yourAddress = Your address
 check_answers.claim.title = About your claim
 check_answers.claim.entryDetails = Entry details
 check_answers.claim.entryDetails.epu = EPU: {0}
