@@ -17,6 +17,7 @@
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models
 
 import play.api.libs.json.{Json, OFormat}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.RepaymentType.Bacs
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.exceptions.MissingUserAnswersException
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UploadedFile
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages._
@@ -27,6 +28,7 @@ case class CreateClaimRequest(
   claimType: ClaimType,
   uploads: Seq[UploadedFile],
   reclaimDutyTypes: Set[ReclaimDutyType],
+  repaymentType: RepaymentType,
   bankDetails: Option[BankDetails],
   entryDetails: EntryDetails
 )
@@ -42,7 +44,8 @@ object CreateClaimRequest {
       claimType = userAnswers.claimType.getOrElse(missing(ClaimTypePage)),
       uploads = userAnswers.uploads.getOrElse(missing(UploadPage)),
       reclaimDutyTypes = userAnswers.reclaimDutyTypes.getOrElse(missing(ReclaimDutyTypePage)),
-      bankDetails = userAnswers.bankDetails,
+      repaymentType = userAnswers.repaymentType.getOrElse(missing(RepaymentTypePage)),
+      bankDetails = if (userAnswers.repaymentType.contains(Bacs)) userAnswers.bankDetails else None,
       entryDetails = userAnswers.entryDetails.getOrElse(missing(EntryDetailsPage))
     )
 

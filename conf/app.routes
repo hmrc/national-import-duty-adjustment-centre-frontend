@@ -24,6 +24,9 @@ GET         /upload-documents/error             uk.gov.hmrc.nationalimportdutyad
 GET         /reclaiming                         uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.ReclaimDutyTypeController.onPageLoad()
 POST        /reclaiming                         uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.ReclaimDutyTypeController.onSubmit()
 
+POST        /repayment-options                  uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.RepaymentTypeController.onSubmit()
+GET         /repayment-options                  uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.RepaymentTypeController.onPageLoad()
+
 GET         /bank-details                       uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.BankDetailsController.onPageLoad()
 POST        /bank-details                       uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.BankDetailsController.onSubmit()
 

@@ -17,25 +17,25 @@
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms
 
 import play.api.data.FormError
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.behaviours.CheckboxFieldBehaviours
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ReclaimDutyType
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.behaviours.OptionFieldBehaviours
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.RepaymentType
 
-class ReclaimDutyTypeFormProviderSpec extends CheckboxFieldBehaviours {
+class RepaymentTypeFormProviderSpec extends OptionFieldBehaviours {
 
-  val form = new ReclaimDutyTypeFormProvider()()
+  val form = new RepaymentTypeFormProvider()()
 
-  "ReclaimDutyTypeFormProvider" must {
+  "RepaymentTypeFormProvider" must {
 
-    val fieldName   = "reclaimDutyType"
-    val requiredKey = "reclaimDutyType.error.required"
+    val fieldName   = "repayment_type"
+    val requiredKey = "repaymentType.error.required"
 
-    behave like checkboxField[ReclaimDutyType](
+    behave like optionsField[RepaymentType](
       form,
       fieldName,
-      validValues = ReclaimDutyType.values,
-      invalidError = FormError(s"$fieldName[0]", "error.invalid")
+      validValues = RepaymentType.values,
+      invalidError = FormError(fieldName, "error.invalid")
     )
 
-    behave like mandatoryCheckboxField(form, fieldName, requiredKey)
+    behave like mandatoryField(form, fieldName, requiredError = FormError(fieldName, requiredKey))
   }
 }

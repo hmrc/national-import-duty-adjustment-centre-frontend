@@ -118,9 +118,19 @@
         id = "payment_section",
         heading = Some(messages("check_answers.payment.title")),
         summaryListRows = Seq(
+            Some(SummaryListRow(
+                classes = "repayment_type_row",
+                key = Key(
+                    content = Text(messages("check_answers.payment.repaymentType"))
+                ),
+                value = Value(
+                    content = Text(MessageKey.apply("repaymentType", claim.repaymentType.toString))
+                ),
+                actions = None
+            )),
             claim.bankDetails.map(bankDetails =>
                 SummaryListRow(
-                    classes = "bank_details_type_row",
+                    classes = "bank_details_row",
                     key = Key(
                         content = Text(messages("check_answers.payment.bankDetails"))
                     ),

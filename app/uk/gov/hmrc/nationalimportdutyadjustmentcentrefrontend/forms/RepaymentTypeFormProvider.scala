@@ -14,15 +14,16 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms
 
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models._
+import javax.inject.Inject
+import play.api.data.Form
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.mappings.Mappings
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.RepaymentType
 
-trait QuestionPage[A] extends Page
+class RepaymentTypeFormProvider @Inject() extends Mappings {
 
-case object ClaimTypePage       extends QuestionPage[ClaimType]
-case object ContactDetailsPage  extends QuestionPage[ContactDetails]
-case object ReclaimDutyTypePage extends QuestionPage[Set[ReclaimDutyType]]
-case object RepaymentTypePage   extends QuestionPage[RepaymentType]
-case object BankDetailsPage     extends QuestionPage[BankDetails]
-case object EntryDetailsPage    extends QuestionPage[EntryDetails]
+  def apply(): Form[RepaymentType] =
+    Form("repayment_type" -> enumerable[RepaymentType]("repaymentType.error.required"))
+
+}

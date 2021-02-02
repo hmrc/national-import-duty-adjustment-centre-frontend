@@ -76,6 +76,10 @@ contactDetails.telephoneNumber.heading = UK telephone number
 contactDetails.telephoneNumber.error.required = Enter a telephone number
 contactDetails.telephoneNumber.error.invalid = Telephone number must be 11 numbers
 
+repaymentType.title = How would you like to be repaid?
+repaymentType.TaxAccount = Business tax account adjustment
+repaymentType.BACS = Bank transfer (Bacs)
+repaymentType.error.required = Select a repayment method
 
 bankDetails.title = Enter your UK bank details
 bankDetails.hint = This must be a UK business account. The bank must also accept Bacs payments.
@@ -142,6 +146,7 @@ check_answers.repayment.reclaimDutyType.01 = Customs duty
 check_answers.repayment.reclaimDutyType.02 = VAT
 check_answers.repayment.reclaimDutyType.03 = Other
 check_answers.payment.title = Payment details
+check_answers.payment.repaymentType = Repayment method
 check_answers.payment.bankDetails = Importer bank details
 
 confirmation.title = Your application is confirmed

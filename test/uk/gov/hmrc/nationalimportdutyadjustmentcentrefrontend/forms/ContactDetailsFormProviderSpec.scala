@@ -86,6 +86,11 @@ class ContactDetailsFormProviderSpec extends StringFieldBehaviours {
       lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
     )
 
+    "fail to bind entries that are not properly formatted" in {
+      val result        = form.bind(Map(fieldName -> "12345678AQ")).apply(fieldName)
+      val expectedError = FormError(fieldName, invalidKey, Seq(Validation.emailAddressPattern))
+      result.errors mustEqual Seq(expectedError)
+    }
   }
 
   ".TelephoneNumber" must {
