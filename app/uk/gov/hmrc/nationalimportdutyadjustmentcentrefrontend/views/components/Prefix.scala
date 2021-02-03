@@ -14,17 +14,12 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.eis
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components
 
-import play.api.libs.json.{Json, OFormat}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{DutyPaid, ReclaimDutyType}
+import uk.gov.hmrc.govukfrontend.views.Aliases.PrefixOrSuffix
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 
-case class DutyDetail(Category: String, PaidAmount: String, DueAmount: String)
+object Prefix {
 
-object DutyDetail {
-  implicit val format: OFormat[DutyDetail] = Json.format[DutyDetail]
-
-  def apply(reclaiming: ReclaimDutyType, paid: DutyPaid): DutyDetail =
-    new DutyDetail(reclaiming.toString, paid.actuallyPaid, paid.dueAmount.toString)
-
+  val currencyPrefix = Some(PrefixOrSuffix(content = Text("£")))
 }

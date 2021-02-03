@@ -20,11 +20,12 @@ import java.time.LocalDate
 
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.UnitSpec
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType.AntiDumping
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ReclaimDutyType.Vat
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ReclaimDutyType.{Customs, Other, Vat}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{
   BankDetails,
   Claim,
   ContactDetails,
+  DutyPaid,
   EntryDetails,
   Address => UkAddress
 }
@@ -36,8 +37,11 @@ class EISCreateCaseRequestSpec extends UnitSpec {
     importerAddress = UkAddress("Import Co Ltd", "Address Line 1", Some("Address Line 2"), "City", "PO12CD"),
     claimType = AntiDumping,
     uploads = Seq.empty,
-    reclaimDutyTypes = Set(Vat),
+    reclaimDutyTypes = Set(Customs, Vat, Other),
     bankDetails = BankDetails("account name", "001122", "12345678"),
+    customsDutyRepayment = Some(DutyPaid("100", "80")),
+    importVatRepayment = Some(DutyPaid("200", "175")),
+    otherDutyRepayment = Some(DutyPaid("10", "5.50")),
     entryDetails = EntryDetails("012", "123456Q", LocalDate.of(2020, 12, 31))
   )
 
@@ -50,7 +54,7 @@ class EISCreateCaseRequestSpec extends UnitSpec {
     EntryProcessingUnit = "012",
     EntryNumber = "123456Q",
     EntryDate = "20201231",
-    DutyDetails = Seq(DutyDetail("02", "0", "0")),
+    DutyDetails = Seq(DutyDetail("01", "100", "20"), DutyDetail("02", "200", "25"), DutyDetail("03", "10", "4.50")),
     PaymentDetails = Some(PaymentDetails("account name", "12345678", "001122")),
     FirstName = "Adam",
     LastName = "Smith"

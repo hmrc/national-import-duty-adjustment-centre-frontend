@@ -21,7 +21,7 @@ import java.time.{LocalDate, LocalDateTime, ZonedDateTime}
 import reactivemongo.bson.BSONObjectID
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.Reference
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType.AntiDumping
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ReclaimDutyType.{Customs, Vat}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ReclaimDutyType.{Customs, Other, Vat}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UpscanNotification.Quarantine
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models._
@@ -40,7 +40,11 @@ trait TestData {
   val uploadAnswer: UploadedFile =
     UploadedFile("reference", "/url", ZonedDateTime.now(), "checksum", "filename", "mime/type")
 
-  val reclaimDutyTypesAnswer: Set[ReclaimDutyType] = Set(Customs, Vat)
+  val reclaimDutyTypesAnswer: Set[ReclaimDutyType] = Set(Customs, Vat, Other)
+
+  val customsDutyRepaymentAnswer: DutyPaid = DutyPaid("100", "9.99")
+  val importVatRepaymentAnswer: DutyPaid   = DutyPaid("100", "9.99")
+  val otherDutyRepaymentAnswer: DutyPaid   = DutyPaid("100", "9.99")
 
   val bankDetailsAnswer: BankDetails = BankDetails("account name", "001100", "12345678")
 
@@ -56,6 +60,9 @@ trait TestData {
     importerAddress = Some(addressAnswer),
     uploads = Some(Seq(uploadAnswer)),
     reclaimDutyTypes = Some(reclaimDutyTypesAnswer),
+    customsDutyRepayment = Some(customsDutyRepaymentAnswer),
+    importVatRepayment = Some(importVatRepaymentAnswer),
+    otherDutyRepayment = Some(otherDutyRepaymentAnswer),
     bankDetails = Some(bankDetailsAnswer),
     entryDetails = Some(entryDetailsAnswer)
   )

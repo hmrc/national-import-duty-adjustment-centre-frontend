@@ -25,6 +25,9 @@ final case class UserAnswers(
   importerAddress: Option[Address] = None,
   claimType: Option[ClaimType] = None,
   reclaimDutyTypes: Option[Set[ReclaimDutyType]] = None,
+  customsDutyRepayment: Option[DutyPaid] = None,
+  importVatRepayment: Option[DutyPaid] = None,
+  otherDutyRepayment: Option[DutyPaid] = None,
   bankDetails: Option[BankDetails] = None,
   entryDetails: Option[EntryDetails] = None,
   uploads: Option[Seq[UploadedFile]] = None

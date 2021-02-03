@@ -14,17 +14,14 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.eis
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models
 
 import play.api.libs.json.{Json, OFormat}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{DutyPaid, ReclaimDutyType}
 
-case class DutyDetail(Category: String, PaidAmount: String, DueAmount: String)
+case class DutyPaid(actuallyPaid: String, shouldHavePaid: String) {
+  val dueAmount: BigDecimal = BigDecimal.apply(actuallyPaid) - BigDecimal.apply(shouldHavePaid)
+}
 
-object DutyDetail {
-  implicit val format: OFormat[DutyDetail] = Json.format[DutyDetail]
-
-  def apply(reclaiming: ReclaimDutyType, paid: DutyPaid): DutyDetail =
-    new DutyDetail(reclaiming.toString, paid.actuallyPaid, paid.dueAmount.toString)
-
+object DutyPaid {
+  implicit val format: OFormat[DutyPaid] = Json.format[DutyPaid]
 }

@@ -24,20 +24,19 @@ import play.api.http.Status
 import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{ControllerSpec, TestData}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.ReclaimDutyTypeFormProvider
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ReclaimDutyType.Customs
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{ReclaimDutyType, UserAnswers}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.ReclaimDutyTypePage
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ReclaimDutyTypePage
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.DutyPaidFormProvider
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{DutyPaid, UserAnswers}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.ImportVatRepaymentPage
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.DutyRepaymentPage
 import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
 
-class ReclaimDutyTypeControllerSpec extends ControllerSpec with TestData {
+class ImportVatRepaymentControllerSpec extends ControllerSpec with TestData {
 
-  private val page         = mock[ReclaimDutyTypePage]
-  private val formProvider = new ReclaimDutyTypeFormProvider
+  private val page         = mock[DutyRepaymentPage]
+  private val formProvider = new DutyPaidFormProvider
 
   private def controller =
-    new ReclaimDutyTypeController(
+    new ImportVatRepaymentController(
       fakeAuthorisedIdentifierAction,
       cacheDataService,
       formProvider,
@@ -48,8 +47,8 @@ class ReclaimDutyTypeControllerSpec extends ControllerSpec with TestData {
 
   override protected def beforeEach(): Unit = {
     super.beforeEach()
-    withEmptyCache
-    when(page.apply(any())(any(), any())).thenReturn(HtmlFormat.empty)
+    withEmptyCache()
+    when(page.apply(any(), any(), any())(any(), any())).thenReturn(HtmlFormat.empty)
   }
 
   override protected def afterEach(): Unit = {
@@ -57,9 +56,9 @@ class ReclaimDutyTypeControllerSpec extends ControllerSpec with TestData {
     super.afterEach()
   }
 
-  def theResponseForm: Form[Set[ReclaimDutyType]] = {
-    val captor = ArgumentCaptor.forClass(classOf[Form[Set[ReclaimDutyType]]])
-    verify(page).apply(captor.capture())(any(), any())
+  def theResponseForm: Form[DutyPaid] = {
+    val captor = ArgumentCaptor.forClass(classOf[Form[DutyPaid]])
+    verify(page).apply(captor.capture(), any(), any())(any(), any())
     captor.getValue
   }
 
@@ -73,17 +72,20 @@ class ReclaimDutyTypeControllerSpec extends ControllerSpec with TestData {
     }
 
     "display page when cache has answer" in {
-      withCacheUserAnswers(UserAnswers(reclaimDutyTypes = Some(reclaimDutyTypesAnswer)))
+      withCacheUserAnswers(UserAnswers(importVatRepayment = Some(importVatRepaymentAnswer)))
       val result = controller.onPageLoad()(fakeGetRequest)
       status(result) mustBe Status.OK
 
-      theResponseForm.value mustBe Some(reclaimDutyTypesAnswer)
+      theResponseForm.value mustBe Some(importVatRepaymentAnswer)
     }
   }
 
   "POST" should {
 
-    val validRequest = postRequest(("reclaimDutyType[]", Customs.toString))
+    val validRequest = postRequest(
+      "actuallyPaid" -> importVatRepaymentAnswer.actuallyPaid,
+      "shouldPaid"   -> importVatRepaymentAnswer.shouldHavePaid
+    )
 
     "update cache and redirect when valid answer is submitted" in {
 
@@ -91,8 +93,8 @@ class ReclaimDutyTypeControllerSpec extends ControllerSpec with TestData {
 
       val result = controller.onSubmit()(validRequest)
       status(result) mustEqual SEE_OTHER
-      theUpdatedUserAnswers.reclaimDutyTypes mustBe Some(Set(Customs))
-      redirectLocation(result) mustBe Some(navigator.nextPage(ReclaimDutyTypePage, theUpdatedUserAnswers).url)
+      theUpdatedUserAnswers.importVatRepayment mustBe Some(importVatRepaymentAnswer)
+      redirectLocation(result) mustBe Some(navigator.nextPage(ImportVatRepaymentPage, theUpdatedUserAnswers).url)
     }
 
     "return 400 (BAD REQUEST) when invalid data posted" in {
