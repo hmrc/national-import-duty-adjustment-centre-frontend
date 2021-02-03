@@ -41,7 +41,7 @@ class CheckYourAnswersController @Inject() (
 
   def onPageLoad(): Action[AnyContent] = identify.async { implicit request =>
     data.getAnswers map { answers =>
-      Ok(checkYourAnswersPage(Claim(request.identifier, answers)))
+      Ok(checkYourAnswersPage(Claim(answers)))
     } recover {
       case _: MissingUserAnswersException =>
         Redirect(controllers.routes.StartController.start())
@@ -50,7 +50,7 @@ class CheckYourAnswersController @Inject() (
 
   def onSubmit(): Action[AnyContent] = identify.async { implicit request =>
     data.getAnswers flatMap { answers =>
-      val claim = Claim(request.identifier, answers)
+      val claim = Claim(answers)
       service.submitClaim(claim) flatMap { response =>
         data.updateResponse(response) map {
           _ => Redirect(routes.ConfirmationController.onPageLoad())

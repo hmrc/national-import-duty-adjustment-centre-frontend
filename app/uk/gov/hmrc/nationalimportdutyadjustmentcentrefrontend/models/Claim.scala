@@ -35,7 +35,7 @@ object Claim {
 
   implicit val format: OFormat[Claim] = Json.format[Claim]
 
-  def apply(id: String, userAnswers: UserAnswers): Claim =
+  def apply(userAnswers: UserAnswers): Claim =
     new Claim(
       contactDetails = userAnswers.contactDetails.getOrElse(missing(ContactDetailsPage)),
       importerAddress = userAnswers.importerAddress.getOrElse(missing(AddressPage)),
