@@ -29,17 +29,17 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class CreateClaimService @Inject() (connector: NIDACConnector)(implicit ec: ExecutionContext) {
 
-  def submitClaim(request: Claim)(implicit hc: HeaderCarrier): Future[CreateClaimResponse] = {
+  def submitClaim(claim: Claim)(implicit hc: HeaderCarrier): Future[CreateClaimResponse] = {
 
     val correlationId = hc.requestId.map(_.value).getOrElse(UUID.randomUUID().toString)
     val eisRequest: EISCreateCaseRequest = EISCreateCaseRequest(
       AcknowledgementReference = correlationId.replace("-", ""),
       ApplicationType = "NIDAC",
       OriginatingSystem = "Digital",
-      Content = EISCreateCaseRequest.Content(request)
+      Content = EISCreateCaseRequest.Content(claim)
     )
 
-    connector.submitClaim(CreateEISClaimRequest(eisRequest, request.uploads), correlationId)
+    connector.submitClaim(CreateEISClaimRequest(eisRequest, claim.uploads), correlationId)
 
   }
 

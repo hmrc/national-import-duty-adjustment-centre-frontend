@@ -52,18 +52,18 @@ object EISCreateCaseRequest {
 
     val entryDataFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd")
 
-    def apply(request: Claim): Content =
+    def apply(claim: Claim): Content =
       Content(
-        ClaimType = request.claimType.toString,
-        ImporterDetails = ImporterDetails(request.contactDetails, request.importerAddress),
-        EntryProcessingUnit = request.entryDetails.entryProcessingUnit,
-        EntryNumber = request.entryDetails.entryNumber,
-        EntryDate = entryDataFormatter.format(request.entryDetails.entryDate),
+        ClaimType = claim.claimType.toString,
+        ImporterDetails = ImporterDetails(claim.contactDetails, claim.importerAddress),
+        EntryProcessingUnit = claim.entryDetails.entryProcessingUnit,
+        EntryNumber = claim.entryDetails.entryNumber,
+        EntryDate = entryDataFormatter.format(claim.entryDetails.entryDate),
         // TODO - remove hard-coded values for paid and due amounts
-        DutyDetails = request.reclaimDutyTypes.map(value => DutyDetail(value.toString, "0", "0")).toSeq,
-        PaymentDetails = request.bankDetails.map(PaymentDetails(_)),
-        FirstName = request.contactDetails.firstName,
-        LastName = request.contactDetails.lastName
+        DutyDetails = claim.reclaimDutyTypes.map(value => DutyDetail(value.toString, "0", "0")).toSeq,
+        PaymentDetails = claim.bankDetails.map(PaymentDetails(_)),
+        FirstName = claim.contactDetails.firstName,
+        LastName = claim.contactDetails.lastName
       )
 
   }
