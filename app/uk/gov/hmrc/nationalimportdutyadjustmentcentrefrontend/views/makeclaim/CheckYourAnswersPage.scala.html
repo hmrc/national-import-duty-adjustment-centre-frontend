@@ -123,7 +123,7 @@
                     content = Text(messages("check_answers.repayment.reclaimDutyType"))
                 ),
                 value = Value(
-                    content = HtmlContent(claim.reclaimDutyTypes.map(dutyType => MessageKey.apply("check_answers.repayment.reclaimDutyType", dutyType.toString)).mkString(", "))
+                    content = HtmlContent(claim.reclaimDutyPayments.keys.map(dutyType => MessageKey.apply("check_answers.repayment.reclaimDutyType", dutyType)).mkString(", "))
                 ),
                 actions = None
             )),

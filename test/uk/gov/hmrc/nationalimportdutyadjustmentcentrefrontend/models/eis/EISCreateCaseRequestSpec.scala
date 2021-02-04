@@ -37,11 +37,9 @@ class EISCreateCaseRequestSpec extends UnitSpec {
     importerAddress = UkAddress("Import Co Ltd", "Address Line 1", Some("Address Line 2"), "City", "PO12CD"),
     claimType = AntiDumping,
     uploads = Seq.empty,
-    reclaimDutyTypes = Set(Customs, Vat, Other),
+    reclaimDutyPayments =
+      Map(Customs -> DutyPaid("100", "80"), Vat -> DutyPaid("200", "175"), Other -> DutyPaid("10", "5.50")),
     bankDetails = BankDetails("account name", "001122", "12345678"),
-    customsDutyRepayment = Some(DutyPaid("100", "80")),
-    importVatRepayment = Some(DutyPaid("200", "175")),
-    otherDutyRepayment = Some(DutyPaid("10", "5.50")),
     entryDetails = EntryDetails("012", "123456Q", LocalDate.of(2020, 12, 31))
   )
 

@@ -18,6 +18,7 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.eis
 
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, UnitSpec}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.Claim
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ReclaimDutyType.{Customs, Other, Vat}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.exceptions.MissingUserAnswersException
 
 class ClaimSpec extends UnitSpec with TestData {
@@ -29,24 +30,24 @@ class ClaimSpec extends UnitSpec with TestData {
       "reclaim Customs Duty specified but no calculations present" in {
 
         intercept[MissingUserAnswersException] {
-          Claim(completeAnswers.copy(customsDutyRepayment = None))
-        }.getMessage mustBe "missing answer - CustomsDutyRepaymentPage"
+          Claim(completeAnswers.copy(reclaimDutyPayments = reclaimDutyPayments - Customs))
+        }.getMessage mustBe s"Missing answer - DutyPayment $Customs"
 
       }
 
       "reclaim Import VAT specified but no calculations present" in {
 
         intercept[MissingUserAnswersException] {
-          Claim(completeAnswers.copy(importVatRepayment = None))
-        }.getMessage mustBe "missing answer - ImportVatRepaymentPage"
+          Claim(completeAnswers.copy(reclaimDutyPayments = reclaimDutyPayments - Vat))
+        }.getMessage mustBe s"Missing answer - DutyPayment $Vat"
 
       }
 
       "reclaim Other Duty specified but no calculations present" in {
 
         intercept[MissingUserAnswersException] {
-          Claim(completeAnswers.copy(otherDutyRepayment = None))
-        }.getMessage mustBe "missing answer - OtherDutyRepaymentPage"
+          Claim(completeAnswers.copy(reclaimDutyPayments = reclaimDutyPayments - Other))
+        }.getMessage mustBe s"Missing answer - DutyPayment $Other"
 
       }
     }

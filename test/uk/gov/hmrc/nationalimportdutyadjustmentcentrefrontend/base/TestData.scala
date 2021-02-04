@@ -22,9 +22,9 @@ import reactivemongo.bson.BSONObjectID
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.Reference
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType.AntiDumping
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ReclaimDutyType.{Customs, Other, Vat}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UpscanNotification.Quarantine
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan._
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.UploadDetails
 
 trait TestData {
@@ -46,6 +46,12 @@ trait TestData {
   val importVatRepaymentAnswer: DutyPaid   = DutyPaid("100", "9.99")
   val otherDutyRepaymentAnswer: DutyPaid   = DutyPaid("100", "9.99")
 
+  val reclaimDutyPayments = Map(
+    Customs.toString -> customsDutyRepaymentAnswer,
+    Vat.toString     -> importVatRepaymentAnswer,
+    Other.toString   -> otherDutyRepaymentAnswer
+  )
+
   val bankDetailsAnswer: BankDetails = BankDetails("account name", "001100", "12345678")
 
   val contactDetailsAnswer: ContactDetails = ContactDetails("Jane", "Doe", "jane@example.com", "01234567890")
@@ -60,9 +66,7 @@ trait TestData {
     importerAddress = Some(addressAnswer),
     uploads = Some(Seq(uploadAnswer)),
     reclaimDutyTypes = Some(reclaimDutyTypesAnswer),
-    customsDutyRepayment = Some(customsDutyRepaymentAnswer),
-    importVatRepayment = Some(importVatRepaymentAnswer),
-    otherDutyRepayment = Some(otherDutyRepaymentAnswer),
+    reclaimDutyPayments = reclaimDutyPayments,
     bankDetails = Some(bankDetailsAnswer),
     entryDetails = Some(entryDetailsAnswer)
   )

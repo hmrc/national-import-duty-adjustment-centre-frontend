@@ -42,13 +42,13 @@ class NavigatorSpec extends UnitSpec with Injector with TestData {
     "redirect to the correct repayment calculation page" when {
 
       "user has requested Customs Duty repayment" in {
-        nextPage(ReclaimDutyTypePage, Customs, Vat, Other) mustBe routes.CustomsDutyRepaymentController.onPageLoad()
+        nextPage(ReclaimDutyTypePage, Customs, Vat, Other) mustBe routes.DutyRepaymentController.onPageLoadCustomsDuty()
       }
       "user has requested Import VAT repayment" in {
-        nextPage(ReclaimDutyTypePage, Vat, Other) mustBe routes.ImportVatRepaymentController.onPageLoad()
+        nextPage(ReclaimDutyTypePage, Vat, Other) mustBe routes.DutyRepaymentController.onPageLoadImportVat()
       }
       "user has requested Other Duty repayment" in {
-        nextPage(ReclaimDutyTypePage, Other) mustBe routes.OtherDutyRepaymentController.onPageLoad()
+        nextPage(ReclaimDutyTypePage, Other) mustBe routes.DutyRepaymentController.onPageLoadOtherDuty()
       }
     }
   }
@@ -61,10 +61,15 @@ class NavigatorSpec extends UnitSpec with Injector with TestData {
         nextPage(CustomsDutyRepaymentPage, Customs) mustBe routes.BankDetailsController.onPageLoad()
       }
       "user has requested Import VAT repayment" in {
-        nextPage(CustomsDutyRepaymentPage, Customs, Vat, Other) mustBe routes.ImportVatRepaymentController.onPageLoad()
+        nextPage(
+          CustomsDutyRepaymentPage,
+          Customs,
+          Vat,
+          Other
+        ) mustBe routes.DutyRepaymentController.onPageLoadImportVat()
       }
       "user has requested Other Duty repayment" in {
-        nextPage(CustomsDutyRepaymentPage, Customs, Other) mustBe routes.OtherDutyRepaymentController.onPageLoad()
+        nextPage(CustomsDutyRepaymentPage, Customs, Other) mustBe routes.DutyRepaymentController.onPageLoadOtherDuty()
       }
     }
   }
@@ -77,7 +82,7 @@ class NavigatorSpec extends UnitSpec with Injector with TestData {
         nextPage(ImportVatRepaymentPage, Vat) mustBe routes.BankDetailsController.onPageLoad()
       }
       "user has requested Other Duty repayment" in {
-        nextPage(ImportVatRepaymentPage, Vat, Other) mustBe routes.OtherDutyRepaymentController.onPageLoad()
+        nextPage(ImportVatRepaymentPage, Vat, Other) mustBe routes.DutyRepaymentController.onPageLoadOtherDuty()
       }
     }
   }

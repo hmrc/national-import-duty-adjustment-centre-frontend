@@ -25,6 +25,6 @@ object DutyDetail {
   implicit val format: OFormat[DutyDetail] = Json.format[DutyDetail]
 
   def apply(reclaiming: ReclaimDutyType, paid: DutyPaid): DutyDetail =
-    new DutyDetail(reclaiming.toString, paid.actuallyPaid, paid.dueAmount.toString)
+    new DutyDetail(reclaiming, paid.actuallyPaid, paid.dueAmount.toString)
 
 }

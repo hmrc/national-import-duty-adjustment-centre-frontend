@@ -33,7 +33,7 @@ class DutyRepaymentPageViewSpec extends UnitViewSpec with TestData {
   private def view(
     messagePrefix: String,
     form: Form[DutyPaid] = form,
-    submit: Call = routes.CustomsDutyRepaymentController.onSubmit()
+    submit: Call = routes.DutyRepaymentController.onSubmitCustomsDuty()
   ): Document = page(form, submit, messagePrefix)
 
   private val messagePrefixs = Seq("customsDutyPaid", "importVatPaid", "otherDutyPaid")

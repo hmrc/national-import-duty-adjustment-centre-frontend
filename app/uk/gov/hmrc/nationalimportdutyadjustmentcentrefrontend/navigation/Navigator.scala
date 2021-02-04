@@ -43,19 +43,19 @@ class Navigator @Inject() () {
 
   private def reclaimDutyTypeNextPage(answers: UserAnswers) = answers.reclaimDutyTypes match {
     case Some(duties) if duties.contains(Customs) =>
-      controllers.makeclaim.routes.CustomsDutyRepaymentController.onPageLoad()
+      controllers.makeclaim.routes.DutyRepaymentController.onPageLoadCustomsDuty()
     case _ => customsDutyRepaymentNextPage(answers)
   }
 
   private def customsDutyRepaymentNextPage(answers: UserAnswers) = answers.reclaimDutyTypes match {
     case Some(duties) if duties.contains(Vat) =>
-      controllers.makeclaim.routes.ImportVatRepaymentController.onPageLoad()
+      controllers.makeclaim.routes.DutyRepaymentController.onPageLoadImportVat()
     case _ => importVatRepaymentNextPage(answers)
   }
 
   private def importVatRepaymentNextPage(answers: UserAnswers) = answers.reclaimDutyTypes match {
     case Some(duties) if duties.contains(Other) =>
-      controllers.makeclaim.routes.OtherDutyRepaymentController.onPageLoad()
+      controllers.makeclaim.routes.DutyRepaymentController.onPageLoadOtherDuty()
     case _ => controllers.makeclaim.routes.BankDetailsController.onPageLoad()
   }
 

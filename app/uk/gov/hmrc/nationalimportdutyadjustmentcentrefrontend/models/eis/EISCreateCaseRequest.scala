@@ -19,8 +19,7 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.eis
 import java.time.format.DateTimeFormatter
 
 import play.api.libs.json.{Format, Json}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ReclaimDutyType.{Customs, Other, Vat}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{Claim, ReclaimDutyType}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.Claim
 
 /**
   * Create specified case in the PEGA system.
@@ -53,27 +52,18 @@ object EISCreateCaseRequest {
 
     val entryDataFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd")
 
-    def apply(claim: Claim): Content = {
-
-      def dutyDetail(dutyType: ReclaimDutyType) = dutyType match {
-        case Customs => claim.customsDutyRepayment.map(paid => DutyDetail(Customs, paid))
-        case Vat     => claim.importVatRepayment.map(paid => DutyDetail(Vat, paid))
-        case Other   => claim.otherDutyRepayment.map(paid => DutyDetail(Other, paid))
-      }
-
+    def apply(claim: Claim): Content =
       Content(
         ClaimType = claim.claimType.toString,
         ImporterDetails = ImporterDetails(claim.contactDetails, claim.importerAddress),
         EntryProcessingUnit = claim.entryDetails.entryProcessingUnit,
         EntryNumber = claim.entryDetails.entryNumber,
         EntryDate = entryDataFormatter.format(claim.entryDetails.entryDate),
-        DutyDetails = claim.reclaimDutyTypes.flatMap(dutyDetail).toSeq,
+        DutyDetails = claim.reclaimDutyPayments.map(entry => DutyDetail(entry._1, entry._2)).toSeq,
         PaymentDetails = Some(PaymentDetails(claim.bankDetails)),
         FirstName = claim.contactDetails.firstName,
         LastName = claim.contactDetails.lastName
       )
-
-    }
 
   }
 

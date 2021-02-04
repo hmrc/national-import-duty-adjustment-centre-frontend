@@ -63,6 +63,8 @@ reclaimDutyType.error.required = Select what you want to reclaim
 dutyPaid.actual.error.required = Enter an amount that was paid
 dutyPaid.should.error.required = Enter an amount that should have been paid
 dutyPaid.error.invalid = Enter an amount in the correct format
+dutyPaid.actual.error.zero = The amount paid must be higher than £0
+dutyPaid.should.error.zero = The amount that should have been paid must be greater than £0
 dutyPaid.amounts.error.same = The amount that should have been paid cannot be equal to the amount paid
 dutyPaid.amounts.error.greater = The amount that should have been paid cannot be more than the amount paid
 
