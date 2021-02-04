@@ -38,7 +38,7 @@ class EISCreateCaseRequestSpec extends UnitSpec {
     claimType = AntiDumping,
     uploads = Seq.empty,
     reclaimDutyPayments =
-      Map(Customs -> DutyPaid("100", "80"), Vat -> DutyPaid("200", "175"), Other -> DutyPaid("10", "5.50")),
+      Map(Customs -> DutyPaid("100", "80"), Vat -> DutyPaid("200.10", "175"), Other -> DutyPaid("10", "5.50")),
     bankDetails = BankDetails("account name", "001122", "12345678"),
     entryDetails = EntryDetails("012", "123456Q", LocalDate.of(2020, 12, 31))
   )
@@ -52,7 +52,8 @@ class EISCreateCaseRequestSpec extends UnitSpec {
     EntryProcessingUnit = "012",
     EntryNumber = "123456Q",
     EntryDate = "20201231",
-    DutyDetails = Seq(DutyDetail("01", "100", "20"), DutyDetail("02", "200", "25"), DutyDetail("03", "10", "4.50")),
+    DutyDetails =
+      Seq(DutyDetail("01", "100.00", "20.00"), DutyDetail("02", "200.10", "25.10"), DutyDetail("03", "10.00", "4.50")),
     PaymentDetails = Some(PaymentDetails("account name", "12345678", "001122")),
     FirstName = "Adam",
     LastName = "Smith"
