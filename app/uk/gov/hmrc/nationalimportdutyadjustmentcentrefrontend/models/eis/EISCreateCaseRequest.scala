@@ -16,7 +16,6 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.eis
 
-import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 import play.api.libs.json.{Format, Json}
@@ -46,6 +45,7 @@ object EISCreateCaseRequest {
     DutyDetails: Seq[DutyDetail],
     PayTo: String,
     PaymentDetails: Option[PaymentDetails],
+    ClaimReason: String,
     FirstName: String,
     LastName: String,
     SubmissionDate: String
@@ -58,15 +58,16 @@ object EISCreateCaseRequest {
 
     def apply(claim: Claim): Content =
       Content(
-        RepresentationType = "Importer", // NF-204 - hard code values
+        RepresentationType = "Importer", // TODO NF-204 - hard code values
         ClaimType = claim.claimType.toString,
         ImporterDetails = ImporterDetails(claim.contactDetails, claim.importerAddress),
         EntryProcessingUnit = claim.entryDetails.entryProcessingUnit,
         EntryNumber = claim.entryDetails.entryNumber,
         EntryDate = eisDateFormatter.format(claim.entryDetails.entryDate),
         DutyDetails = claim.reclaimDutyPayments.map(entry => DutyDetail(entry._1, entry._2)).toSeq,
-        PayTo = "Importer", // NF-204 - hard code values
+        PayTo = "Importer", // TODO NF-204 - hard code values
         PaymentDetails = Some(PaymentDetails(claim.bankDetails)),
+        ClaimReason = "TBC", // TODO NF-204 - hard code values
         FirstName = claim.contactDetails.firstName,
         LastName = claim.contactDetails.lastName,
         SubmissionDate = eisDateFormatter.format(claim.submissionDate)

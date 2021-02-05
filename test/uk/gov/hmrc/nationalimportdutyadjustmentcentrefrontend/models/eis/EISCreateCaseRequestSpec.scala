@@ -58,6 +58,7 @@ class EISCreateCaseRequestSpec extends UnitSpec {
       Seq(DutyDetail("01", "100.00", "20.00"), DutyDetail("02", "200.10", "25.10"), DutyDetail("03", "10.00", "4.50")),
     PayTo = "Importer",
     PaymentDetails = Some(PaymentDetails("account name", "12345678", "001122")),
+    ClaimReason = "TBC",
     FirstName = "Adam",
     LastName = "Smith",
     SubmissionDate = "20210131"
