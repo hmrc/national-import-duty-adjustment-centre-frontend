@@ -68,7 +68,9 @@ class Navigator @Inject() () {
 
   def nextPage(page: Page, userAnswers: UserAnswers): Call = {
     val existing      = normalRoutes(page, userAnswers)
-    val reimplemented = viewFor(nextPageFor(page, userAnswers))
+    val reimplemented = viewFor(nextPageFor(pageOrder, page, userAnswers)).getOrElse(
+      throw new IllegalStateException(s"No page after $page")
+    )
     if (existing != reimplemented)
       throw new IllegalStateException("New implementation did not return same result as old one")
     reimplemented
@@ -102,32 +104,30 @@ class Navigator @Inject() () {
     P(ConfirmationPage, makeclaim.routes.ConfirmationController.onPageLoad, always)
   )
 
-  private def nextPageFor(currentPage: Page, userAnswers: UserAnswers): Page =
-    after(currentPage)
-      .find(_.canAccessGiven(userAnswers))
-      .getOrElse(
-        throw new IllegalStateException(s"Could not find next page for: $currentPage")
-      ) // TODO improve handling/messaging here?
-      .page
-
-  private def viewFor(page: Page): Call =
-    pageOrder
-      .find(_.page == page)
-      .getOrElse(throw new IllegalStateException(s"Unknown page: $page")) // TODO improve handling/messaging here?
-      .destination()
+  private val reversePageOrder = pageOrder.reverse
 
   // TODO use this to generate href for <a class="govuk-back-link">Back</a> links
-  def previousPage(currentPage: Page, userAnswers: UserAnswers): Call = {
-    val previous: Page = before(currentPage)
-      .filter(_.canAccessGiven(userAnswers))
-      .reverse
-      .find(candidate => nextPageFor(candidate.page, userAnswers) == currentPage)
+  def previousPage(currentPage: Page, userAnswers: UserAnswers): Call =
+    viewFor(nextPageFor(reversePageOrder, currentPage, userAnswers)).getOrElse(
+      throw new IllegalStateException(s"No page before $currentPage - consider returning Option[Call]")
+    )
+
+
+  private def nextPageFor(pages: Seq[P], currentPage: Page, userAnswers: UserAnswers): Option[Page] =
+    after(pages, currentPage)
+      .find(_.canAccessGiven(userAnswers))
       .map(_.page)
-      .getOrElse(throw new IllegalStateException("Maybe this should return an optional and we don't render a backlink"))
 
-    viewFor(previous)
+  private def viewFor(page: Option[Page]): Option[Call] =
+    page.flatMap(
+      p =>
+        pageOrder
+          .find(_.page == p)
+          .map(_.destination())
+    )
+
+  private def after(pages: Seq[P], page: Page): Seq[P] = pages.span(_.page != page)._2 match {
+    case s if s.isEmpty => Seq.empty
+    case s              => s.tail
   }
-
-  private def before(page: Page): Seq[P] = pageOrder.take(pageOrder.map(_.page).indexOf(page))
-  private def after(page: Page): Seq[P]  = pageOrder.drop(pageOrder.map(_.page).indexOf(page) + 1)
 }
