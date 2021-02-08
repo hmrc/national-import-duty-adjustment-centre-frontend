@@ -23,7 +23,11 @@ import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.play.bootstrap.frontend.filters.SessionTimeoutFilterConfig
 
 @Singleton
-class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig, sessionTimeoutConfig: SessionTimeoutFilterConfig) {
+class AppConfig @Inject() (
+  config: Configuration,
+  servicesConfig: ServicesConfig,
+  sessionTimeoutConfig: SessionTimeoutFilterConfig
+) {
 
   case class Upscan(
     callbackBase: String,
