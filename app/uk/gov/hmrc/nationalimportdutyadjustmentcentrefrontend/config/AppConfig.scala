@@ -20,9 +20,10 @@ import javax.inject.{Inject, Singleton}
 import play.api.Configuration
 import play.api.i18n.Lang
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
+import uk.gov.hmrc.play.bootstrap.frontend.filters.SessionTimeoutFilterConfig
 
 @Singleton
-class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig) {
+class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig, sessionTimeoutConfig: SessionTimeoutFilterConfig) {
 
   case class Upscan(
     callbackBase: String,
@@ -44,8 +45,12 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
   val loginContinueUrl: String = loadConfig("urls.loginContinue")
   val signOutUrl: String       = loadConfig("urls.signout")
 
-  val timeoutDialogTimeout: Int   = servicesConfig.getInt("timeoutDialog.timeoutSeconds")
+  private val sessionTimeoutSeconds: Int = sessionTimeoutConfig.timeoutDuration.getSeconds.toInt
+
+  val timeoutDialogTimeout: Int   = sessionTimeoutSeconds
   val timeoutDialogCountdown: Int = servicesConfig.getInt("timeoutDialog.countdownSeconds")
+
+  val mongoTimeToLiveInSeconds: Int = sessionTimeoutSeconds + 60
 
   val nidacServiceBaseUrl: String = servicesConfig.baseUrl("national-import-duty-adjustment-centre")
   val upscanInitiateV2Url: String = servicesConfig.baseUrl("upscan-initiate") + "/upscan/v2/initiate"
