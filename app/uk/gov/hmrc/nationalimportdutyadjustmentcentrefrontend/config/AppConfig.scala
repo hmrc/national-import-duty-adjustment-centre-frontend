@@ -40,9 +40,12 @@ class AppConfig @Inject() (config: Configuration, servicesConfig: ServicesConfig
   val cy: String            = "cy"
   val defaultLanguage: Lang = Lang(en)
 
-  lazy val loginUrl: String         = loadConfig("urls.login")
-  lazy val loginContinueUrl: String = loadConfig("urls.loginContinue")
-  lazy val signOutUrl: String       = loadConfig("urls.signout")
+  val loginUrl: String         = loadConfig("urls.login")
+  val loginContinueUrl: String = loadConfig("urls.loginContinue")
+  val signOutUrl: String       = loadConfig("urls.signout")
+
+  val timeoutDialogTimeout: Int   = servicesConfig.getInt("timeoutDialog.timeoutSeconds")
+  val timeoutDialogCountdown: Int = servicesConfig.getInt("timeoutDialog.countdownSeconds")
 
   val nidacServiceBaseUrl: String = servicesConfig.baseUrl("national-import-duty-adjustment-centre")
   val upscanInitiateV2Url: String = servicesConfig.baseUrl("upscan-initiate") + "/upscan/v2/initiate"
