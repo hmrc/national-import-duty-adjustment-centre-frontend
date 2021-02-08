@@ -20,15 +20,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, Un
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.routes
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ReclaimDutyType.{Customs, Other, Vat}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{ReclaimDutyType, UserAnswers}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{
-  AddressPage,
-  BankDetailsPage,
-  CustomsDutyRepaymentPage,
-  ImportVatRepaymentPage,
-  OtherDutyRepaymentPage,
-  Page,
-  ReclaimDutyTypePage
-}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.utils.Injector
 
 class NavigatorSpec extends UnitSpec with Injector with TestData {
@@ -38,257 +30,141 @@ class NavigatorSpec extends UnitSpec with Injector with TestData {
   private def answers(reclaim: ReclaimDutyType*): UserAnswers =
     completeAnswers.copy(reclaimDutyTypes = Some(Set(reclaim: _*)))
 
-  private def nextPage(page: Page, reclaim: ReclaimDutyType*) =
-    navigator.nextPage(page, answers(reclaim: _*))
-
-  "Navigator on leaving ReclaimDutyTypePage" should {
-
-    "redirect to the correct repayment calculation page" when {
-
-      "user has requested Customs Duty repayment" in {
-        nextPage(ReclaimDutyTypePage, Customs, Vat, Other) mustBe routes.DutyRepaymentController.onPageLoadCustomsDuty()
-      }
-      "user has requested Import VAT repayment" in {
-        nextPage(ReclaimDutyTypePage, Vat, Other) mustBe routes.DutyRepaymentController.onPageLoadImportVat()
-      }
-      "user has requested Other Duty repayment" in {
-        nextPage(ReclaimDutyTypePage, Other) mustBe routes.DutyRepaymentController.onPageLoadOtherDuty()
-      }
-    }
-  }
-
-  "Navigator on leaving CustomsDutyRepaymentPage" should {
-
-    "redirect to the correct repayment calculation page" when {
-
-      "user has ONLY requested Customs Duty repayment" in {
-        nextPage(CustomsDutyRepaymentPage, Customs) mustBe routes.UploadFormController.onPageLoad()
-      }
-      "user has requested Import VAT repayment" in {
-        nextPage(
-          CustomsDutyRepaymentPage,
-          Customs,
-          Vat,
-          Other
-        ) mustBe routes.DutyRepaymentController.onPageLoadImportVat()
-      }
-      "user has requested Other Duty repayment" in {
-        nextPage(CustomsDutyRepaymentPage, Customs, Other) mustBe routes.DutyRepaymentController.onPageLoadOtherDuty()
-      }
-    }
-  }
-
-  "Navigator on leaving ImportVatRepaymentPage" should {
-
-    "redirect to the correct repayment calculation page" when {
-
-      "user has ONLY requested Import VAT repayment" in {
-        nextPage(ImportVatRepaymentPage, Vat) mustBe routes.UploadFormController.onPageLoad()
-      }
-      "user has requested Other Duty repayment" in {
-        nextPage(ImportVatRepaymentPage, Vat, Other) mustBe routes.DutyRepaymentController.onPageLoadOtherDuty()
-      }
-    }
-  }
-
   "Navigator from address page" when {
+    val nextPage     = navigator.nextPage(AddressPage, _)
+    val previousPage = navigator.previousPage(AddressPage, _)
+
     "going forward" should {
       "go to bank details page" in {
-        navigator.nextPage(AddressPage, answers()) mustBe routes.BankDetailsController.onPageLoad()
+        nextPage(answers()) mustBe routes.BankDetailsController.onPageLoad()
       }
     }
     "going back" should {
       "go to contact details page" in {
-        navigator.previousPage(AddressPage, answers()) mustBe routes.ContactDetailsController.onPageLoad()
+        previousPage(answers()) mustBe routes.ContactDetailsController.onPageLoad()
       }
     }
   }
 
   "Navigator from duty types page" when {
+    val nextPage     = navigator.nextPage(ReclaimDutyTypePage, _)
+    val previousPage = navigator.previousPage(ReclaimDutyTypePage, _)
+
     "going forward" should {
       "go to customs duty page when Customs duty type selected" in {
-        navigator.nextPage(
-          ReclaimDutyTypePage,
-          answers(Customs)
-        ) mustBe routes.DutyRepaymentController.onPageLoadCustomsDuty()
-        navigator.nextPage(
-          ReclaimDutyTypePage,
-          answers(Customs, Vat)
-        ) mustBe routes.DutyRepaymentController.onPageLoadCustomsDuty()
-        navigator.nextPage(
-          ReclaimDutyTypePage,
-          answers(Customs, Other)
-        ) mustBe routes.DutyRepaymentController.onPageLoadCustomsDuty()
-        navigator.nextPage(
-          ReclaimDutyTypePage,
-          answers(Customs, Vat, Other)
-        ) mustBe routes.DutyRepaymentController.onPageLoadCustomsDuty()
+        nextPage(answers(Customs)) mustBe routes.DutyRepaymentController.onPageLoadCustomsDuty()
+        nextPage(answers(Customs, Vat)) mustBe routes.DutyRepaymentController.onPageLoadCustomsDuty()
+        nextPage(answers(Customs, Other)) mustBe routes.DutyRepaymentController.onPageLoadCustomsDuty()
+        nextPage(answers(Customs, Vat, Other)) mustBe routes.DutyRepaymentController.onPageLoadCustomsDuty()
       }
       "go to vat duty page when VAT duty type selected (and Customs duty type not selected)" in {
-        navigator.nextPage(
-          ReclaimDutyTypePage,
-          answers(Vat)
-        ) mustBe routes.DutyRepaymentController.onPageLoadImportVat()
-        navigator.nextPage(
-          ReclaimDutyTypePage,
-          answers(Vat, Other)
-        ) mustBe routes.DutyRepaymentController.onPageLoadImportVat()
+        nextPage(answers(Vat)) mustBe routes.DutyRepaymentController.onPageLoadImportVat()
+        nextPage(answers(Vat, Other)) mustBe routes.DutyRepaymentController.onPageLoadImportVat()
       }
       "go to vat duty page when only OTHER duty type selected" in {
-        navigator.nextPage(
-          ReclaimDutyTypePage,
-          answers(Other)
-        ) mustBe routes.DutyRepaymentController.onPageLoadOtherDuty()
+        nextPage(answers(Other)) mustBe routes.DutyRepaymentController.onPageLoadOtherDuty()
       }
     }
     "going back" should {
       "go to item number page" in {
-        navigator.previousPage(ReclaimDutyTypePage, answers()) mustBe routes.ItemNumbersController.onPageLoad()
+        previousPage(answers()) mustBe routes.ItemNumbersController.onPageLoad()
       }
     }
   }
 
   "Navigator from Customs duty page" when {
+    val nextPage     = navigator.nextPage(CustomsDutyRepaymentPage, _)
+    val previousPage = navigator.previousPage(CustomsDutyRepaymentPage, _)
+
     "going forward" should {
-      "go to VAT duty page when VAT duty type selected" in {
-        navigator.nextPage(
-          CustomsDutyRepaymentPage,
-          answers(Customs, Vat)
-        ) mustBe routes.DutyRepaymentController.onPageLoadImportVat()
-        navigator.nextPage(
-          CustomsDutyRepaymentPage,
-          answers(Customs, Vat, Other)
-        ) mustBe routes.DutyRepaymentController.onPageLoadImportVat()
+      "go to vat duty page when VAT duty type selected" in {
+        nextPage(answers(Customs, Vat)) mustBe routes.DutyRepaymentController.onPageLoadImportVat()
+        nextPage(answers(Customs, Vat, Other)) mustBe routes.DutyRepaymentController.onPageLoadImportVat()
       }
-      "go to Other duty page when Other duty selected and VAT duty not selected" in {
-        navigator.nextPage(
-          CustomsDutyRepaymentPage,
-          answers(Customs, Other)
-        ) mustBe routes.DutyRepaymentController.onPageLoadOtherDuty()
+      "go to other duty page when Other duty selected and VAT duty not selected" in {
+        nextPage(answers(Customs, Other)) mustBe routes.DutyRepaymentController.onPageLoadOtherDuty()
       }
       "go to upload page when neither VAT or Other duty selected" in {
-        navigator.nextPage(CustomsDutyRepaymentPage, answers(Customs)) mustBe routes.UploadFormController.onPageLoad()
+        nextPage(answers(Customs)) mustBe routes.UploadFormController.onPageLoad()
       }
     }
     "going back" should {
       "go to duty types page" in {
-        navigator.previousPage(
-          CustomsDutyRepaymentPage,
-          answers(Customs)
-        ) mustBe routes.ReclaimDutyTypeController.onPageLoad()
-        navigator.previousPage(
-          CustomsDutyRepaymentPage,
-          answers(Customs, Vat)
-        ) mustBe routes.ReclaimDutyTypeController.onPageLoad()
-        navigator.previousPage(
-          CustomsDutyRepaymentPage,
-          answers(Customs, Vat, Other)
-        ) mustBe routes.ReclaimDutyTypeController.onPageLoad()
-        navigator.previousPage(
-          CustomsDutyRepaymentPage,
-          answers(Customs, Other)
-        ) mustBe routes.ReclaimDutyTypeController.onPageLoad()
+        previousPage(answers(Customs)) mustBe routes.ReclaimDutyTypeController.onPageLoad()
+        previousPage(answers(Customs, Vat)) mustBe routes.ReclaimDutyTypeController.onPageLoad()
+        previousPage(answers(Customs, Vat, Other)) mustBe routes.ReclaimDutyTypeController.onPageLoad()
+        previousPage(answers(Customs, Other)) mustBe routes.ReclaimDutyTypeController.onPageLoad()
       }
     }
   }
 
   "Navigator from VAT duty page" when {
+    val nextPage     = navigator.nextPage(ImportVatRepaymentPage, _)
+    val previousPage = navigator.previousPage(ImportVatRepaymentPage, _)
+
     "going forward" should {
       "go to other duty page when Other duty type selected" in {
-        navigator.nextPage(
-          ImportVatRepaymentPage,
-          answers(Customs, Vat, Other)
-        ) mustBe routes.DutyRepaymentController.onPageLoadOtherDuty()
-        navigator.nextPage(
-          ImportVatRepaymentPage,
-          answers(Vat, Other)
-        ) mustBe routes.DutyRepaymentController.onPageLoadOtherDuty()
+        nextPage(answers(Customs, Vat, Other)) mustBe routes.DutyRepaymentController.onPageLoadOtherDuty()
+        nextPage(answers(Vat, Other)) mustBe routes.DutyRepaymentController.onPageLoadOtherDuty()
       }
       "go to upload page when Other duty not selected" in {
-        navigator.nextPage(
-          ImportVatRepaymentPage,
-          answers(Customs, Vat)
-        ) mustBe routes.UploadFormController.onPageLoad()
-        navigator.nextPage(ImportVatRepaymentPage, answers(Vat)) mustBe routes.UploadFormController.onPageLoad()
+        nextPage(answers(Customs, Vat)) mustBe routes.UploadFormController.onPageLoad()
+        nextPage(answers(Vat)) mustBe routes.UploadFormController.onPageLoad()
       }
     }
     "going back" should {
       "go to customs duty page when Customs duty type selected" in {
-        navigator.previousPage(
-          ImportVatRepaymentPage,
-          answers(Customs, Vat)
-        ) mustBe routes.DutyRepaymentController.onPageLoadCustomsDuty()
-        navigator.previousPage(
-          ImportVatRepaymentPage,
-          answers(Customs, Vat, Other)
-        ) mustBe routes.DutyRepaymentController.onPageLoadCustomsDuty()
+        previousPage(answers(Customs, Vat)) mustBe routes.DutyRepaymentController.onPageLoadCustomsDuty()
+        previousPage(answers(Customs, Vat, Other)) mustBe routes.DutyRepaymentController.onPageLoadCustomsDuty()
       }
 
       "go to duty types page when Customs duty type not selected" in {
-        navigator.previousPage(
-          ImportVatRepaymentPage,
-          answers(Vat)
-        ) mustBe routes.ReclaimDutyTypeController.onPageLoad()
-        navigator.previousPage(
-          ImportVatRepaymentPage,
-          answers(Vat, Other)
-        ) mustBe routes.ReclaimDutyTypeController.onPageLoad()
+        previousPage(answers(Vat)) mustBe routes.ReclaimDutyTypeController.onPageLoad()
+        previousPage(answers(Vat, Other)) mustBe routes.ReclaimDutyTypeController.onPageLoad()
       }
     }
   }
 
   "Navigator from Other duty page" when {
+    val nextPage     = navigator.nextPage(OtherDutyRepaymentPage, _)
+    val previousPage = navigator.previousPage(OtherDutyRepaymentPage, _)
+
     "going forward" should {
       "go to upload page" in {
-        navigator.nextPage(
-          OtherDutyRepaymentPage,
-          answers(Customs, Other)
-        ) mustBe routes.UploadFormController.onPageLoad()
-        navigator.nextPage(OtherDutyRepaymentPage, answers(Vat, Other)) mustBe routes.UploadFormController.onPageLoad()
-        navigator.nextPage(
-          OtherDutyRepaymentPage,
-          answers(Customs, Vat, Other)
-        ) mustBe routes.UploadFormController.onPageLoad()
-        navigator.nextPage(OtherDutyRepaymentPage, answers(Other)) mustBe routes.UploadFormController.onPageLoad()
+        nextPage(answers(Customs, Other)) mustBe routes.UploadFormController.onPageLoad()
+        nextPage(answers(Vat, Other)) mustBe routes.UploadFormController.onPageLoad()
+        nextPage(answers(Customs, Vat, Other)) mustBe routes.UploadFormController.onPageLoad()
+        nextPage(answers(Other)) mustBe routes.UploadFormController.onPageLoad()
       }
     }
     "going back" should {
-      "go to Vat duty page when Vat duty type selected" in {
-        navigator.previousPage(
-          OtherDutyRepaymentPage,
-          answers(Customs, Vat, Other)
-        ) mustBe routes.DutyRepaymentController.onPageLoadImportVat()
-        navigator.previousPage(
-          OtherDutyRepaymentPage,
-          answers(Vat, Other)
-        ) mustBe routes.DutyRepaymentController.onPageLoadImportVat()
+      "go to vat duty page when Vat duty type selected" in {
+        previousPage(answers(Customs, Vat, Other)) mustBe routes.DutyRepaymentController.onPageLoadImportVat()
+        previousPage(answers(Vat, Other)) mustBe routes.DutyRepaymentController.onPageLoadImportVat()
       }
 
-      "go to Customs duty page when Customs duty type selected and Vat duty type not selected" in {
-        navigator.previousPage(
-          OtherDutyRepaymentPage,
-          answers(Customs, Other)
-        ) mustBe routes.DutyRepaymentController.onPageLoadCustomsDuty()
+      "go to customs duty page when Customs duty type selected and Vat duty type not selected" in {
+        previousPage(answers(Customs, Other)) mustBe routes.DutyRepaymentController.onPageLoadCustomsDuty()
       }
 
       "go to duty types page when neither Customs or Vat duty type not selected" in {
-        navigator.previousPage(
-          OtherDutyRepaymentPage,
-          answers(Other)
-        ) mustBe routes.ReclaimDutyTypeController.onPageLoad()
+        previousPage(answers(Other)) mustBe routes.ReclaimDutyTypeController.onPageLoad()
       }
     }
   }
 
   "Navigator from bank details page" when {
+    val nextPage     = navigator.nextPage(BankDetailsPage, _)
+    val previousPage = navigator.previousPage(BankDetailsPage, _)
+
     "going forward" should {
       "go to check your answers page" in {
-        navigator.nextPage(BankDetailsPage, answers()) mustBe routes.CheckYourAnswersController.onPageLoad()
+        nextPage(answers()) mustBe routes.CheckYourAnswersController.onPageLoad()
       }
     }
     "going back" should {
       "go to address page" in {
-        navigator.previousPage(BankDetailsPage, answers()) mustBe routes.AddressController.onPageLoad()
+        previousPage(answers()) mustBe routes.AddressController.onPageLoad()
       }
     }
   }
