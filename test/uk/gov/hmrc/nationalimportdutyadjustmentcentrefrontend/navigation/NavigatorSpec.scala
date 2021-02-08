@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation
 
+import play.api.mvc.Call
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, UnitSpec}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.routes
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ReclaimDutyType.{Customs, Other, Vat}
@@ -30,9 +31,12 @@ class NavigatorSpec extends UnitSpec with Injector with TestData {
   private def answers(reclaim: ReclaimDutyType*): UserAnswers =
     completeAnswers.copy(reclaimDutyTypes = Some(Set(reclaim: _*)))
 
+  private def back(page: Page, userAnswers: UserAnswers): Call =
+    navigator.previousPage(page, userAnswers).getOrElse(Call("GET", "No back page"))
+
   "Navigator from address page" when {
     val nextPage     = navigator.nextPage(AddressPage, _)
-    val previousPage = navigator.previousPage(AddressPage, _)
+    val previousPage = back(AddressPage, _)
 
     "going forward" should {
       "go to bank details page" in {
@@ -48,7 +52,7 @@ class NavigatorSpec extends UnitSpec with Injector with TestData {
 
   "Navigator from duty types page" when {
     val nextPage     = navigator.nextPage(ReclaimDutyTypePage, _)
-    val previousPage = navigator.previousPage(ReclaimDutyTypePage, _)
+    val previousPage = back(ReclaimDutyTypePage, _)
 
     "going forward" should {
       "go to customs duty page when Customs duty type selected" in {
@@ -74,7 +78,7 @@ class NavigatorSpec extends UnitSpec with Injector with TestData {
 
   "Navigator from Customs duty page" when {
     val nextPage     = navigator.nextPage(CustomsDutyRepaymentPage, _)
-    val previousPage = navigator.previousPage(CustomsDutyRepaymentPage, _)
+    val previousPage = back(CustomsDutyRepaymentPage, _)
 
     "going forward" should {
       "go to vat duty page when VAT duty type selected" in {
@@ -100,7 +104,7 @@ class NavigatorSpec extends UnitSpec with Injector with TestData {
 
   "Navigator from VAT duty page" when {
     val nextPage     = navigator.nextPage(ImportVatRepaymentPage, _)
-    val previousPage = navigator.previousPage(ImportVatRepaymentPage, _)
+    val previousPage = back(ImportVatRepaymentPage, _)
 
     "going forward" should {
       "go to other duty page when Other duty type selected" in {
@@ -127,7 +131,7 @@ class NavigatorSpec extends UnitSpec with Injector with TestData {
 
   "Navigator from Other duty page" when {
     val nextPage     = navigator.nextPage(OtherDutyRepaymentPage, _)
-    val previousPage = navigator.previousPage(OtherDutyRepaymentPage, _)
+    val previousPage = back(OtherDutyRepaymentPage, _)
 
     "going forward" should {
       "go to upload page" in {
@@ -155,7 +159,7 @@ class NavigatorSpec extends UnitSpec with Injector with TestData {
 
   "Navigator from bank details page" when {
     val nextPage     = navigator.nextPage(BankDetailsPage, _)
-    val previousPage = navigator.previousPage(BankDetailsPage, _)
+    val previousPage = back(BankDetailsPage, _)
 
     "going forward" should {
       "go to check your answers page" in {

@@ -18,74 +18,15 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation
 
 import javax.inject.{Inject, Singleton}
 import play.api.mvc.Call
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.{makeclaim, routes}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ReclaimDutyType.{Customs, Other, Vat}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{ReclaimDutyType, UserAnswers}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{FirstPage, Page, _}
 
-private case class P(page: Page, destination: () => Call, canAccessGiven: UserAnswers => Boolean)
+protected case class P(page: Page, destination: () => Call, canAccessGiven: UserAnswers => Boolean)
 
 @Singleton
-class Navigator @Inject() () {
-
-  private val normalRoutes: (Page, UserAnswers) => Call = {
-    case (FirstPage, _)                      => controllers.makeclaim.routes.ClaimTypeController.onPageLoad()
-    case (ClaimTypePage, _)                  => controllers.makeclaim.routes.EntryDetailsController.onPageLoad()
-    case (EntryDetailsPage, _)               => controllers.makeclaim.routes.ItemNumbersController.onPageLoad()
-    case (ItemNumbersPage, _)                => controllers.makeclaim.routes.ReclaimDutyTypeController.onPageLoad()
-    case (ReclaimDutyTypePage, answers)      => reclaimDutyTypeNextPage(answers)
-    case (CustomsDutyRepaymentPage, answers) => customsDutyRepaymentNextPage(answers)
-    case (ImportVatRepaymentPage, answers)   => importVatRepaymentNextPage(answers)
-    case (OtherDutyRepaymentPage, answers)   => otherDutyRepaymentNextPage(answers)
-    case (UploadPage, _)                     => controllers.makeclaim.routes.ContactDetailsController.onPageLoad()
-    case (ContactDetailsPage, _)             => controllers.makeclaim.routes.AddressController.onPageLoad()
-    case (AddressPage, _)                    => controllers.makeclaim.routes.BankDetailsController.onPageLoad()
-    case (BankDetailsPage, _)                => controllers.makeclaim.routes.CheckYourAnswersController.onPageLoad()
-    case _                                   => controllers.routes.StartController.start()
-  }
-
-  private def reclaimDutyTypeNextPage(answers: UserAnswers) = answers.reclaimDutyTypes match {
-    case Some(duties) if duties.contains(Customs) =>
-      controllers.makeclaim.routes.DutyRepaymentController.onPageLoadCustomsDuty()
-    case _ => customsDutyRepaymentNextPage(answers)
-  }
-
-  private def customsDutyRepaymentNextPage(answers: UserAnswers) = answers.reclaimDutyTypes match {
-    case Some(duties) if duties.contains(Vat) =>
-      controllers.makeclaim.routes.DutyRepaymentController.onPageLoadImportVat()
-    case _ => importVatRepaymentNextPage(answers)
-  }
-
-  private def importVatRepaymentNextPage(answers: UserAnswers) = answers.reclaimDutyTypes match {
-    case Some(duties) if duties.contains(Other) =>
-      controllers.makeclaim.routes.DutyRepaymentController.onPageLoadOtherDuty()
-    case _ => otherDutyRepaymentNextPage(answers)
-  }
-
-  private def otherDutyRepaymentNextPage(answers: UserAnswers) =
-    controllers.makeclaim.routes.UploadFormController.onPageLoad()
-
-  def nextPage(page: Page, userAnswers: UserAnswers): Call = {
-    val existing      = normalRoutes(page, userAnswers)
-    val reimplemented = viewFor(nextPageFor(pageOrder, page, userAnswers)).getOrElse(
-      throw new IllegalStateException(s"No page after $page")
-    )
-    if (existing != reimplemented)
-      throw new IllegalStateException("New implementation did not return same result as old one")
-    reimplemented
-  }
-
-  // Alternate implementation below here
-
-  private val always = (_: UserAnswers) => true
-
-  private val hasDutyType = (dutyType: ReclaimDutyType) =>
-    (userAnswers: UserAnswers) =>
-      userAnswers.reclaimDutyTypes match {
-        case Some(duties) => duties.contains(dutyType)
-        case _            => false
-      }
+class Navigator @Inject() () extends Conditions with Ordering {
 
   private val pageOrder: Seq[P] = Seq(
     P(FirstPage, routes.StartController.start, always),
@@ -106,22 +47,40 @@ class Navigator @Inject() () {
 
   private val reversePageOrder = pageOrder.reverse
 
-  // TODO use this to generate href for <a class="govuk-back-link">Back</a> links
-  def previousPage(currentPage: Page, userAnswers: UserAnswers): Call =
-    viewFor(nextPageFor(reversePageOrder, currentPage, userAnswers)).getOrElse(
-      throw new IllegalStateException(s"No page before $currentPage - consider returning Option[Call]")
+  def nextPage(page: Page, userAnswers: UserAnswers): Call =
+    viewFor(pageOrder, nextPageFor(pageOrder, page, userAnswers)).getOrElse(
+      throw new IllegalStateException(s"No page after $page")
     )
 
+  // TODO use this to generate href for <a class="govuk-back-link">Back</a> links
+  def previousPage(currentPage: Page, userAnswers: UserAnswers): Option[Call] =
+    viewFor(pageOrder, nextPageFor(reversePageOrder, currentPage, userAnswers))
 
-  private def nextPageFor(pages: Seq[P], currentPage: Page, userAnswers: UserAnswers): Option[Page] =
-    after(pages, currentPage)
+}
+
+protected trait Conditions {
+  protected val always: UserAnswers => Boolean = (_: UserAnswers) => true
+
+  protected val hasDutyType: ReclaimDutyType => UserAnswers => Boolean = (dutyType: ReclaimDutyType) =>
+    (userAnswers: UserAnswers) =>
+      userAnswers.reclaimDutyTypes match {
+        case Some(duties) => duties.contains(dutyType)
+        case _            => false
+      }
+
+}
+
+protected trait Ordering {
+
+  protected val nextPageFor: (Seq[P], Page, UserAnswers) => Option[Page] = (pages, page, userAnswers) =>
+    after(pages, page)
       .find(_.canAccessGiven(userAnswers))
       .map(_.page)
 
-  private def viewFor(page: Option[Page]): Option[Call] =
+  protected val viewFor: (Seq[P], Option[Page]) => Option[Call] = (pages, page) =>
     page.flatMap(
       p =>
-        pageOrder
+        pages
           .find(_.page == p)
           .map(_.destination())
     )
@@ -130,4 +89,5 @@ class Navigator @Inject() () {
     case s if s.isEmpty => Seq.empty
     case s              => s.tail
   }
+
 }
