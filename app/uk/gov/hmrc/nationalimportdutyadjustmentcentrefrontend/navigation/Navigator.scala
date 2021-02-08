@@ -47,9 +47,9 @@ class Navigator @Inject() () extends Conditions with Ordering {
 
   private val reversePageOrder = pageOrder.reverse
 
-  def nextPage(page: Page, userAnswers: UserAnswers): Call =
-    viewFor(pageOrder, nextPageFor(pageOrder, page, userAnswers)).getOrElse(
-      throw new IllegalStateException(s"No page after $page")
+  def nextPage(currentPage: Page, userAnswers: UserAnswers): Call =
+    viewFor(pageOrder, nextPageFor(pageOrder, currentPage, userAnswers)).getOrElse(
+      throw new IllegalStateException(s"No page after $currentPage")
     )
 
   // TODO use this to generate href for <a class="govuk-back-link">Back</a> links
@@ -72,8 +72,8 @@ protected trait Conditions {
 
 protected trait Ordering {
 
-  protected val nextPageFor: (Seq[P], Page, UserAnswers) => Option[Page] = (pages, page, userAnswers) =>
-    after(pages, page)
+  protected val nextPageFor: (Seq[P], Page, UserAnswers) => Option[Page] = (pages, currentPage, userAnswers) =>
+    after(pages, currentPage)
       .find(_.canAccessGiven(userAnswers))
       .map(_.page)
 
