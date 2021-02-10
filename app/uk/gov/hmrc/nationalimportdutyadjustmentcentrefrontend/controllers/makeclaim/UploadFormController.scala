@@ -62,9 +62,7 @@ class UploadFormController @Inject() (
     data.getAnswers flatMap { answers =>
       uploadProgressTracker.getUploadResult(uploadId, answers.journeyId) flatMap {
         case Some(successUpload: UploadedFile) =>
-          data.updateAnswers(answers => addUpload(answers, successUpload)) map {
-            _ => Redirect(controllers.makeclaim.routes.UploadFormSummaryController.onPageLoad())
-          }
+          processSuccessfulUpload(successUpload)
         case Some(failed: Failed) =>
           Future(Redirect(controllers.makeclaim.routes.UploadFormController.onError(failed.errorCode)))
         case Some(_) => Future(Ok(uploadProgressPage(answers.claimType)))
@@ -97,16 +95,16 @@ class UploadFormController @Inject() (
     } yield Ok(uploadFormPage(upscanInitiateResponse, answers.claimType, answers.uploads.forall(_.isEmpty), maybeError))
   }
 
-  private def addUpload(userAnswers: UserAnswers, successUpload: UploadedFile) = {
-
-    /**
-      * TODO - when multiple file uploads are supported ...
-      * ...replace code below with
-      * val uploads: Seq[UploadedFile] = userAnswers.uploads.getOrElse(Seq.empty)
-      */
-    val uploads: Seq[UploadedFile] = Seq.empty
-    userAnswers.copy(uploads = Some(uploads :+ successUpload))
-  }
+  private def processSuccessfulUpload(successUpload: UploadedFile)(implicit request: IdentifierRequest[_]) =
+    data.getAnswers flatMap { answers =>
+      val uploads = answers.uploads.getOrElse(Seq.empty)
+      if (uploads.exists(_.checksum == successUpload.checksum))
+        Future(Redirect(controllers.makeclaim.routes.UploadFormController.onError("DUPLICATE")))
+      else
+        data.updateAnswers(answers => answers.copy(uploads = Some(uploads :+ successUpload))) map {
+          _ => Redirect(controllers.makeclaim.routes.UploadFormSummaryController.onPageLoad())
+        }
+    }
 
   private def mapError(code: String): FormError = {
     def error(message: String) = FormError("upload-file", message)
@@ -117,6 +115,7 @@ class UploadFormController @Inject() (
       case "EntityTooSmall"          => error("error.file-upload.invalid-size-small")
       case "QUARANTINE"              => error("error.file-upload.quarantine")
       case "REJECTED"                => error("error.file-upload.invalid-type")
+      case "DUPLICATE"               => error("error.file-upload.duplicate")
       case _                         => error("error.file-upload.unknown")
     }
   }
