@@ -63,9 +63,8 @@ class UploadFormSummaryController @Inject() (
 
   def removeDocument: String => UserAnswers => UserAnswers = (ref: String) =>
     (userAnswers: UserAnswers) => {
-      val uploadedFiles  = userAnswers.uploads.getOrElse(Seq.empty)
-      val remainingFiles = uploadedFiles.filterNot(file => file.upscanReference == ref)
-      userAnswers.copy(uploads = Some(remainingFiles))
+      val remainingFiles = userAnswers.uploads.map(_.filterNot(_.upscanReference == ref))
+      userAnswers.copy(uploads = remainingFiles)
     }
 
 }
