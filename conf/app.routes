@@ -27,6 +27,7 @@ GET         /upload-documents/error             uk.gov.hmrc.nationalimportdutyad
 
 GET         /uploaded-documents                 uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.UploadFormSummaryController.onPageLoad()
 POST        /uploaded-documents                 uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.UploadFormSummaryController.onSubmit()
+GET         /uploaded-documents/remove          uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.UploadFormSummaryController.onRemove(documentReference: String)
 
 GET         /reclaiming                         uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.ReclaimDutyTypeController.onPageLoad()
 POST        /reclaiming                         uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.ReclaimDutyTypeController.onSubmit()
