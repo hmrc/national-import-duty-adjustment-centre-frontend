@@ -22,6 +22,7 @@
         form: Form[Boolean],
         label: String,
         legendAsHeading: Boolean = true,
+        legendClass: Option[String] = None,
         inline: Boolean = false
 )(implicit messages: Messages)
 
@@ -42,5 +43,6 @@
     ),
     inline = inline,
     legendAsHeading = legendAsHeading,
+    legendClass = legendClass,
     legend = Some(label)
 )

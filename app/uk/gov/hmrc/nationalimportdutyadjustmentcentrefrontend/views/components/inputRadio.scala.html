@@ -20,6 +20,7 @@
         name: String,
         items: Seq[RadioItem],
         legend: Option[String] = None,
+        legendClass: Option[String] = None,
         legendAsHeading: Boolean = true,
         hint: Option[Html] = None,
         contentHtml: Option[Html] = None,
@@ -33,7 +34,7 @@
         legend = Some(Legend(
             content = Text(text),
             isPageHeading = legendAsHeading,
-            classes = if(legendAsHeading) "govuk-fieldset__legend--l" else ""
+            classes = legendClass.getOrElse(if(legendAsHeading) "govuk-fieldset__legend--l" else "")
         ))
     )),
 

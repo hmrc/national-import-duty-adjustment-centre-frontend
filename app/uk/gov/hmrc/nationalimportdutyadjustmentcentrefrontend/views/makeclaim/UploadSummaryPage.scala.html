@@ -68,7 +68,13 @@
 
         @uploadDocumentTypes(claimType)
 
-        @inputYesNo(form, messages("upload_documents_summary.add.label"), legendAsHeading = false, inline = true)
+        @inputYesNo(
+            form = form,
+            label = messages("upload_documents_summary.add.label"),
+            legendAsHeading = false,
+            legendClass = Some("govuk-fieldset__legend--m"),
+            inline = true
+        )
 
         @continueButton()
     }
