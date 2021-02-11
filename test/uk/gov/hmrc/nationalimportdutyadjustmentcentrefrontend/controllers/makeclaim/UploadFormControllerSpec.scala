@@ -52,6 +52,7 @@ class UploadFormControllerSpec extends ControllerSpec with TestData {
       mockInitiateConnector,
       cacheDataService,
       appConfig,
+      navigator,
       formPage,
       progressPage
     )(executionContext)
