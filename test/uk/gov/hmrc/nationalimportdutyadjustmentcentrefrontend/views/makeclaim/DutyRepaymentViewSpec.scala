@@ -49,9 +49,7 @@ class DutyRepaymentViewSpec extends UnitViewSpec with TestData {
     }
 
     "have back link" in {
-      messagePrefixs.foreach(
-        prefix => view(prefix).getElementsByClass("govuk-back-link") must containMessage("site.back")
-      )
+      messagePrefixs.foreach(prefix => view(prefix) must haveNavigatorBackLink(navigatorBackUrl))
     }
 
     "have label for duty paid" in {

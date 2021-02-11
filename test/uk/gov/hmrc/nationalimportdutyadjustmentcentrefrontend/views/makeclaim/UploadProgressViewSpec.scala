@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.makeclaim
 
+import org.jsoup.nodes.Document
 import play.twirl.api.Html
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, UnitViewSpec}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType.Quota
@@ -25,7 +26,7 @@ class UploadProgressViewSpec extends UnitViewSpec with TestData {
 
   private val page = instanceOf[UploadProgressView]
 
-  private val view: Html = page(Some(Quota), navigatorBack)
+  private val view: Document = page(Some(Quota), navigatorBack)
 
   "UploadProgressPage" should {
 
@@ -46,7 +47,7 @@ class UploadProgressViewSpec extends UnitViewSpec with TestData {
     }
 
     "have back link" in {
-      view.getElementsByClass("govuk-back-link") must containMessage("site.back")
+      view must haveNavigatorBackLink(navigatorBackUrl)
     }
   }
 }

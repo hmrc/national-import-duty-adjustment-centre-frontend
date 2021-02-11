@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.makeclaim
 
+import org.jsoup.nodes.Document
 import play.api.data.Form
 import play.twirl.api.Html
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
@@ -30,7 +31,7 @@ class ReclaimDutyTypeViewSpec extends UnitViewSpec {
   private val page = instanceOf[ReclaimDutyTypeView]
   private val form = new ReclaimDutyTypeFormProvider().apply()
 
-  private def view(form: Form[Set[ReclaimDutyType]] = form): Html = page(form, navigatorBack)
+  private def view(form: Form[Set[ReclaimDutyType]] = form): Document = page(form, navigatorBack)
 
   "ReclaimDutyTypePage on empty form" should {
 
@@ -43,7 +44,7 @@ class ReclaimDutyTypeViewSpec extends UnitViewSpec {
     }
 
     "have back link" in {
-      view().getElementsByClass("govuk-back-link") must containMessage("site.back")
+      view() must haveNavigatorBackLink(navigatorBackUrl)
     }
 
     "have checkbox for each claim type" in {

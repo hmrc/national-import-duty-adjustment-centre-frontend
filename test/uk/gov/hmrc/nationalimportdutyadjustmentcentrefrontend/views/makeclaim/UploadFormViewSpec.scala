@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.makeclaim
 
+import org.jsoup.nodes.Document
 import play.api.data.FormError
 import play.twirl.api.Html
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, UnitViewSpec}
@@ -40,7 +41,7 @@ class UploadFormViewSpec extends UnitViewSpec with TestData {
     claimType: Option[ClaimType] = None,
     isFirst: Boolean = true,
     error: Option[FormError] = None
-  ): Html =
+  ): Document =
     page(upscanInitiateResponse, claimType, isFirst, error, navigatorBack)
 
   "UploadFormPage" should {
@@ -58,7 +59,7 @@ class UploadFormViewSpec extends UnitViewSpec with TestData {
     }
 
     "have back link" in {
-      view().getElementsByClass("govuk-back-link") must containMessage("site.back")
+      view() must haveNavigatorBackLink(navigatorBackUrl)
     }
 
     "render input file with correct file-types" in {

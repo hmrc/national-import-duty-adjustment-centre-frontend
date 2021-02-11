@@ -16,6 +16,8 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base
 
+import org.jsoup.nodes.Element
+import org.scalatest.Assertion
 import play.api.i18n.{Lang, Messages, MessagesApi}
 import play.api.mvc.{AnyContent, Call, Request}
 import play.api.test.CSRFTokenHelper.CSRFRequest
@@ -35,7 +37,8 @@ trait UnitViewSpec extends UnitSpec with ViewMatchers with Injector {
   protected def messages(key: String, args: Any*)(implicit request: Request[_]): String =
     messages(request)(key, args: _*)
 
-  protected val navigatorBack: NavigatorBack = NavigatorBack(Some(Call("GET", "/fixed/url")))
+  protected val navigatorBackUrl             = "/fixed/url"
+  protected val navigatorBack: NavigatorBack = NavigatorBack(Some(Call("GET", navigatorBackUrl)))
 
 }
 

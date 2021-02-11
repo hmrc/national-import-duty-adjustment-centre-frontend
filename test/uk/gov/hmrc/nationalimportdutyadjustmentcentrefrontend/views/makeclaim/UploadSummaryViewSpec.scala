@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.makeclaim
 
+import org.jsoup.nodes.Document
 import play.api.data.Form
 import play.twirl.api.Html
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, UnitViewSpec}
@@ -42,7 +43,7 @@ class UploadSummaryViewSpec extends UnitViewSpec with TestData {
     form: Form[Boolean] = form,
     claimType: Option[ClaimType] = None,
     uploadedDocuments: Seq[UploadedFile] = Seq.empty
-  ): Html =
+  ): Document =
     page(form, claimType, uploadedDocuments, navigatorBack)
 
   "UploadSummaryPage" should {
@@ -53,6 +54,10 @@ class UploadSummaryViewSpec extends UnitViewSpec with TestData {
 
     "have correct heading" in {
       view().getElementsByTag("h1") must containMessage("upload_documents_summary.title.multiple", 0)
+    }
+
+    "have back link" in {
+      view() must haveNavigatorBackLink(navigatorBackUrl)
     }
 
     "have the uploaded file names" in {

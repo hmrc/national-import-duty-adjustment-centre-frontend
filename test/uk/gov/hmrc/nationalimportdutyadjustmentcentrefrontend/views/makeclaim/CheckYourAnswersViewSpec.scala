@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.makeclaim
 
+import org.jsoup.nodes.Document
 import play.twirl.api.Html
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, UnitViewSpec}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.Claim
@@ -26,8 +27,8 @@ class CheckYourAnswersViewSpec extends UnitViewSpec with TestData {
 
   private val page = instanceOf[CheckYourAnswersView]
 
-  private val claim      = Claim(completeAnswers)
-  private val view: Html = page(claim, navigatorBack)
+  private val claim          = Claim(completeAnswers)
+  private val view: Document = page(claim, navigatorBack)
 
   "CheckYourAnswersPage" should {
 
@@ -40,7 +41,7 @@ class CheckYourAnswersViewSpec extends UnitViewSpec with TestData {
     }
 
     "have back link" in {
-      view.getElementsByClass("govuk-back-link") must containMessage("site.back")
+      view must haveNavigatorBackLink(navigatorBackUrl)
     }
 
     "have claim section" which {
