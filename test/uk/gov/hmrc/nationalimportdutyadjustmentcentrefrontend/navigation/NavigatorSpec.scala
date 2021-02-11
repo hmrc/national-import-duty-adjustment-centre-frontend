@@ -20,6 +20,7 @@ import play.api.mvc.Call
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, UnitSpec}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.routes
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ReclaimDutyType.{Customs, Other, Vat}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UploadedFile
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{ReclaimDutyType, UserAnswers}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.utils.Injector
@@ -88,7 +89,7 @@ class NavigatorSpec extends UnitSpec with Injector with TestData {
       "go to other duty page when Other duty selected and VAT duty not selected" in {
         nextPage(answers(Customs, Other)) mustBe routes.DutyRepaymentController.onPageLoadOtherDuty()
       }
-      "go to upload page when neither VAT or Other duty selected" in {
+      "go to claim reason page when neither VAT or Other duty selected" in {
         nextPage(answers(Customs)) mustBe routes.ClaimReasonController.onPageLoad()
       }
     }
@@ -111,7 +112,7 @@ class NavigatorSpec extends UnitSpec with Injector with TestData {
         nextPage(answers(Customs, Vat, Other)) mustBe routes.DutyRepaymentController.onPageLoadOtherDuty()
         nextPage(answers(Vat, Other)) mustBe routes.DutyRepaymentController.onPageLoadOtherDuty()
       }
-      "go to upload page when Other duty not selected" in {
+      "go to claim reason page when Other duty not selected" in {
         nextPage(answers(Customs, Vat)) mustBe routes.ClaimReasonController.onPageLoad()
         nextPage(answers(Vat)) mustBe routes.ClaimReasonController.onPageLoad()
       }
@@ -134,7 +135,7 @@ class NavigatorSpec extends UnitSpec with Injector with TestData {
     val previousPage = back(OtherDutyRepaymentPage, _)
 
     "going forward" should {
-      "go to upload page" in {
+      "go to claim reason page" in {
         nextPage(answers(Customs, Other)) mustBe routes.ClaimReasonController.onPageLoad()
         nextPage(answers(Vat, Other)) mustBe routes.ClaimReasonController.onPageLoad()
         nextPage(answers(Customs, Vat, Other)) mustBe routes.ClaimReasonController.onPageLoad()
@@ -169,6 +170,40 @@ class NavigatorSpec extends UnitSpec with Injector with TestData {
     "going back" should {
       "go to address page" in {
         previousPage(answers()) mustBe routes.AddressController.onPageLoad()
+      }
+    }
+  }
+
+  "Navigating around file uploads" when {
+
+    def answers(uploads: Seq[UploadedFile]): UserAnswers =
+      completeAnswers.copy(uploads = Some(uploads))
+
+    val nextPage     = navigator.nextPage(ClaimReasonPage, _)
+    val previousPage = back(ContactDetailsPage, _)
+
+    "going forward (from the question before file uploads)" when {
+      "no files have been uploaded" should {
+        "goto upload page" in {
+          nextPage(answers(Seq.empty)) mustBe routes.UploadFormController.onPageLoad()
+        }
+      }
+      "files have been uploaded" should {
+        "goto upload summary page" in {
+          nextPage(answers(Seq(uploadAnswer))) mustBe routes.UploadFormSummaryController.onPageLoad()
+        }
+      }
+    }
+    "going back (from the question after file uploads)" when {
+      "no files have been uploaded" should {
+        "goto upload page" in {
+          previousPage(answers(Seq.empty)) mustBe routes.UploadFormController.onPageLoad()
+        }
+      }
+      "files have been uploaded" should {
+        "goto upload summary page" in {
+          previousPage(answers(Seq(uploadAnswer))) mustBe routes.UploadFormSummaryController.onPageLoad()
+        }
       }
     }
   }
