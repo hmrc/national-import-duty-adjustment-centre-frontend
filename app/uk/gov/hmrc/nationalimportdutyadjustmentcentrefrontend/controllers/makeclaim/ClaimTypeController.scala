@@ -24,6 +24,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.ClaimTypeFor
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.Navigator
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.ClaimTypePage
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.CacheDataService
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.NavigatorBack
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ClaimTypePage
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
@@ -45,13 +46,13 @@ class ClaimTypeController @Inject() (
   def onPageLoad(): Action[AnyContent] = identify.async { implicit request =>
     data.getAnswers map { answers =>
       val preparedForm = answers.claimType.fold(form)(form.fill)
-      Ok(claimTypePage(preparedForm))
+      Ok(claimTypePage(preparedForm, NavigatorBack(navigator.previousPage(ClaimTypePage, answers))))
     }
   }
 
   def onSubmit(): Action[AnyContent] = identify.async { implicit request =>
     form.bindFromRequest().fold(
-      formWithErrors => Future(BadRequest(claimTypePage(formWithErrors))),
+      formWithErrors => Future(BadRequest(claimTypePage(formWithErrors, NavigatorBack(None)))),
       value =>
         data.updateAnswers(answers => answers.copy(claimType = Some(value))) map {
           updatedAnswers => Redirect(navigator.nextPage(ClaimTypePage, updatedAnswers))

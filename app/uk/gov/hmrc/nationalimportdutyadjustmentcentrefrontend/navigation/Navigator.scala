@@ -29,7 +29,6 @@ protected case class P(page: Page, destination: () => Call, canAccessGiven: User
 class Navigator @Inject() () extends Conditions with Ordering {
 
   private val pageOrder: Seq[P] = Seq(
-    P(FirstPage, routes.StartController.start, always),
     P(ClaimTypePage, makeclaim.routes.ClaimTypeController.onPageLoad, always),
     P(EntryDetailsPage, makeclaim.routes.EntryDetailsController.onPageLoad, always),
     P(ItemNumbersPage, makeclaim.routes.ItemNumbersController.onPageLoad, always),
@@ -51,7 +50,7 @@ class Navigator @Inject() () extends Conditions with Ordering {
 
   def nextPage(currentPage: Page, userAnswers: UserAnswers): Call =
     viewFor(pageOrder, nextPageFor(pageOrder, currentPage, userAnswers)).getOrElse(
-      throw new IllegalStateException(s"No page after $currentPage")
+      pageOrder.head.destination()
     )
 
   // TODO use this to generate href for <a class="govuk-back-link">Back</a> links
