@@ -19,15 +19,16 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makec
 import javax.inject.{Inject, Singleton}
 import play.api.i18n.I18nSupport
 import play.api.mvc._
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.Navigation
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.IdentifierAction
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.ReclaimDutyTypeFormProvider
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.Navigator
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.ReclaimDutyTypePage
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.CacheDataService
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ReclaimDutyTypePage
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 @Singleton
 class ReclaimDutyTypeController @Inject() (
@@ -35,26 +36,28 @@ class ReclaimDutyTypeController @Inject() (
   data: CacheDataService,
   formProvider: ReclaimDutyTypeFormProvider,
   val controllerComponents: MessagesControllerComponents,
-  navigator: Navigator,
+  val navigator: Navigator,
+  val page: pages.ReclaimDutyTypePage,
   reclaimDutyTypePage: ReclaimDutyTypePage
 )(implicit ec: ExecutionContext)
-    extends FrontendBaseController with I18nSupport {
+    extends FrontendBaseController with I18nSupport with Navigation {
 
   private val form = formProvider()
 
   def onPageLoad(): Action[AnyContent] = identify.async { implicit request =>
     data.getAnswers map { answers =>
       val preparedForm = answers.reclaimDutyTypes.fold(form)(form.fill)
-      Ok(reclaimDutyTypePage(preparedForm))
+      Ok(reclaimDutyTypePage(preparedForm, backLink(answers)))
     }
   }
 
   def onSubmit(): Action[AnyContent] = identify.async { implicit request =>
     form.bindFromRequest().fold(
-      formWithErrors => Future(BadRequest(reclaimDutyTypePage(formWithErrors))),
+      formWithErrors =>
+        data.getAnswers map { answers => BadRequest(reclaimDutyTypePage(formWithErrors, backLink(answers))) },
       value =>
         data.updateAnswers(answers => answers.copy(reclaimDutyTypes = Some(value))) map {
-          updatedAnswers => Redirect(navigator.nextPage(ReclaimDutyTypePage, updatedAnswers))
+          updatedAnswers => Redirect(nextPage(updatedAnswers))
         }
     )
   }

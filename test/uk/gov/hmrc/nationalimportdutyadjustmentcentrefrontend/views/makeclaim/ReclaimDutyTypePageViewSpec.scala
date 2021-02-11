@@ -30,7 +30,7 @@ class ReclaimDutyTypePageViewSpec extends UnitViewSpec {
   private val page = instanceOf[ReclaimDutyTypePage]
   private val form = new ReclaimDutyTypeFormProvider().apply()
 
-  private def view(form: Form[Set[ReclaimDutyType]] = form): Html = page(form)
+  private def view(form: Form[Set[ReclaimDutyType]] = form): Html = page(form, dummyBack)
 
   "ReclaimDutyTypePage on empty form" should {
 

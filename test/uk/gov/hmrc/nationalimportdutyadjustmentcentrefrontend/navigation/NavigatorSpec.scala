@@ -52,8 +52,8 @@ class NavigatorSpec extends UnitSpec with Injector with TestData {
   }
 
   "Navigator from duty types page" when {
-    val nextPage     = navigator.nextPage(ReclaimDutyTypePage, _)
-    val previousPage = back(ReclaimDutyTypePage, _)
+    val nextPage     = navigator.nextPage(ReclaimDutyTypePage(), _)
+    val previousPage = back(ReclaimDutyTypePage(), _)
 
     "going forward" should {
       "go to customs duty page when Customs duty type selected" in {
