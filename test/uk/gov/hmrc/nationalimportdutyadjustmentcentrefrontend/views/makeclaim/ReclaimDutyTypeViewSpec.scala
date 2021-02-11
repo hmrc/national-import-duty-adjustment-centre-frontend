@@ -23,14 +23,14 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.UnitViewSpec
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.ReclaimDutyTypeFormProvider
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ReclaimDutyType
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ReclaimDutyType.Customs
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ReclaimDutyTypePage
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ReclaimDutyTypeView
 
-class ReclaimDutyTypePageViewSpec extends UnitViewSpec {
+class ReclaimDutyTypeViewSpec extends UnitViewSpec {
 
-  private val page = instanceOf[ReclaimDutyTypePage]
+  private val page = instanceOf[ReclaimDutyTypeView]
   private val form = new ReclaimDutyTypeFormProvider().apply()
 
-  private def view(form: Form[Set[ReclaimDutyType]] = form): Html = page(form, dummyBack)
+  private def view(form: Form[Set[ReclaimDutyType]] = form): Html = page(form, navigatorBack)
 
   "ReclaimDutyTypePage on empty form" should {
 

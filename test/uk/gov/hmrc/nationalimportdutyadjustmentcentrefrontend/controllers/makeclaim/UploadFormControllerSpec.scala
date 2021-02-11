@@ -29,15 +29,15 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.Uplo
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UpscanNotification.Quarantine
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.UploadRepository
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.MongoBackedUploadProgressTracker
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.{UploadFormPage, UploadProgressPage}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.{UploadFormView, UploadProgressView}
 import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
 
 import scala.concurrent.Future
 
 class UploadFormControllerSpec extends ControllerSpec with TestData {
 
-  private val formPage     = mock[UploadFormPage]
-  private val progressPage = mock[UploadProgressPage]
+  private val formView     = mock[UploadFormView]
+  private val progressView = mock[UploadProgressView]
 
   private val mockInitiateConnector = mock[UpscanInitiateConnector]
   private val appConfig             = instanceOf[AppConfig]
@@ -53,8 +53,8 @@ class UploadFormControllerSpec extends ControllerSpec with TestData {
       cacheDataService,
       appConfig,
       navigator,
-      formPage,
-      progressPage
+      formView,
+      progressView
     )(executionContext)
 
   override protected def beforeEach(): Unit = {
@@ -68,12 +68,12 @@ class UploadFormControllerSpec extends ControllerSpec with TestData {
 
     when(mockUploadRepository.add(any())).thenReturn(Future.successful(true))
 
-    when(formPage.apply(any(), any(), any(), any())(any(), any())).thenReturn(HtmlFormat.empty)
-    when(progressPage.apply(any())(any(), any())).thenReturn(HtmlFormat.empty)
+    when(formView.apply(any(), any(), any(), any(), any())(any(), any())).thenReturn(HtmlFormat.empty)
+    when(progressView.apply(any(), any())(any(), any())).thenReturn(HtmlFormat.empty)
   }
 
   override protected def afterEach(): Unit = {
-    reset(formPage, progressPage, mockInitiateConnector, mockUploadRepository)
+    reset(formView, progressView, mockInitiateConnector, mockUploadRepository)
     super.afterEach()
   }
 

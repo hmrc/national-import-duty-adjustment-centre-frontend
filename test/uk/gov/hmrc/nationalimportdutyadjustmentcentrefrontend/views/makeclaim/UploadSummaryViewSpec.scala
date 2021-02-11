@@ -29,13 +29,13 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType.{
   Quota
 }
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UploadedFile
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.UploadSummaryPage
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.UploadSummaryView
 
 import scala.collection.JavaConverters._
 
-class UploadSummaryPageViewSpec extends UnitViewSpec with TestData {
+class UploadSummaryViewSpec extends UnitViewSpec with TestData {
 
-  private val page = instanceOf[UploadSummaryPage]
+  private val page = instanceOf[UploadSummaryView]
   private val form = new YesNoFormProvider().apply("upload_documents_summary.add.required")
 
   private def view(
@@ -43,7 +43,7 @@ class UploadSummaryPageViewSpec extends UnitViewSpec with TestData {
     claimType: Option[ClaimType] = None,
     uploadedDocuments: Seq[UploadedFile] = Seq.empty
   ): Html =
-    page(form, claimType, uploadedDocuments, dummyBack)
+    page(form, claimType, uploadedDocuments, navigatorBack)
 
   "UploadSummaryPage" should {
 

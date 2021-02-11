@@ -28,10 +28,10 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{DutyPaid, 
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.Navigator
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.CacheDataService
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.DutyRepaymentPage
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.DutyRepaymentView
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 @Singleton
 class DutyRepaymentController @Inject() (
@@ -40,7 +40,7 @@ class DutyRepaymentController @Inject() (
   formProvider: DutyPaidFormProvider,
   val controllerComponents: MessagesControllerComponents,
   navigator: Navigator,
-  repaymentPage: DutyRepaymentPage
+  repaymentView: DutyRepaymentView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController with I18nSupport {
 
@@ -74,9 +74,9 @@ class DutyRepaymentController @Inject() (
   }
 
   private def currentPage(dutyType: ReclaimDutyType) = dutyType match {
-    case Customs => pages.CustomsDutyRepaymentPage()
-    case Vat     => pages.ImportVatRepaymentPage()
-    case Other   => pages.OtherDutyRepaymentPage()
+    case Customs => pages.CustomsDutyRepaymentPage
+    case Vat     => pages.ImportVatRepaymentPage
+    case Other   => pages.OtherDutyRepaymentPage
     case _       => pages.FirstPage()
   }
 
@@ -86,9 +86,9 @@ class DutyRepaymentController @Inject() (
     val backLink = navigator.previousPage(currentPage(dutyType), answers)
     dutyType match {
       case Customs =>
-        repaymentPage(form, routes.DutyRepaymentController.onSubmitCustomsDuty(), "customsDutyPaid", backLink)
-      case Vat   => repaymentPage(form, routes.DutyRepaymentController.onSubmitImportVat(), "importVatPaid", backLink)
-      case Other => repaymentPage(form, routes.DutyRepaymentController.onSubmitOtherDuty(), "otherDutyPaid", backLink)
+        repaymentView(form, routes.DutyRepaymentController.onSubmitCustomsDuty(), "customsDutyPaid", backLink)
+      case Vat   => repaymentView(form, routes.DutyRepaymentController.onSubmitImportVat(), "importVatPaid", backLink)
+      case Other => repaymentView(form, routes.DutyRepaymentController.onSubmitOtherDuty(), "otherDutyPaid", backLink)
     }
   }
 

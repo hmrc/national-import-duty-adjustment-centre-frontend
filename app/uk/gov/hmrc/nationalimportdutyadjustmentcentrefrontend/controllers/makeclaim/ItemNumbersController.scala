@@ -23,9 +23,9 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.Naviga
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.IdentifierAction
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.ItemNumbersFormProvider
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.Navigator
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{ItemNumbersPage, Page}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.CacheDataService
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ItemNumbersPage
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ItemNumbersView
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import scala.concurrent.ExecutionContext
@@ -37,24 +37,25 @@ class ItemNumbersController @Inject() (
   formProvider: ItemNumbersFormProvider,
   val controllerComponents: MessagesControllerComponents,
   val navigator: Navigator,
-  val page: pages.ItemNumbersPage,
-  itemNumbersPage: ItemNumbersPage
+  itemNumbersView: ItemNumbersView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController with I18nSupport with Navigation {
+
+  override val page: Page = ItemNumbersPage
 
   private val form = formProvider()
 
   def onPageLoad(): Action[AnyContent] = identify.async { implicit request =>
     data.getAnswers map { answers =>
       val preparedForm = answers.itemNumbers.fold(form)(form.fill)
-      Ok(itemNumbersPage(preparedForm, backLink(answers)))
+      Ok(itemNumbersView(preparedForm, backLink(answers)))
     }
   }
 
   def onSubmit(): Action[AnyContent] = identify.async { implicit request =>
     form.bindFromRequest().fold(
       formWithErrors =>
-        data.getAnswers map { answers => BadRequest(itemNumbersPage(formWithErrors, backLink(answers))) },
+        data.getAnswers map { answers => BadRequest(itemNumbersView(formWithErrors, backLink(answers))) },
       value =>
         data.updateAnswers(answers => answers.copy(itemNumbers = Some(value))) map {
           updatedAnswers => Redirect(nextPage(updatedAnswers))

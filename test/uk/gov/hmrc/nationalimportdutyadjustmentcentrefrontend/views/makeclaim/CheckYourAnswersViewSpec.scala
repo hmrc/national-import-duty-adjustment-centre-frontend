@@ -20,14 +20,14 @@ import play.twirl.api.Html
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, UnitViewSpec}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.Claim
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.MessageKey
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.CheckYourAnswersPage
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.CheckYourAnswersView
 
-class CheckYourAnswersPageViewSpec extends UnitViewSpec with TestData {
+class CheckYourAnswersViewSpec extends UnitViewSpec with TestData {
 
-  private val page = instanceOf[CheckYourAnswersPage]
+  private val page = instanceOf[CheckYourAnswersView]
 
   private val claim      = Claim(completeAnswers)
-  private val view: Html = page(claim)
+  private val view: Html = page(claim, navigatorBack)
 
   "CheckYourAnswersPage" should {
 

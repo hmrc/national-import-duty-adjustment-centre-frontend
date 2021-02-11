@@ -52,8 +52,8 @@ class NavigatorSpec extends UnitSpec with Injector with TestData {
   }
 
   "Navigator from duty types page" when {
-    val nextPage     = navigator.nextPage(ReclaimDutyTypePage(), _)
-    val previousPage = back(ReclaimDutyTypePage(), _)
+    val nextPage     = navigator.nextPage(ReclaimDutyTypePage, _)
+    val previousPage = back(ReclaimDutyTypePage, _)
 
     "going forward" should {
       "go to customs duty page when Customs duty type selected" in {
@@ -78,8 +78,8 @@ class NavigatorSpec extends UnitSpec with Injector with TestData {
   }
 
   "Navigator from Customs duty page" when {
-    val nextPage     = navigator.nextPage(CustomsDutyRepaymentPage(), _)
-    val previousPage = back(CustomsDutyRepaymentPage(), _)
+    val nextPage     = navigator.nextPage(CustomsDutyRepaymentPage, _)
+    val previousPage = back(CustomsDutyRepaymentPage, _)
 
     "going forward" should {
       "go to vat duty page when VAT duty type selected" in {
@@ -104,8 +104,8 @@ class NavigatorSpec extends UnitSpec with Injector with TestData {
   }
 
   "Navigator from VAT duty page" when {
-    val nextPage     = navigator.nextPage(ImportVatRepaymentPage(), _)
-    val previousPage = back(ImportVatRepaymentPage(), _)
+    val nextPage     = navigator.nextPage(ImportVatRepaymentPage, _)
+    val previousPage = back(ImportVatRepaymentPage, _)
 
     "going forward" should {
       "go to other duty page when Other duty type selected" in {
@@ -131,8 +131,8 @@ class NavigatorSpec extends UnitSpec with Injector with TestData {
   }
 
   "Navigator from Other duty page" when {
-    val nextPage     = navigator.nextPage(OtherDutyRepaymentPage(), _)
-    val previousPage = back(OtherDutyRepaymentPage(), _)
+    val nextPage     = navigator.nextPage(OtherDutyRepaymentPage, _)
+    val previousPage = back(OtherDutyRepaymentPage, _)
 
     "going forward" should {
       "go to claim reason page" in {
@@ -179,7 +179,7 @@ class NavigatorSpec extends UnitSpec with Injector with TestData {
     def answers(uploads: Seq[UploadedFile]): UserAnswers =
       completeAnswers.copy(uploads = Some(uploads))
 
-    val nextPage     = navigator.nextPage(ClaimReasonPage(), _)
+    val nextPage     = navigator.nextPage(ClaimReasonPage, _)
     val previousPage = back(ContactDetailsPage, _)
 
     "going forward (from the question before file uploads)" when {

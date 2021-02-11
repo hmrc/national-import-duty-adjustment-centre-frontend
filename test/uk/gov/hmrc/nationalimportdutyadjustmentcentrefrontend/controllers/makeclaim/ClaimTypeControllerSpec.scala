@@ -27,13 +27,13 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{ControllerSp
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.ClaimTypeFormProvider
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType.AntiDumping
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{ClaimType, UserAnswers}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ClaimTypePage
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.ClaimTypePage
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ClaimTypeView
 import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
 
 class ClaimTypeControllerSpec extends ControllerSpec with TestData {
 
-  private val page         = mock[ClaimTypePage]
+  private val page         = mock[ClaimTypeView]
   private val formProvider = new ClaimTypeFormProvider
 
   private def controller =
@@ -43,7 +43,6 @@ class ClaimTypeControllerSpec extends ControllerSpec with TestData {
       formProvider,
       stubMessagesControllerComponents(),
       navigator,
-      pages.ClaimTypePage(),
       page
     )(executionContext)
 
@@ -93,7 +92,7 @@ class ClaimTypeControllerSpec extends ControllerSpec with TestData {
       val result = controller.onSubmit()(validRequest)
       status(result) mustEqual SEE_OTHER
       theUpdatedUserAnswers.claimType mustBe Some(AntiDumping)
-      redirectLocation(result) mustBe Some(navigator.nextPage(pages.ClaimTypePage(), emptyAnswers).url)
+      redirectLocation(result) mustBe Some(navigator.nextPage(ClaimTypePage, emptyAnswers).url)
     }
 
     "return 400 (BAD REQUEST) when invalid data posted" in {

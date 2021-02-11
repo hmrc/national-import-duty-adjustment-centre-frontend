@@ -18,9 +18,10 @@
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.Layout
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.routes._
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.BankDetails
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ContactDetails
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components.errorSummary
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.Title
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.NavigatorBack
 
 @this(
         layout: Layout,
@@ -30,45 +31,50 @@
         errorSummary: errorSummary,
         continueButton: components.continueButton )
 
-@(form: Form[BankDetails])(implicit request: Request[_], messages: Messages)
+@(form: Form[ContactDetails], backLink: NavigatorBack)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = Title(form, messages("bankDetails.title"))) {
+@layout(pageTitle = Title(form, messages("contactDetails.title")), backLink) {
 
-    @formHelper(action = BankDetailsController.onSubmit(), 'autoComplete -> "off") {
+    @formHelper(action = ContactDetailsController.onSubmit(), 'autoComplete -> "off") {
         @errorSummary(form.errors)
 
         @fieldSet(
-            legend = "bankDetails.title",
-            hint = Some(Html(messages("bankDetails.hint")))
+            legend = "contactDetails.title",
+            hint = Some(Html(messages("contactDetails.hint")))
         ) {
 
             @inputText(
                 form = form,
-                id = "accountName",
-                name = "accountName",
-                label = "bankDetails.name.heading",
-                hint = Some(messages("bankDetails.name.hint")),
-                attributes = Map("autocomplete" -> "off")
+                id = "firstName",
+                name = "firstName",
+                label = "contactDetails.firstName.heading",
+                autocomplete = Some("given-name")
             )
 
             @inputText(
                 form = form,
-                id = "sortCode",
-                name = "sortCode",
-                label = "bankDetails.sortCode.heading",
-                hint = Some(messages("bankDetails.sortCode.hint")),
-                classes = Some("govuk-input--width-5"),
-                attributes = Map("autocomplete" -> "off")
+                id = "lastName",
+                name = "lastName",
+                label = "contactDetails.lastName.heading",
+                autocomplete = Some("family-name")
             )
 
             @inputText(
                 form = form,
-                id = "accountNumber",
-                name = "accountNumber",
-                label = "bankDetails.accountNumber.heading",
-                hint = Some(messages("bankDetails.accountNumber.hint")),
-                classes = Some("govuk-input--width-10"),
-                attributes = Map("autocomplete" -> "off")
+                id = "emailAddress",
+                name = "emailAddress",
+                inputType = "email",
+                label = "contactDetails.emailAddress.heading",
+                autocomplete = Some("email")
+            )
+
+            @inputText(
+                form = form,
+                id = "telephoneNumber",
+                name = "telephoneNumber",
+                label = "contactDetails.telephoneNumber.heading",
+                classes = Some("govuk-input--width-20"),
+                autocomplete = Some("tel")
             )
         }
 

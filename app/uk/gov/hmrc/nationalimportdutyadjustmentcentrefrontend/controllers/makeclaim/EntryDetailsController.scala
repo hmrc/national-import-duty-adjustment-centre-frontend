@@ -23,9 +23,9 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.Naviga
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.IdentifierAction
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.EntryDetailsFormProvider
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.Navigator
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{EntryDetailsPage, Page}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.CacheDataService
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.EntryDetailsPage
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.EntryDetailsView
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import scala.concurrent.ExecutionContext
@@ -37,24 +37,25 @@ class EntryDetailsController @Inject() (
   formProvider: EntryDetailsFormProvider,
   val controllerComponents: MessagesControllerComponents,
   val navigator: Navigator,
-  val page: pages.EntryDetailsPage,
-  entryDetailsPage: EntryDetailsPage
+  entryDetailsView: EntryDetailsView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController with I18nSupport with Navigation {
+
+  override val page: Page = EntryDetailsPage
 
   private val form = formProvider()
 
   def onPageLoad(): Action[AnyContent] = identify.async { implicit request =>
     data.getAnswers map { answers =>
       val preparedForm = answers.entryDetails.fold(form)(form.fill)
-      Ok(entryDetailsPage(preparedForm, backLink(answers)))
+      Ok(entryDetailsView(preparedForm, backLink(answers)))
     }
   }
 
   def onSubmit(): Action[AnyContent] = identify.async { implicit request =>
     form.bindFromRequest().fold(
       formWithErrors =>
-        data.getAnswers map { answers => BadRequest(entryDetailsPage(formWithErrors, backLink(answers))) },
+        data.getAnswers map { answers => BadRequest(entryDetailsView(formWithErrors, backLink(answers))) },
       value =>
         data.updateAnswers(answers => answers.copy(entryDetails = Some(value))) map {
           updatedAnswers => Redirect(nextPage(updatedAnswers))

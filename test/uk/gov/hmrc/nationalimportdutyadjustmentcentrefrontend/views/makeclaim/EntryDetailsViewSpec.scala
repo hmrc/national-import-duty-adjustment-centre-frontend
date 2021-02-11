@@ -23,14 +23,14 @@ import play.api.data.Form
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, UnitViewSpec}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.EntryDetailsFormProvider
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.EntryDetails
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.EntryDetailsPage
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.EntryDetailsView
 
-class EntryDetailsPageViewSpec extends UnitViewSpec with TestData {
+class EntryDetailsViewSpec extends UnitViewSpec with TestData {
 
-  private val page = instanceOf[EntryDetailsPage]
+  private val page = instanceOf[EntryDetailsView]
   private val form = new EntryDetailsFormProvider().apply()
 
-  private def view(form: Form[EntryDetails] = form): Document = page(form, dummyBack)
+  private def view(form: Form[EntryDetails] = form): Document = page(form, navigatorBack)
 
   "EntryDetailsPage on empty form" should {
 

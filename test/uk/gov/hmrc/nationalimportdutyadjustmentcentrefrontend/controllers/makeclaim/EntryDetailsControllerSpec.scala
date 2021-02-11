@@ -26,13 +26,13 @@ import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{ControllerSpec, TestData}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.EntryDetailsFormProvider
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{EntryDetails, UserAnswers}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.EntryDetailsPage
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.EntryDetailsPage
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.EntryDetailsView
 import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
 
 class EntryDetailsControllerSpec extends ControllerSpec with TestData {
 
-  private val page         = mock[EntryDetailsPage]
+  private val page         = mock[EntryDetailsView]
   private val formProvider = new EntryDetailsFormProvider
 
   private def controller =
@@ -42,7 +42,6 @@ class EntryDetailsControllerSpec extends ControllerSpec with TestData {
       formProvider,
       stubMessagesControllerComponents(),
       navigator,
-      pages.EntryDetailsPage(),
       page
     )(executionContext)
 
@@ -98,7 +97,7 @@ class EntryDetailsControllerSpec extends ControllerSpec with TestData {
       val result = controller.onSubmit()(validRequest)
       status(result) mustEqual SEE_OTHER
       theUpdatedUserAnswers.entryDetails mustBe Some(entryDetailsAnswer)
-      redirectLocation(result) mustBe Some(navigator.nextPage(pages.EntryDetailsPage(), emptyAnswers).url)
+      redirectLocation(result) mustBe Some(navigator.nextPage(EntryDetailsPage, emptyAnswers).url)
     }
 
     "return 400 (BAD REQUEST) when invalid data posted" in {

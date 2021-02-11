@@ -26,13 +26,13 @@ import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{ControllerSpec, TestData}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.ClaimReasonFormProvider
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{ClaimReason, UserAnswers}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ClaimReasonPage
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.ClaimReasonPage
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ClaimReasonView
 import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
 
 class ClaimReasonControllerSpec extends ControllerSpec with TestData {
 
-  private val page         = mock[ClaimReasonPage]
+  private val page         = mock[ClaimReasonView]
   private val formProvider = new ClaimReasonFormProvider
 
   private def controller =
@@ -42,8 +42,7 @@ class ClaimReasonControllerSpec extends ControllerSpec with TestData {
       formProvider,
       stubMessagesControllerComponents(),
       navigator,
-      pages.ClaimReasonPage(),
-      page,
+      page
     )(executionContext)
 
   override protected def beforeEach(): Unit = {
@@ -92,7 +91,7 @@ class ClaimReasonControllerSpec extends ControllerSpec with TestData {
       val result = controller.onSubmit()(validRequest)
       status(result) mustEqual SEE_OTHER
       theUpdatedUserAnswers.claimReason mustBe Some(claimReasonAnswer)
-      redirectLocation(result) mustBe Some(navigator.nextPage(pages.ClaimReasonPage(), theUpdatedUserAnswers).url)
+      redirectLocation(result) mustBe Some(navigator.nextPage(ClaimReasonPage, theUpdatedUserAnswers).url)
     }
 
     "return 400 (BAD REQUEST) when invalid data posted" in {

@@ -25,13 +25,13 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{ControllerSp
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.YesNoFormProvider
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.UserAnswers
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.UploadSummaryPage
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.UploadSummaryPage
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.UploadSummaryView
 import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
 
 class UploadFormSummaryControllerSpec extends ControllerSpec with TestData {
 
-  private val formPage     = mock[UploadSummaryPage]
+  private val formPage     = mock[UploadSummaryView]
   private val formProvider = new YesNoFormProvider
 
   private def controller =
@@ -41,7 +41,6 @@ class UploadFormSummaryControllerSpec extends ControllerSpec with TestData {
       cacheDataService,
       formProvider,
       navigator,
-      pages.UploadSummaryPage(),
       formPage
     )(executionContext)
 
@@ -87,7 +86,7 @@ class UploadFormSummaryControllerSpec extends ControllerSpec with TestData {
     "redirect to next question when user does not want to upload another" in {
       val result = controller.onSubmit()(postRequest(("yesOrNo", "no")))
       status(result) mustEqual SEE_OTHER
-      redirectLocation(result) mustBe Some(navigator.nextPage(pages.UploadSummaryPage(), emptyAnswers).url)
+      redirectLocation(result) mustBe Some(navigator.nextPage(UploadSummaryPage, emptyAnswers).url)
     }
 
     "error when user does answer the question" in {

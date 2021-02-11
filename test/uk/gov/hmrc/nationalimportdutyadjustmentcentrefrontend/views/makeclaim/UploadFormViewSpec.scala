@@ -27,13 +27,13 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType.{
   Preference,
   Quota
 }
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.UploadFormPage
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.UploadFormView
 
 import scala.collection.JavaConverters._
 
-class UploadFormPageViewSpec extends UnitViewSpec with TestData {
+class UploadFormViewSpec extends UnitViewSpec with TestData {
 
-  private val page      = instanceOf[UploadFormPage]
+  private val page      = instanceOf[UploadFormView]
   private val appConfig = instanceOf[AppConfig]
 
   private def view(
@@ -41,7 +41,7 @@ class UploadFormPageViewSpec extends UnitViewSpec with TestData {
     isFirst: Boolean = true,
     error: Option[FormError] = None
   ): Html =
-    page(upscanInitiateResponse, claimType, isFirst, error)
+    page(upscanInitiateResponse, claimType, isFirst, error, navigatorBack)
 
   "UploadFormPage" should {
 
@@ -55,6 +55,10 @@ class UploadFormPageViewSpec extends UnitViewSpec with TestData {
 
     "render hidden input fields" in {
       view().getElementsByAttributeValue("name", "field-hidden").size() mustBe 1
+    }
+
+    "have back link" in {
+      view().getElementsByClass("govuk-back-link") must containMessage("site.back")
     }
 
     "render input file with correct file-types" in {

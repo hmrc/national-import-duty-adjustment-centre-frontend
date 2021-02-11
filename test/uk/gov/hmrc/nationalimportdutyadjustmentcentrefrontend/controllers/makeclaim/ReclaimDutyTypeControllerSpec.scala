@@ -27,13 +27,13 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{ControllerSp
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.ReclaimDutyTypeFormProvider
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ReclaimDutyType.Customs
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{ReclaimDutyType, UserAnswers}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ReclaimDutyTypePage
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.ReclaimDutyTypePage
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ReclaimDutyTypeView
 import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
 
 class ReclaimDutyTypeControllerSpec extends ControllerSpec with TestData {
 
-  private val page         = mock[ReclaimDutyTypePage]
+  private val page         = mock[ReclaimDutyTypeView]
   private val formProvider = new ReclaimDutyTypeFormProvider
 
   private def controller =
@@ -43,7 +43,6 @@ class ReclaimDutyTypeControllerSpec extends ControllerSpec with TestData {
       formProvider,
       stubMessagesControllerComponents(),
       navigator,
-      pages.ReclaimDutyTypePage(),
       page
     )(executionContext)
 
@@ -93,7 +92,7 @@ class ReclaimDutyTypeControllerSpec extends ControllerSpec with TestData {
       val result = controller.onSubmit()(validRequest)
       status(result) mustEqual SEE_OTHER
       theUpdatedUserAnswers.reclaimDutyTypes mustBe Some(Set(Customs))
-      redirectLocation(result) mustBe Some(navigator.nextPage(pages.ReclaimDutyTypePage(), theUpdatedUserAnswers).url)
+      redirectLocation(result) mustBe Some(navigator.nextPage(ReclaimDutyTypePage, theUpdatedUserAnswers).url)
     }
 
     "return 400 (BAD REQUEST) when invalid data posted" in {

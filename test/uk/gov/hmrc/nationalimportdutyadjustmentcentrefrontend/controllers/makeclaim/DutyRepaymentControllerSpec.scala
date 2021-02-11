@@ -32,12 +32,12 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{
   ImportVatRepaymentPage,
   OtherDutyRepaymentPage
 }
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.DutyRepaymentPage
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.DutyRepaymentView
 import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
 
 class DutyRepaymentControllerSpec extends ControllerSpec with TestData {
 
-  private val page         = mock[DutyRepaymentPage]
+  private val page         = mock[DutyRepaymentView]
   private val formProvider = new DutyPaidFormProvider
 
   private def controller =
@@ -117,7 +117,7 @@ class DutyRepaymentControllerSpec extends ControllerSpec with TestData {
       val result = controller.onSubmitCustomsDuty()(validRequest)
       status(result) mustEqual SEE_OTHER
       theUpdatedUserAnswers.reclaimDutyPayments mustBe Map(Customs.toString -> dutyPaid)
-      redirectLocation(result) mustBe Some(navigator.nextPage(CustomsDutyRepaymentPage(), theUpdatedUserAnswers).url)
+      redirectLocation(result) mustBe Some(navigator.nextPage(CustomsDutyRepaymentPage, theUpdatedUserAnswers).url)
     }
 
     "update cache and redirect when import VAT answer is submitted" in {
@@ -127,7 +127,7 @@ class DutyRepaymentControllerSpec extends ControllerSpec with TestData {
       val result = controller.onSubmitImportVat()(validRequest)
       status(result) mustEqual SEE_OTHER
       theUpdatedUserAnswers.reclaimDutyPayments mustBe Map(Vat.toString -> dutyPaid)
-      redirectLocation(result) mustBe Some(navigator.nextPage(ImportVatRepaymentPage(), theUpdatedUserAnswers).url)
+      redirectLocation(result) mustBe Some(navigator.nextPage(ImportVatRepaymentPage, theUpdatedUserAnswers).url)
     }
 
     "update cache and redirect when other duty answer is submitted" in {
@@ -137,7 +137,7 @@ class DutyRepaymentControllerSpec extends ControllerSpec with TestData {
       val result = controller.onSubmitOtherDuty()(validRequest)
       status(result) mustEqual SEE_OTHER
       theUpdatedUserAnswers.reclaimDutyPayments mustBe Map(Other.toString -> dutyPaid)
-      redirectLocation(result) mustBe Some(navigator.nextPage(OtherDutyRepaymentPage(), theUpdatedUserAnswers).url)
+      redirectLocation(result) mustBe Some(navigator.nextPage(OtherDutyRepaymentPage, theUpdatedUserAnswers).url)
     }
 
     "return 400 (BAD REQUEST) when invalid data posted" in {

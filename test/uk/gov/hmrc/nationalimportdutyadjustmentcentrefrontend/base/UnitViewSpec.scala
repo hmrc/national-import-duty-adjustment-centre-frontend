@@ -35,7 +35,7 @@ trait UnitViewSpec extends UnitSpec with ViewMatchers with Injector {
   protected def messages(key: String, args: Any*)(implicit request: Request[_]): String =
     messages(request)(key, args: _*)
 
-  protected val dummyBack: NavigatorBack = NavigatorBack(Some(Call("GET", "/dummy/url")))
+  protected val navigatorBack: NavigatorBack = NavigatorBack(Some(Call("GET", "/fixed/url")))
 
 }
 
