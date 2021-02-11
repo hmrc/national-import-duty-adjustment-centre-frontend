@@ -30,7 +30,7 @@ class EntryDetailsPageViewSpec extends UnitViewSpec with TestData {
   private val page = instanceOf[EntryDetailsPage]
   private val form = new EntryDetailsFormProvider().apply()
 
-  private def view(form: Form[EntryDetails] = form): Document = page(form)
+  private def view(form: Form[EntryDetails] = form): Document = page(form, dummyBack)
 
   "EntryDetailsPage on empty form" should {
 

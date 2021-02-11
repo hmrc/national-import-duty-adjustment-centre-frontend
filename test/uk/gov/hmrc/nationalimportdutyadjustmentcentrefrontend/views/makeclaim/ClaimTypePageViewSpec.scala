@@ -30,7 +30,7 @@ class ClaimTypePageViewSpec extends UnitViewSpec {
   private val page = instanceOf[ClaimTypePage]
   private val form = new ClaimTypeFormProvider().apply()
 
-  private def view(form: Form[ClaimType] = form): Html = page(form)
+  private def view(form: Form[ClaimType] = form): Html = page(form, dummyBack)
 
   "ClaimTypePage on empty form" should {
 

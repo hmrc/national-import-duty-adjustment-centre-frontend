@@ -26,7 +26,7 @@ import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{ControllerSpec, TestData}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.EntryDetailsFormProvider
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{EntryDetails, UserAnswers}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.EntryDetailsPage
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.EntryDetailsPage
 import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
 
@@ -42,13 +42,14 @@ class EntryDetailsControllerSpec extends ControllerSpec with TestData {
       formProvider,
       stubMessagesControllerComponents(),
       navigator,
+      pages.EntryDetailsPage(),
       page
     )(executionContext)
 
   override protected def beforeEach(): Unit = {
     super.beforeEach()
     withEmptyCache()
-    when(page.apply(any())(any(), any())).thenReturn(HtmlFormat.empty)
+    when(page.apply(any(), any())(any(), any())).thenReturn(HtmlFormat.empty)
   }
 
   override protected def afterEach(): Unit = {
@@ -58,7 +59,7 @@ class EntryDetailsControllerSpec extends ControllerSpec with TestData {
 
   def theResponseForm: Form[EntryDetails] = {
     val captor = ArgumentCaptor.forClass(classOf[Form[EntryDetails]])
-    verify(page).apply(captor.capture())(any(), any())
+    verify(page).apply(captor.capture(), any())(any(), any())
     captor.getValue
   }
 
@@ -97,7 +98,7 @@ class EntryDetailsControllerSpec extends ControllerSpec with TestData {
       val result = controller.onSubmit()(validRequest)
       status(result) mustEqual SEE_OTHER
       theUpdatedUserAnswers.entryDetails mustBe Some(entryDetailsAnswer)
-      redirectLocation(result) mustBe Some(navigator.nextPage(EntryDetailsPage, emptyAnswers).url)
+      redirectLocation(result) mustBe Some(navigator.nextPage(pages.EntryDetailsPage(), emptyAnswers).url)
     }
 
     "return 400 (BAD REQUEST) when invalid data posted" in {

@@ -20,7 +20,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models._
 
 trait QuestionPage[A] extends Page
 
-case object ClaimTypePage            extends QuestionPage[ClaimType]
+case class ClaimTypePage()           extends QuestionPage[ClaimType]
 case object ContactDetailsPage       extends QuestionPage[ContactDetails]
 case object AddressPage              extends QuestionPage[Address]
 case object ReclaimDutyTypePage      extends QuestionPage[Set[ReclaimDutyType]]
@@ -30,5 +30,5 @@ case object OtherDutyRepaymentPage   extends QuestionPage[DutyPaid]
 case object BankDetailsPage          extends QuestionPage[BankDetails]
 case object ClaimReasonPage          extends QuestionPage[ClaimReason]
 case object UploadSummaryPage        extends QuestionPage[Boolean]
-case object EntryDetailsPage         extends QuestionPage[EntryDetails]
+case class EntryDetailsPage()        extends QuestionPage[EntryDetails]
 case object ItemNumbersPage          extends QuestionPage[ItemNumbers]

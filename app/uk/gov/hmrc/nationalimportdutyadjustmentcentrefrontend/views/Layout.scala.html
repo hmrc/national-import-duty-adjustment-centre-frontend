@@ -34,8 +34,7 @@
         govukBackLink: GovukBackLink,
         appConfig: AppConfig
 )
-@(
-        pageTitle: Title,
+@(      pageTitle: Title,
         backLink: NavigatorBack = NavigatorBack(None),  // TODO - remove default
         headBlock: Option[Html] = None
 )(contentBlock: Html)(implicit request: Request[_], messages: Messages)
