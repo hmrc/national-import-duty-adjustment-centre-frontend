@@ -18,7 +18,7 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages
 
 trait Page
 
-case class FirstPage()           extends Page
+case object FirstPage            extends Page
 case object UploadPage           extends Page
 case object CheckYourAnswersPage extends Page
 case object ConfirmationPage     extends Page

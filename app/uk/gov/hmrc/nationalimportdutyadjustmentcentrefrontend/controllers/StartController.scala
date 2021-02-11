@@ -32,7 +32,7 @@ class StartController @Inject() (mcc: MessagesControllerComponents, identify: Id
   private val noAnswers = UserAnswers()
 
   val start: Action[AnyContent] = identify { _ =>
-    Redirect(navigator.nextPage(FirstPage(), noAnswers))
+    Redirect(navigator.nextPage(FirstPage, noAnswers))
   }
 
 }

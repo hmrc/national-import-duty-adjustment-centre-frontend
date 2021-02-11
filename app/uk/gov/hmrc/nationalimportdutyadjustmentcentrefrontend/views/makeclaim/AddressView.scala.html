@@ -24,12 +24,13 @@
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.NavigatorBack
 
 @this(
-layout: Layout,
-formHelper: FormWithCSRF,
-fieldSet: components.fieldSet,
-inputText: components.inputText,
-errorSummary: errorSummary,
-continueButton: components.continueButton )
+    layout: Layout,
+    formHelper: FormWithCSRF,
+    fieldSet: components.fieldSet,
+    inputText: components.inputText,
+    errorSummary: errorSummary,
+    continueButton: components.continueButton
+)
 
 @(form: Form[Address], backLink: NavigatorBack)(implicit request: Request[_], messages: Messages)
 

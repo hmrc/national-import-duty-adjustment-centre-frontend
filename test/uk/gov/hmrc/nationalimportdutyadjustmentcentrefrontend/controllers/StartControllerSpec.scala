@@ -34,7 +34,7 @@ class StartControllerSpec extends ControllerSpec {
     "redirect to first question when user is authorised" in {
       val result = controller(fakeAuthorisedIdentifierAction).start(fakeGetRequest)
       status(result) mustBe Status.SEE_OTHER
-      redirectLocation(result) mustBe Some(navigator.nextPage(FirstPage(), UserAnswers()).url)
+      redirectLocation(result) mustBe Some(navigator.nextPage(FirstPage, UserAnswers()).url)
     }
 
     "redirect when user is unauthorised" in {

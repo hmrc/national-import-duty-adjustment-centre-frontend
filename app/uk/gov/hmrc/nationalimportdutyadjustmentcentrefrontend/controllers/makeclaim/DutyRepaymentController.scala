@@ -26,7 +26,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ReclaimDuty
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.requests.IdentifierRequest
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{DutyPaid, ReclaimDutyType, UserAnswers}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.Navigator
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.CacheDataService
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.DutyRepaymentView
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -74,10 +74,10 @@ class DutyRepaymentController @Inject() (
   }
 
   private def currentPage(dutyType: ReclaimDutyType) = dutyType match {
-    case Customs => pages.CustomsDutyRepaymentPage
-    case Vat     => pages.ImportVatRepaymentPage
-    case Other   => pages.OtherDutyRepaymentPage
-    case _       => pages.FirstPage()
+    case Customs => CustomsDutyRepaymentPage
+    case Vat     => ImportVatRepaymentPage
+    case Other   => OtherDutyRepaymentPage
+    case _       => FirstPage
   }
 
   private def page(dutyType: ReclaimDutyType, form: Form[DutyPaid], answers: UserAnswers)(implicit
