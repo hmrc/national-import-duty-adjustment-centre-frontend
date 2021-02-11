@@ -25,8 +25,8 @@ import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{ControllerSpec, TestData}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.ItemNumbersFormProvider
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{BankDetails, ItemNumbers, UserAnswers}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.ItemNumbersPage
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{ItemNumbers, UserAnswers}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ItemNumbersPage
 import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
 
@@ -42,13 +42,14 @@ class ItemNumbersControllerSpec extends ControllerSpec with TestData {
       formProvider,
       stubMessagesControllerComponents(),
       navigator,
+      pages.ItemNumbersPage(),
       page
     )(executionContext)
 
   override protected def beforeEach(): Unit = {
     super.beforeEach()
     withEmptyCache()
-    when(page.apply(any())(any(), any())).thenReturn(HtmlFormat.empty)
+    when(page.apply(any(), any())(any(), any())).thenReturn(HtmlFormat.empty)
   }
 
   override protected def afterEach(): Unit = {
@@ -58,7 +59,7 @@ class ItemNumbersControllerSpec extends ControllerSpec with TestData {
 
   def theResponseForm: Form[ItemNumbers] = {
     val captor = ArgumentCaptor.forClass(classOf[Form[ItemNumbers]])
-    verify(page).apply(captor.capture())(any(), any())
+    verify(page).apply(captor.capture(), any())(any(), any())
     captor.getValue
   }
 
@@ -91,7 +92,7 @@ class ItemNumbersControllerSpec extends ControllerSpec with TestData {
       val result = controller.onSubmit()(validRequest)
       status(result) mustEqual SEE_OTHER
       theUpdatedUserAnswers.itemNumbers mustBe Some(itemNumbersAnswer)
-      redirectLocation(result) mustBe Some(navigator.nextPage(ItemNumbersPage, theUpdatedUserAnswers).url)
+      redirectLocation(result) mustBe Some(navigator.nextPage(pages.ItemNumbersPage(), theUpdatedUserAnswers).url)
     }
 
     "return 400 (BAD REQUEST) when invalid data posted" in {

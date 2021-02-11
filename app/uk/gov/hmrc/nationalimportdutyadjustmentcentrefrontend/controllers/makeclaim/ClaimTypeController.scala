@@ -28,7 +28,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.CacheData
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ClaimTypePage
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 @Singleton
 class ClaimTypeController @Inject() (
@@ -52,15 +52,13 @@ class ClaimTypeController @Inject() (
   }
 
   def onSubmit(): Action[AnyContent] = identify.async { implicit request =>
-    data.getAnswers flatMap { answers =>
-      form.bindFromRequest().fold(
-        formWithErrors => Future(BadRequest(claimTypePage(formWithErrors, backLink(answers)))),
-        value =>
-          data.updateAnswers(answers => answers.copy(claimType = Some(value))) map {
-            updatedAnswers => Redirect(nextPage(updatedAnswers))
-          }
-      )
-    }
+    form.bindFromRequest().fold(
+      formWithErrors => data.getAnswers map { answers => BadRequest(claimTypePage(formWithErrors, backLink(answers))) },
+      value =>
+        data.updateAnswers(answers => answers.copy(claimType = Some(value))) map {
+          updatedAnswers => Redirect(nextPage(updatedAnswers))
+        }
+    )
   }
 
 }

@@ -28,7 +28,7 @@ class ItemNumbersPageViewSpec extends UnitViewSpec with TestData {
   private val page = instanceOf[ItemNumbersPage]
   private val form = new ItemNumbersFormProvider().apply()
 
-  private def view(form: Form[ItemNumbers] = form): Document = page(form)
+  private def view(form: Form[ItemNumbers] = form): Document = page(form, dummyBack)
 
   "ItemNumbersPage on empty form" should {
 

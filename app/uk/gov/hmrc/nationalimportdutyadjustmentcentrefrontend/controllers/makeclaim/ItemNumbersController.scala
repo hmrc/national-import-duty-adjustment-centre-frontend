@@ -19,15 +19,16 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makec
 import javax.inject.{Inject, Singleton}
 import play.api.i18n.I18nSupport
 import play.api.mvc._
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.Navigation
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.IdentifierAction
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.ItemNumbersFormProvider
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.Navigator
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.ItemNumbersPage
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.CacheDataService
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ItemNumbersPage
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 @Singleton
 class ItemNumbersController @Inject() (
@@ -35,28 +36,31 @@ class ItemNumbersController @Inject() (
   data: CacheDataService,
   formProvider: ItemNumbersFormProvider,
   val controllerComponents: MessagesControllerComponents,
-  navigator: Navigator,
+  val navigator: Navigator,
+  val page: pages.ItemNumbersPage,
   itemNumbersPage: ItemNumbersPage
 )(implicit ec: ExecutionContext)
-    extends FrontendBaseController with I18nSupport {
+    extends FrontendBaseController with I18nSupport with Navigation {
 
   private val form = formProvider()
 
   def onPageLoad(): Action[AnyContent] = identify.async { implicit request =>
     data.getAnswers map { answers =>
       val preparedForm = answers.itemNumbers.fold(form)(form.fill)
-      Ok(itemNumbersPage(preparedForm))
+      Ok(itemNumbersPage(preparedForm, backLink(answers)))
     }
   }
 
   def onSubmit(): Action[AnyContent] = identify.async { implicit request =>
     form.bindFromRequest().fold(
-      formWithErrors => Future(BadRequest(itemNumbersPage(formWithErrors))),
+      formWithErrors =>
+        data.getAnswers map { answers => BadRequest(itemNumbersPage(formWithErrors, backLink(answers))) },
       value =>
         data.updateAnswers(answers => answers.copy(itemNumbers = Some(value))) map {
-          updatedAnswers => Redirect(navigator.nextPage(ItemNumbersPage, updatedAnswers))
+          updatedAnswers => Redirect(nextPage(updatedAnswers))
         }
     )
+
   }
 
 }
