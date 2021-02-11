@@ -53,7 +53,7 @@ class DutyRepaymentControllerSpec extends ControllerSpec with TestData {
   override protected def beforeEach(): Unit = {
     super.beforeEach()
     withEmptyCache()
-    when(page.apply(any(), any(), any())(any(), any())).thenReturn(HtmlFormat.empty)
+    when(page.apply(any(), any(), any(), any())(any(), any())).thenReturn(HtmlFormat.empty)
   }
 
   override protected def afterEach(): Unit = {
@@ -63,7 +63,7 @@ class DutyRepaymentControllerSpec extends ControllerSpec with TestData {
 
   def theResponseForm: Form[DutyPaid] = {
     val captor = ArgumentCaptor.forClass(classOf[Form[DutyPaid]])
-    verify(page).apply(captor.capture(), any(), any())(any(), any())
+    verify(page).apply(captor.capture(), any(), any(), any())(any(), any())
     captor.getValue
   }
 
@@ -117,7 +117,7 @@ class DutyRepaymentControllerSpec extends ControllerSpec with TestData {
       val result = controller.onSubmitCustomsDuty()(validRequest)
       status(result) mustEqual SEE_OTHER
       theUpdatedUserAnswers.reclaimDutyPayments mustBe Map(Customs.toString -> dutyPaid)
-      redirectLocation(result) mustBe Some(navigator.nextPage(CustomsDutyRepaymentPage, theUpdatedUserAnswers).url)
+      redirectLocation(result) mustBe Some(navigator.nextPage(CustomsDutyRepaymentPage(), theUpdatedUserAnswers).url)
     }
 
     "update cache and redirect when import VAT answer is submitted" in {
@@ -127,7 +127,7 @@ class DutyRepaymentControllerSpec extends ControllerSpec with TestData {
       val result = controller.onSubmitImportVat()(validRequest)
       status(result) mustEqual SEE_OTHER
       theUpdatedUserAnswers.reclaimDutyPayments mustBe Map(Vat.toString -> dutyPaid)
-      redirectLocation(result) mustBe Some(navigator.nextPage(ImportVatRepaymentPage, theUpdatedUserAnswers).url)
+      redirectLocation(result) mustBe Some(navigator.nextPage(ImportVatRepaymentPage(), theUpdatedUserAnswers).url)
     }
 
     "update cache and redirect when other duty answer is submitted" in {
@@ -137,7 +137,7 @@ class DutyRepaymentControllerSpec extends ControllerSpec with TestData {
       val result = controller.onSubmitOtherDuty()(validRequest)
       status(result) mustEqual SEE_OTHER
       theUpdatedUserAnswers.reclaimDutyPayments mustBe Map(Other.toString -> dutyPaid)
-      redirectLocation(result) mustBe Some(navigator.nextPage(OtherDutyRepaymentPage, theUpdatedUserAnswers).url)
+      redirectLocation(result) mustBe Some(navigator.nextPage(OtherDutyRepaymentPage(), theUpdatedUserAnswers).url)
     }
 
     "return 400 (BAD REQUEST) when invalid data posted" in {
