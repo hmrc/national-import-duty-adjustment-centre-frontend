@@ -20,11 +20,12 @@ import javax.inject.{Inject, Singleton}
 import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.Navigation
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.IdentifierAction
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.YesNoFormProvider
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.UserAnswers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.Navigator
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.UploadSummaryPage
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.CacheDataService
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.UploadSummaryPage
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
@@ -37,17 +38,18 @@ class UploadFormSummaryController @Inject() (
   identify: IdentifierAction,
   data: CacheDataService,
   formProvider: YesNoFormProvider,
-  navigator: Navigator,
+  val navigator: Navigator,
+  val page: pages.UploadSummaryPage,
   summaryPage: UploadSummaryPage
 )(implicit ec: ExecutionContext)
-    extends FrontendController(mcc) with I18nSupport {
+    extends FrontendController(mcc) with I18nSupport with Navigation{
 
   private val form = formProvider("upload_documents_summary.add.required")
 
   def onPageLoad(): Action[AnyContent] = identify.async { implicit request =>
     data.getAnswers map { answers =>
       answers.uploads match {
-        case Some(documents) if documents.nonEmpty => Ok(summaryPage(form, answers.claimType, documents))
+        case Some(documents) if documents.nonEmpty => Ok(summaryPage(form, answers.claimType, documents, backLink(answers)))
         case _                                     => Redirect(controllers.makeclaim.routes.UploadFormController.onPageLoad())
       }
     }
@@ -57,12 +59,12 @@ class UploadFormSummaryController @Inject() (
     data.getAnswers map { answers =>
       form.bindFromRequest().fold(
         formWithErrors =>
-          BadRequest(summaryPage(formWithErrors, answers.claimType, answers.uploads.getOrElse(Seq.empty))),
+          BadRequest(summaryPage(formWithErrors, answers.claimType, answers.uploads.getOrElse(Seq.empty), backLink(answers))),
         addAnother =>
           if (addAnother)
             Redirect(controllers.makeclaim.routes.UploadFormController.onPageLoad())
           else
-            Redirect(navigator.nextPage(UploadSummaryPage, answers))
+            Redirect(nextPage(answers))
       )
     }
   }

@@ -43,7 +43,7 @@ class UploadSummaryPageViewSpec extends UnitViewSpec with TestData {
     claimType: Option[ClaimType] = None,
     uploadedDocuments: Seq[UploadedFile] = Seq.empty
   ): Html =
-    page(form, claimType, uploadedDocuments)
+    page(form, claimType, uploadedDocuments, dummyBack)
 
   "UploadSummaryPage" should {
 

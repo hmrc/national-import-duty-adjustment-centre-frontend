@@ -39,7 +39,7 @@ class Navigator @Inject() () extends Conditions with Ordering {
     P(OtherDutyRepaymentPage(), makeclaim.routes.DutyRepaymentController.onPageLoadOtherDuty, hasDutyType(Other)),
     P(ClaimReasonPage(), makeclaim.routes.ClaimReasonController.onPageLoad, always),
     P(UploadPage, makeclaim.routes.UploadFormController.onPageLoad, hasNoUploads),
-    P(UploadSummaryPage, makeclaim.routes.UploadFormSummaryController.onPageLoad, hasUploads),
+    P(UploadSummaryPage(), makeclaim.routes.UploadFormSummaryController.onPageLoad, hasUploads),
     P(ContactDetailsPage, makeclaim.routes.ContactDetailsController.onPageLoad, always),
     P(AddressPage, makeclaim.routes.AddressController.onPageLoad, always),
     P(BankDetailsPage, makeclaim.routes.BankDetailsController.onPageLoad, always),
