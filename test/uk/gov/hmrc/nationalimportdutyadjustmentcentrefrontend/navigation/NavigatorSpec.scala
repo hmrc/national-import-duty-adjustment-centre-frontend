@@ -179,7 +179,7 @@ class NavigatorSpec extends UnitSpec with Injector with TestData {
     def answers(uploads: Seq[UploadedFile]): UserAnswers =
       completeAnswers.copy(uploads = Some(uploads))
 
-    val nextPage     = navigator.nextPage(ClaimReasonPage, _)
+    val nextPage     = navigator.nextPage(ClaimReasonPage(), _)
     val previousPage = back(ContactDetailsPage, _)
 
     "going forward (from the question before file uploads)" when {

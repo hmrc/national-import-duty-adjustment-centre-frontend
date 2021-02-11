@@ -22,6 +22,7 @@
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components.errorSummary
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components.inputCharacterCount
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.Title
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.NavigatorBack
 
 @this(
         layout: Layout,
@@ -30,9 +31,9 @@
         errorSummary: errorSummary,
         continueButton: components.continueButton )
 
-@(form: Form[ClaimReason])(implicit request: Request[_], messages: Messages)
+@(form: Form[ClaimReason], backLink: NavigatorBack)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = Title(form, messages("claim_reason.title"))) {
+@layout(pageTitle = Title(form, messages("claim_reason.title")), backLink) {
 
     @formHelper(action = ClaimReasonController.onSubmit(), 'autoComplete -> "off") {
         @errorSummary(form.errors)

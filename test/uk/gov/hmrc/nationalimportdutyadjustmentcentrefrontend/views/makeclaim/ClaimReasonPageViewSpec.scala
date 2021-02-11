@@ -28,7 +28,7 @@ class ClaimReasonPageViewSpec extends UnitViewSpec with TestData {
   private val page = instanceOf[ClaimReasonPage]
   private val form = new ClaimReasonFormProvider().apply()
 
-  private def view(form: Form[ClaimReason] = form): Document = page(form)
+  private def view(form: Form[ClaimReason] = form): Document = page(form, dummyBack)
 
   "ClaimReasonPage on empty form" should {
 
