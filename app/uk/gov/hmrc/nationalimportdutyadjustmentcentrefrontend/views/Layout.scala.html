@@ -35,7 +35,7 @@
         appConfig: AppConfig
 )
 @(      pageTitle: Title,
-        backLink: NavigatorBack = NavigatorBack(None),  // TODO - remove default
+        backLink: NavigatorBack,
         headBlock: Option[Html] = None
 )(contentBlock: Html)(implicit request: Request[_], messages: Messages)
 
