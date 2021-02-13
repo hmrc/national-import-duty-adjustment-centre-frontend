@@ -3,7 +3,7 @@
 // @namespace  http://tampermonkey.net/
 // @version   0.1
 // @description Authenticates for NIDAC
-// @author    You
+// @author    NIDAC Team
 // @match     http*://*/auth-login-stub/gg-sign-in?continue=*national-import-duty-adjustment-centre*
 // @grant     none
 // @updateURL https://raw.githubusercontent.com/hmrc/national-import-duty-adjustment-centre-frontend/master/docs/NIDAC%20Authorisation.js
@@ -11,12 +11,8 @@
 
 (function () {
     'use strict';
-
     document.getElementsByName("redirectionUrl")[0].value = getBaseUrl() + "/national-import-duty-adjustment-centre";
-
-
     document.getElementById('global-header').appendChild(createQuickButton())
-
 })();
 
 function createQuickButton() {

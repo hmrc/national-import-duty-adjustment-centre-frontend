@@ -3,7 +3,7 @@
 // @namespace    http://tampermonkey.net/
 // @version      0.1
 // @description  NIDAC Create Claim AutoComplete
-// @author       You
+// @author       NIDAC Team
 // @match        http*://*/national-import-duty-adjustment-centre*
 // @grant        none
 // @updateURL    https://raw.githubusercontent.com/hmrc/national-import-duty-adjustment-centre-frontend/master/docs/NIDAC%20Create%20Claim%20AutoComplete.js
