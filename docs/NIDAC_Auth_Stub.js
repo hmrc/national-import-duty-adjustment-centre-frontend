@@ -6,7 +6,7 @@
 // @author    NIDAC Team
 // @match     http*://*/auth-login-stub/gg-sign-in?continue=*national-import-duty-adjustment-centre*
 // @grant     none
-// @updateURL https://raw.githubusercontent.com/hmrc/national-import-duty-adjustment-centre-frontend/master/docs/NIDAC%20Authorisation.js
+// @updateURL https://raw.githubusercontent.com/hmrc/national-import-duty-adjustment-centre-frontend/master/docs/NIDAC_Auth_Stub.js
 // ==/UserScript==
 
 (function () {
