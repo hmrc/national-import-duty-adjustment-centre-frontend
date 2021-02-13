@@ -15,8 +15,7 @@ Open the app in your browser at `http://localhost:8490/national-import-duty-adju
 
 [Tampermonkey](https://www.tampermonkey.net/) scripts are provided for testing / demonstration purposes.
 
-Note:  The scripts are not a deliverable part of this project and are not guaranteed to be kept up to date with changes
-in the UI.
+Note:  The scripts are not a deliverable part of this project and are not guaranteed to be kept up to date with changes in the UI.
 
 Use the following urls to install the scripts into the Tampermonkey browser plugin.
 
