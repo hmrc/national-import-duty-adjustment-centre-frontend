@@ -17,11 +17,14 @@
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim
 
 import javax.inject.{Inject, Singleton}
+import play.api.data.FormError
 import play.api.i18n.I18nSupport
 import play.api.mvc._
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.BankAccountReputationConnector
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.Navigation
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.IdentifierAction
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.BankDetailsFormProvider
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.bankaccountreputation.{AccountDetails, AccountRequest}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.Navigator
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{BankDetailsPage, Page}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.CacheDataService
@@ -34,6 +37,7 @@ import scala.concurrent.ExecutionContext
 class BankDetailsController @Inject() (
   identify: IdentifierAction,
   data: CacheDataService,
+  bankAccountReputationConnector: BankAccountReputationConnector,
   formProvider: BankDetailsFormProvider,
   val controllerComponents: MessagesControllerComponents,
   val navigator: Navigator,
@@ -57,8 +61,16 @@ class BankDetailsController @Inject() (
       formWithErrors =>
         data.getAnswers map { answers => BadRequest(bankDetailsView(formWithErrors, backLink(answers))) },
       value =>
-        data.updateAnswers(answers => answers.copy(bankDetails = Some(value))) map {
-          updatedAnswers => Redirect(nextPage(updatedAnswers))
+        bankAccountReputationConnector.submitClaim(AccountRequest(AccountDetails(value.sortCode, value.accountNumber))) flatMap {
+          accountResponse =>
+            if (accountResponse.accountNumberWithSortCodeIsValid == "yes")
+              data.updateAnswers(answers => answers.copy(bankDetails = Some(value))) map {
+                updatedAnswers => Redirect(nextPage(updatedAnswers))
+              }
+            else {
+              val formWithErrors = form.fill(value).copy(errors = Seq(FormError("", "Account number and/or sort code invalid.  Please check and try again")))
+              data.getAnswers map { answers => BadRequest(bankDetailsView(formWithErrors, backLink(answers))) }
+            }
         }
     )
   }

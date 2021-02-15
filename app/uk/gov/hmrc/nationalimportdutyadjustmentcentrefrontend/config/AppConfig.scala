@@ -48,6 +48,7 @@ class AppConfig @Inject() (
   val loginUrl: String         = loadConfig("urls.login")
   val loginContinueUrl: String = loadConfig("urls.loginContinue")
   val signOutUrl: String       = loadConfig("urls.signout")
+  val bankaccountReputationValidateUrl: String = loadConfig("urls.bankAccountValidate")
 
   private val sessionTimeoutSeconds: Int = sessionTimeoutConfig.timeoutDuration.getSeconds.toInt
 
