@@ -27,8 +27,8 @@ class BankAccountReputationConnector @Inject()(httpClient: HttpClient, appConfig
 
   private val url = appConfig.bankaccountReputationValidateUrl
 
-  def submitClaim(request: AccountRequest)(implicit
-                                                                  hc: HeaderCarrier
+  def validate(request: AccountRequest)(implicit
+                                        hc: HeaderCarrier
   ): Future[AccountResponse] =
     httpClient.POST[AccountRequest, AccountResponse](
       url,

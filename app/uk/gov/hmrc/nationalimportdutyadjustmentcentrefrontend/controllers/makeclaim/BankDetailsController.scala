@@ -24,7 +24,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.BankAcc
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.Navigation
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.IdentifierAction
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.BankDetailsFormProvider
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.bankaccountreputation.{AccountDetails, AccountRequest}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.bankaccountreputation.{AccountDetails, AccountRequest, AccountResponse}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.Navigator
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{BankDetailsPage, Page}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.CacheDataService
@@ -61,16 +61,18 @@ class BankDetailsController @Inject() (
       formWithErrors =>
         data.getAnswers map { answers => BadRequest(bankDetailsView(formWithErrors, backLink(answers))) },
       value =>
-        bankAccountReputationConnector.submitClaim(AccountRequest(AccountDetails(value.sortCode, value.accountNumber))) flatMap {
-          accountResponse =>
-            if (accountResponse.accountNumberWithSortCodeIsValid == "yes")
-              data.updateAnswers(answers => answers.copy(bankDetails = Some(value))) map {
-                updatedAnswers => Redirect(nextPage(updatedAnswers))
-              }
-            else {
-              val formWithErrors = form.fill(value).copy(errors = Seq(FormError("", "Account number and/or sort code invalid.  Please check and try again")))
-              data.getAnswers map { answers => BadRequest(bankDetailsView(formWithErrors, backLink(answers))) }
-            }
+        bankAccountReputationConnector.validate(AccountRequest(AccountDetails(value.sortCode, value.accountNumber))) flatMap {
+          case AccountResponse(_, Some("no")) => {
+            val formWithErrors = form.fill(value).copy(errors = Seq(FormError("", "Account does not support BACS payments")))
+            data.getAnswers map { answers => BadRequest(bankDetailsView(formWithErrors, backLink(answers))) }
+          }
+          case AccountResponse("yes", _) => data.updateAnswers(answers => answers.copy(bankDetails = Some(value))) map {
+            updatedAnswers => Redirect(nextPage(updatedAnswers))
+          }
+          case _ => {
+            val formWithErrors = form.fill(value).copy(errors = Seq(FormError("", "Account number and/or sort code invalid.  Please check and try again")))
+            data.getAnswers map { answers => BadRequest(bankDetailsView(formWithErrors, backLink(answers))) }
+          }
         }
     )
   }
