@@ -162,7 +162,7 @@ itemNumbers.hint = Tell us the item numbers as they appear on your declaration. 
 itemNumbers.error.required = Enter an item number
 itemNumbers.error.length = Item numbers must be 500 characters or fewer
 
-importer.eori.title = What is the importer’s EORI number
+importer.eori.title = What is the importer’s EORI number?
 importer.eori.hint = The number starts with GB and is followed by 12 digits. For example, GB345834921000.
 importer.eori.details.summary = The importer’s EORI doesn't start with GB
 importer.eori.details.getEori = If the importer’s EORI number does not start with GB, they will need to {0} (opens in a new tab).
