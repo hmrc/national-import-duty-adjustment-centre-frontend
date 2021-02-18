@@ -16,7 +16,7 @@
 
 @import uk.gov.hmrc.govukfrontend.views.html.components._
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.Layout
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components._
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.routes._
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.EoriNumber
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components.errorSummary
@@ -26,11 +26,10 @@
 @this(
         layout: Layout,
         formHelper: FormWithCSRF,
-        inputText: components.inputText,
+        inputText: inputText,
         govukDetails : GovukDetails,
         errorSummary: errorSummary,
-        externalLink: components.externalLink,
-        continueButton: components.continueButton,
+        continueButton: continueButton,
         appConfig: AppConfig)
 
 @(form: Form[EoriNumber], backLink: NavigatorBack)(implicit request: Request[_], messages: Messages)
