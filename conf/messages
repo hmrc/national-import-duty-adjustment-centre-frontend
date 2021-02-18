@@ -168,7 +168,7 @@ importer.eori.details.summary = The importer’s EORI doesn’t start with GB
 importer.eori.details.getEori = If the importer’s EORI number does not start with GB, they will need to {0} (opens in a new tab).
 importer.eori.details.getEori.linktext = apply for a new EORI number
 importer.eori.error.required = Enter the importer’s EORI number
-importer.eori.error.invalid = Enter an EORI number in the correct format. For example, GB012345678901
+importer.eori.error.invalid = Enter an EORI number in the correct format
 
 entryDetails.title = Entry details
 entryDetails.hint = These can be found on Single Administrative Document (C88) or Import Entry Acceptance Advice (E2) documents.
