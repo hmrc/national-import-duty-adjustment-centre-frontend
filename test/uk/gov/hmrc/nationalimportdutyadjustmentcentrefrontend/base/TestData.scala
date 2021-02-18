@@ -71,6 +71,8 @@ trait TestData {
 
   val itemNumbersAnswer: ItemNumbers = ItemNumbers("1,2,3,4")
 
+  val importerHasEoriAnswer = true
+
   val importerEoriNumberAnswer = EoriNumber("GB232454456746")
 
   val completeAnswers: UserAnswers = UserAnswers(
@@ -86,6 +88,7 @@ trait TestData {
     bankDetails = Some(bankDetailsAnswer),
     entryDetails = Some(entryDetailsAnswer),
     itemNumbers = Some(itemNumbersAnswer),
+    importerHasEori = Some(importerHasEoriAnswer),
     importerEori = Some(importerEoriNumberAnswer)
   )
 

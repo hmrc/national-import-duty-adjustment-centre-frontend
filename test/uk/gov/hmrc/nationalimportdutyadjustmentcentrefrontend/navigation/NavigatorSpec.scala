@@ -45,15 +45,10 @@ class NavigatorSpec extends UnitSpec with Injector with TestData {
           answers().copy(representationType = Some(RepresentationType.Importer))
         ) mustBe routes.BankDetailsController.onPageLoad()
       }
-      "go to who to repay page if claimant is representative and importer has no EORI" in {
+      "go to does importer have Eori page if claimant is representative" in {
         nextPage(
-          answers().copy(representationType = Some(RepresentationType.Representative), importerHasEori = Some(false))
-        ) mustBe routes.RepayToController.onPageLoad()
-      }
-      "go to importer EORI page if claimant is representative and importer has EORI" in {
-        nextPage(
-          answers().copy(representationType = Some(RepresentationType.Representative), importerHasEori = Some(true))
-        ) mustBe routes.ImporterEoriNumberController.onPageLoad()
+          answers().copy(representationType = Some(RepresentationType.Representative))
+        ) mustBe routes.ImporterHasEoriController.onPageLoad()
       }
     }
     "going back" should {
