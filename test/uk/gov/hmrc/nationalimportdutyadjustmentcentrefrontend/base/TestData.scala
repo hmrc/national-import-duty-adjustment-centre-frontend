@@ -69,7 +69,9 @@ trait TestData {
 
   val entryDetailsAnswer: EntryDetails = EntryDetails("010", "123456Q", fixedDate)
 
-  var itemNumbersAnswer: ItemNumbers = ItemNumbers("1,2,3,4")
+  val itemNumbersAnswer: ItemNumbers = ItemNumbers("1,2,3,4")
+
+  val importerEoriNumberAnswer = EoriNumber("GB232454456746")
 
   val completeAnswers: UserAnswers = UserAnswers(
     representationType = Some(representationTypeAnswer),
@@ -83,7 +85,8 @@ trait TestData {
     repayTo = Some(repayToAnswer),
     bankDetails = Some(bankDetailsAnswer),
     entryDetails = Some(entryDetailsAnswer),
-    itemNumbers = Some(itemNumbersAnswer)
+    itemNumbers = Some(itemNumbersAnswer),
+    importerEori = Some(importerEoriNumberAnswer)
   )
 
   // Upscan

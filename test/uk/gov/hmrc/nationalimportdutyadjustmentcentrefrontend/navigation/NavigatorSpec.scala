@@ -40,13 +40,20 @@ class NavigatorSpec extends UnitSpec with Injector with TestData {
     val previousPage = back(AddressPage, _)
 
     "going forward" should {
-      "go to bank details page" in {
+      "go to bank details page if claimant is importer" in {
         nextPage(
           answers().copy(representationType = Some(RepresentationType.Importer))
         ) mustBe routes.BankDetailsController.onPageLoad()
+      }
+      "go to who to repay page if claimant is representative and importer has no EORI" in {
         nextPage(
-          answers().copy(representationType = Some(RepresentationType.Representative))
+          answers().copy(representationType = Some(RepresentationType.Representative), importerHasEori = Some(false))
         ) mustBe routes.RepayToController.onPageLoad()
+      }
+      "go to importer EORI page if claimant is representative and importer has EORI" in {
+        nextPage(
+          answers().copy(representationType = Some(RepresentationType.Representative), importerHasEori = Some(true))
+        ) mustBe routes.ImporterEoriNumberController.onPageLoad()
       }
     }
     "going back" should {
