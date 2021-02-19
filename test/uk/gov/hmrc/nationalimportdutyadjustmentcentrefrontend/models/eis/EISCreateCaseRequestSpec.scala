@@ -62,7 +62,6 @@ class EISCreateCaseRequestSpec extends UnitSpec {
       Map(Customs -> DutyPaid("100", "80"), Vat -> DutyPaid("200.10", "175"), Other -> DutyPaid("10", "5.50")),
     repayTo = Some(RepayTo.Representative),
     bankDetails = BankDetails("account name", "001122", "12345678"),
-    importerHasEoriNumber = Some(true),
     importerEoriNumber = Some(EoriNumber("GB098765432123")),
     importerContactDetails = Some(
       ImporterContactDetails(
@@ -128,7 +127,6 @@ class EISCreateCaseRequestSpec extends UnitSpec {
       Map(Customs -> DutyPaid("100", "80"), Vat -> DutyPaid("200.10", "175"), Other -> DutyPaid("10", "5.50")),
     repayTo = None,
     bankDetails = BankDetails("account name", "001122", "12345678"),
-    importerHasEoriNumber = None,
     importerEoriNumber = None,
     importerContactDetails = None,
     entryDetails = EntryDetails("012", "123456Q", LocalDate.of(2020, 12, 31)),

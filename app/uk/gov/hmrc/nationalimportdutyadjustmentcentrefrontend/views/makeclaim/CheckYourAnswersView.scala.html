@@ -184,14 +184,14 @@
             id = "importer_section",
             heading = Some(messages("check_answers.importer.title")),
             summaryListRows = Seq(
-                claim.importerHasEoriNumber.map(hasEori =>
+                Some(
                     SummaryListRow(
                         classes = "importer_has_eori_row",
                         key = Key(
                             content = Text(messages("check_answers.importer.hasEori"))
                         ),
                         value = Value(
-                            content = Text(MessageKey.apply("check_answers.importer.hasEori", hasEori.toString))
+                            content = Text(MessageKey.apply("check_answers.importer.hasEori", claim.importerEoriNumber.isDefined.toString))
                         ),
                         actions = None
                     )

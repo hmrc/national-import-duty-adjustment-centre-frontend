@@ -34,7 +34,6 @@ case class Claim(
   uploads: Seq[UploadedFile],
   reclaimDutyPayments: Map[ReclaimDutyType, DutyPaid],
   repayTo: Option[RepayTo],
-  importerHasEoriNumber: Option[Boolean],
   importerEoriNumber: Option[EoriNumber],
   importerContactDetails: Option[ImporterContactDetails],
   bankDetails: BankDetails,
@@ -64,10 +63,6 @@ object Claim {
           dutyType -> Try(userAnswers.reclaimDutyPayments(dutyType)).getOrElse(missing(s"DutyPayment $dutyType"))
       ).toMap,
       repayTo = if (userAnswers.isRepresentative) Some(userAnswers.repayTo.getOrElse(missing(RepayToPage))) else None,
-      importerHasEoriNumber =
-        if (userAnswers.isRepresentative)
-          Some(userAnswers.importerHasEori.getOrElse(missing(ImporterHasEoriNumberPage)))
-        else None,
       importerEoriNumber =
         if (userAnswers.importerHasEori.contains(true))
           Some(userAnswers.importerEori.getOrElse(missing(ImporterEoriNumberPage)))
