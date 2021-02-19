@@ -34,30 +34,32 @@ object ImporterDetails {
 
   def forClaim(claim: Claim): ImporterDetails = claim.representationType match {
     case Representative =>
-      ImporterDetails(
+      forRepresentativeApplicant(
         claim.importerEoriNumber,
         claim.importerContactDetails.getOrElse(throw new MissingUserAnswersException("Missing ImporterContactDetails"))
       )
-    case Importer => ImporterDetails(claim.contactDetails, claim.claimantAddress)
+    case Importer => forImporterApplicant(claim.contactDetails, claim.claimantAddress)
   }
 
-  // Applicant is the importer
-  def apply(contactDetails: ContactDetails, address: UkAddress): ImporterDetails = new ImporterDetails(
-    EORI = None, // TODO - capture applicant's EORI
-    Name = address.name,
-    Address = Address(
-      AddressLine1 = address.addressLine1,
-      AddressLine2 = address.addressLine2,
-      City = address.city,
-      PostalCode = address.postCode,
-      CountryCode = "GB",
-      EmailAddress = contactDetails.emailAddress,
-      TelephoneNumber = contactDetails.telephoneNumber
+  private def forImporterApplicant(contactDetails: ContactDetails, address: UkAddress): ImporterDetails =
+    new ImporterDetails(
+      EORI = None, // TODO - capture applicant's EORI
+      Name = address.name,
+      Address = Address(
+        AddressLine1 = address.addressLine1,
+        AddressLine2 = address.addressLine2,
+        City = address.city,
+        PostalCode = address.postCode,
+        CountryCode = "GB",
+        EmailAddress = contactDetails.emailAddress,
+        TelephoneNumber = contactDetails.telephoneNumber
+      )
     )
-  )
 
-  // Applicant is the agent/representative
-  def apply(importerEoriNumber: Option[EoriNumber], importer: ImporterContactDetails): ImporterDetails =
+  def forRepresentativeApplicant(
+    importerEoriNumber: Option[EoriNumber],
+    importer: ImporterContactDetails
+  ): ImporterDetails =
     new ImporterDetails(
       EORI = importerEoriNumber.map(_.number),
       Name = importer.name,
