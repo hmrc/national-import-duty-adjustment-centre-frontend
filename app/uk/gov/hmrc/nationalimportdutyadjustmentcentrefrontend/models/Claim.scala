@@ -27,7 +27,7 @@ import scala.util.Try
 
 case class Claim(
   contactDetails: ContactDetails,
-  importerAddress: Address,
+  claimantAddress: Address,
   representationType: RepresentationType,
   claimType: ClaimType,
   claimReason: ClaimReason,
@@ -36,6 +36,7 @@ case class Claim(
   repayTo: Option[RepayTo],
   importerHasEoriNumber: Option[Boolean],
   importerEoriNumber: Option[EoriNumber],
+  importerContactDetails: Option[ImporterContactDetails],
   bankDetails: BankDetails,
   entryDetails: EntryDetails,
   itemNumbers: ItemNumbers,
@@ -53,7 +54,7 @@ object Claim {
     if (userAnswers.reclaimDutyTypes.isEmpty) missing(ReclaimDutyTypePage)
     new Claim(
       contactDetails = userAnswers.contactDetails.getOrElse(missing(ContactDetailsPage)),
-      importerAddress = userAnswers.importerAddress.getOrElse(missing(AddressPage)),
+      claimantAddress = userAnswers.claimantAddress.getOrElse(missing(AddressPage)),
       representationType = userAnswers.representationType.getOrElse(missing(ReclaimDutyTypePage)),
       claimType = userAnswers.claimType.getOrElse(missing(ClaimTypePage)),
       claimReason = userAnswers.claimReason.getOrElse(missing(ClaimReasonPage)),
@@ -70,6 +71,10 @@ object Claim {
       importerEoriNumber =
         if (userAnswers.importerHasEori.contains(true))
           Some(userAnswers.importerEori.getOrElse(missing(ImporterEoriNumberPage)))
+        else None,
+      importerContactDetails =
+        if (userAnswers.isRepresentative)
+          Some(userAnswers.importerContactDetails.getOrElse(missing(ImporterContactDetailsPage)))
         else None,
       bankDetails = userAnswers.bankDetails.getOrElse(missing(BankDetailsPage)),
       entryDetails = userAnswers.entryDetails.getOrElse(missing(EntryDetailsPage)),
