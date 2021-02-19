@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name     NIDAC Authorisation
 // @namespace  http://tampermonkey.net/
-// @version   0.1
+// @version   0.2
 // @description Authenticates for NIDAC
 // @author    NIDAC Team
 // @match     http*://*/auth-login-stub/gg-sign-in?continue=*national-import-duty-adjustment-centre*
@@ -12,6 +12,11 @@
 (function () {
     'use strict';
     document.getElementsByName("redirectionUrl")[0].value = getBaseUrl() + "/national-import-duty-adjustment-centre";
+    
+    document.getElementsByName("enrolment[0].name")[0].value = "HMRC-CTS-ORG";
+    document.getElementById("input-0-0-name").value = "EORINumber";
+    document.getElementById("input-0-0-value").value = "GB717572504502";
+    
     document.getElementById('global-header').appendChild(createQuickButton())
 })();
 
