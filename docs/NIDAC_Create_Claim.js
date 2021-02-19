@@ -107,6 +107,10 @@ function completePage() {
         document.getElementById("postcode").value = "MD123KD";
         submit();
     }
+    if (currentPageIs("/national-import-duty-adjustment-centre/eori-number")) {
+        document.getElementById("yesOrNo").checked = true;
+        submit();
+    }
     if (currentPageIs("/national-import-duty-adjustment-centre/enter-eori-number")) {
         document.getElementById("eoriNumber").value = "GB123456789536";
         submit();
