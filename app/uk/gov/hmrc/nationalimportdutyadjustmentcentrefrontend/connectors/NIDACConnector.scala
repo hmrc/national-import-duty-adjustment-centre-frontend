@@ -17,7 +17,6 @@
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors
 
 import javax.inject.Inject
-import play.api.libs.json.{Json, OFormat}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.CreateClaimResponse

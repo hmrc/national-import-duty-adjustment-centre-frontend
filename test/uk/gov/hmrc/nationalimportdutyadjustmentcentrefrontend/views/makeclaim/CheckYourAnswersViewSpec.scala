@@ -26,8 +26,8 @@ class CheckYourAnswersViewSpec extends UnitViewSpec with TestData {
 
   private val page = instanceOf[CheckYourAnswersView]
 
-  private val complateClaim                                = Claim(completeAnswers)
-  private def view(claim: Claim = complateClaim): Document = page(claim, navigatorBack)
+  private val completeClaim                                = Claim(completeAnswers)
+  private def view(claim: Claim = completeClaim): Document = page(claim, navigatorBack)
 
   "CheckYourAnswersPage" should {
 
@@ -101,7 +101,7 @@ class CheckYourAnswersViewSpec extends UnitViewSpec with TestData {
       }
 
       "does not contains Eori number when importer does not have EORI" in {
-        val importerSection = view(complateClaim.copy(importerEoriNumber = None)).getElementById("importer_section")
+        val importerSection = view(completeClaim.copy(importerEoriNumber = None)).getElementById("importer_section")
         val eoriRow         = importerSection.getElementsByClass("importer_eori_row")
         eoriRow must beEmpty
       }
