@@ -60,6 +60,8 @@ class Navigator @Inject() () extends Conditions with Ordering {
   def previousPage(currentPage: Page, userAnswers: UserAnswers): NavigatorBack =
     NavigatorBack(viewFor(pageOrder, nextPageFor(reversePageOrder, currentPage, userAnswers)))
 
+  def nextPageInCYAMode(currentPage: Page, userAnswers: UserAnswers): Call =
+    viewFor(pageOrder, nextPageAfterChangeFor(pageOrder, currentPage, userAnswers)).getOrElse(makeclaim.routes.CheckYourAnswersController.onPageLoad())
 }
 
 protected trait Conditions {
@@ -85,6 +87,13 @@ protected trait Ordering {
     after(pages, currentPage)
       .find(_.canAccessGiven(userAnswers))
       .map(_.page)
+
+  protected val nextPageAfterChangeFor: (Seq[P], Page, UserAnswers) => Option[Page] = (pages, currentPage, userAnswers) => {
+    def hasAnswer(page: Page) = page.isInstanceOf[QuestionPage[_]] && page.asInstanceOf[QuestionPage[_]].hasAnswer(userAnswers)
+    after(pages, currentPage)
+      .find(p => p.canAccessGiven(userAnswers) && !hasAnswer(p.page))
+      .map(_.page)
+  }
 
   protected val viewFor: (Seq[P], Option[Page]) => Option[Call] = (pages, page) =>
     page.flatMap(
