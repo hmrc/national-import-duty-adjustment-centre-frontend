@@ -162,7 +162,7 @@ bankDetails.accountNumber.heading = Account number
 bankDetails.accountNumber.hint = Must be between 6 and 8 digits long.
 bankDetails.accountNumber.error.required = Enter an account number
 bankDetails.accountNumber.error.invalid = Enter a valid account number like 00733445
-bankDetails.bars.validation.failed = Unable to validate account number and sort code
+bankDetails.bars.validation.failed = Unable to validate bank account details
 bankDetails.bars.validation.modCheckFailed = Account number must be valid for the given sort code
 
 itemNumbers.title = Which item numbers are you claiming for?
