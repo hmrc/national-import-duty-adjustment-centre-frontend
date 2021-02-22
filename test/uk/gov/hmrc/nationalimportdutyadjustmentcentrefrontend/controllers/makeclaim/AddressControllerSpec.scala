@@ -72,7 +72,7 @@ class AddressControllerSpec extends ControllerSpec with TestData {
     }
 
     "display page when cache has answer" in {
-      withCacheUserAnswers(UserAnswers(importerAddress = Some(addressAnswer)))
+      withCacheUserAnswers(UserAnswers(claimantAddress = Some(addressAnswer)))
       val result = controller.onPageLoad()(fakeGetRequest)
       status(result) mustBe Status.OK
 
@@ -96,7 +96,7 @@ class AddressControllerSpec extends ControllerSpec with TestData {
 
       val result = controller.onSubmit()(validRequest)
       status(result) mustEqual SEE_OTHER
-      theUpdatedUserAnswers.importerAddress mustBe Some(addressAnswer)
+      theUpdatedUserAnswers.claimantAddress mustBe Some(addressAnswer)
       redirectLocation(result) mustBe Some(navigator.nextPage(AddressPage, emptyAnswers).url)
     }
 

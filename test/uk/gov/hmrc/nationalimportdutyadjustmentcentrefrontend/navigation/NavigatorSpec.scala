@@ -21,7 +21,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, Un
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.routes
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ReclaimDutyType.{Customs, Other, Vat}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UploadedFile
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{ReclaimDutyType, UserAnswers}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{ReclaimDutyType, RepresentationType, UserAnswers}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.utils.Injector
 
@@ -40,8 +40,15 @@ class NavigatorSpec extends UnitSpec with Injector with TestData {
     val previousPage = back(AddressPage, _)
 
     "going forward" should {
-      "go to bank details page" in {
-        nextPage(answers()) mustBe routes.BankDetailsController.onPageLoad()
+      "go to bank details page if claimant is importer" in {
+        nextPage(
+          answers().copy(representationType = Some(RepresentationType.Importer))
+        ) mustBe routes.BankDetailsController.onPageLoad()
+      }
+      "go to does importer have Eori page if claimant is representative" in {
+        nextPage(
+          answers().copy(representationType = Some(RepresentationType.Representative))
+        ) mustBe routes.ImporterHasEoriController.onPageLoad()
       }
     }
     "going back" should {
@@ -169,7 +176,12 @@ class NavigatorSpec extends UnitSpec with Injector with TestData {
     }
     "going back" should {
       "go to address page" in {
-        previousPage(answers()) mustBe routes.AddressController.onPageLoad()
+        previousPage(
+          answers().copy(representationType = Some(RepresentationType.Importer))
+        ) mustBe routes.AddressController.onPageLoad()
+        previousPage(
+          answers().copy(representationType = Some(RepresentationType.Representative))
+        ) mustBe routes.RepayToController.onPageLoad()
       }
     }
   }

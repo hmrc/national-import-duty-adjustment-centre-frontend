@@ -14,12 +14,19 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.bankaccountreputation
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models
 
-import play.api.libs.json.{Json, OFormat}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, UnitSpec}
 
-case class AccountResponse(accountNumberWithSortCodeIsValid: String, supportsBACS: Option[String])
+class BankDetailsSpec extends UnitSpec with TestData {
 
-object AccountResponse {
-  implicit val format: OFormat[AccountResponse] = Json.format[AccountResponse]
+  "BankDetails" should {
+
+    "pad a 6 digit account number" in {
+
+      BankDetails("Account", "001122", "123456").accountNumber mustBe "00123456"
+    }
+
+  }
+
 }

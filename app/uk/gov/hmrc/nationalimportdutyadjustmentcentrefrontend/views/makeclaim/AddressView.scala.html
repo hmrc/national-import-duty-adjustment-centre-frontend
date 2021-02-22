@@ -27,7 +27,7 @@
     layout: Layout,
     formHelper: FormWithCSRF,
     fieldSet: components.fieldSet,
-    inputText: components.inputText,
+    addressFields: components.addressInputFields,
     errorSummary: errorSummary,
     continueButton: components.continueButton
 )
@@ -43,48 +43,7 @@
             legend = "address.title",
             hint = Some(Html(messages("address.hint")))
         ) {
-
-            @inputText(
-                form = form,
-                id = "name",
-                name = "name",
-                label = "address.name.heading",
-                autocomplete = Some("off")
-            )
-
-            @inputText(
-                form = form,
-                id = "addressLine1",
-                name = "addressLine1",
-                label = "address.line1.heading",
-                hiddenLabel = Some("address.line1.hidden"),
-                autocomplete = Some("address-line1")
-            )
-
-            @inputText(
-                form = form,
-                id = "addressLine2",
-                name = "addressLine2",
-                label = "",
-                hiddenLabel = Some("address.line2.hidden"),
-                autocomplete = Some("address-line2")
-            )
-
-            @inputText(
-                form = form,
-                id = "city",
-                name = "city",
-                label = "address.city.heading",
-                autocomplete = Some("address-level2")
-            )
-
-            @inputText(
-                form = form,
-                id = "postcode",
-                name = "postcode",
-                label = "address.postcode.heading",
-                autocomplete = Some("postal-code")
-            )
+          @addressFields(form)
         }
 
         @continueButton()

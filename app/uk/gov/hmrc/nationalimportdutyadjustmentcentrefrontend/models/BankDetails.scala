@@ -17,9 +17,14 @@
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models
 
 import play.api.libs.json.{Json, OFormat}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.Implicits.SanitizedString
 
 case class BankDetails(accountName: String, sortCode: String, accountNumber: String)
 
 object BankDetails {
   implicit val format: OFormat[BankDetails] = Json.format[BankDetails]
+
+  def apply(accountName: String, sortCode: String, accountNumber: String): BankDetails =
+    new BankDetails(accountName, sortCode, accountNumber.leftPadToLength(8, '0'))
+
 }

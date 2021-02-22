@@ -17,24 +17,58 @@
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.eis
 
 import play.api.libs.json.{Json, OFormat}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{ContactDetails, Address => UkAddress}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.RepresentationType.{Importer, Representative}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.exceptions.MissingUserAnswersException
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{
+  Claim,
+  ContactDetails,
+  ImporterBeingRepresentedDetails,
+  Address => UkAddress
+}
 
-case class ImporterDetails(Name: String, Address: Address)
+case class ImporterDetails(EORI: Option[String], Name: String, Address: Address)
 
 object ImporterDetails {
   implicit val format: OFormat[ImporterDetails] = Json.format[ImporterDetails]
 
-  def apply(contactDetails: ContactDetails, address: UkAddress): ImporterDetails = new ImporterDetails(
-    Name = address.name,
-    Address = Address(
-      AddressLine1 = address.addressLine1,
-      AddressLine2 = address.addressLine2,
-      City = address.city,
-      PostalCode = address.postCode,
-      CountryCode = "GB",
-      EmailAddress = contactDetails.emailAddress,
-      TelephoneNumber = contactDetails.telephoneNumber
+  def forClaim(claim: Claim): ImporterDetails = claim.representationType match {
+    case Representative =>
+      forRepresentativeApplicant(
+        claim.importerBeingRepresentedDetails.getOrElse(
+          throw new MissingUserAnswersException("Missing ImporterBeingRepresentedDetails")
+        )
+      )
+    case Importer => forImporterApplicant(claim.contactDetails, claim.claimantAddress)
+  }
+
+  private def forImporterApplicant(contactDetails: ContactDetails, address: UkAddress): ImporterDetails =
+    new ImporterDetails(
+      EORI = None, // TODO - capture applicant's EORI
+      Name = address.name,
+      Address = Address(
+        AddressLine1 = address.addressLine1,
+        AddressLine2 = address.addressLine2,
+        City = address.city,
+        PostalCode = address.postCode,
+        CountryCode = "GB",
+        EmailAddress = contactDetails.emailAddress,
+        TelephoneNumber = contactDetails.telephoneNumber
+      )
     )
-  )
+
+  def forRepresentativeApplicant(importer: ImporterBeingRepresentedDetails): ImporterDetails =
+    new ImporterDetails(
+      EORI = importer.eoriNumber.map(_.number),
+      Name = importer.contactDetails.name,
+      Address = Address(
+        AddressLine1 = importer.contactDetails.addressLine1,
+        AddressLine2 = importer.contactDetails.addressLine2,
+        City = importer.contactDetails.city,
+        PostalCode = importer.contactDetails.postCode,
+        CountryCode = "GB",
+        EmailAddress = importer.contactDetails.emailAddress,
+        TelephoneNumber = importer.contactDetails.telephoneNumber
+      )
+    )
 
 }

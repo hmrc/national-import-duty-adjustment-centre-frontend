@@ -14,12 +14,16 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.bankaccountreputation
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models
 
 import play.api.libs.json.{Json, OFormat}
 
-case class AccountDetails(sortCode: String, accountNumber: String)
+case class ImporterBeingRepresentedDetails(
+  repayTo: RepayTo,
+  eoriNumber: Option[EoriNumber],
+  contactDetails: ImporterContactDetails
+)
 
-object AccountDetails {
-  implicit val format: OFormat[AccountDetails] = Json.format[AccountDetails]
+object ImporterBeingRepresentedDetails {
+  implicit val format: OFormat[ImporterBeingRepresentedDetails] = Json.format[ImporterBeingRepresentedDetails]
 }

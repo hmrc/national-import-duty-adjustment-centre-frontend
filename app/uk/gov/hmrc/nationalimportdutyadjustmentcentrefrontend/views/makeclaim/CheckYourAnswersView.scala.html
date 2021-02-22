@@ -16,6 +16,7 @@
 
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.Claim
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.RepresentationType
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.MessageKey
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.Title
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html._
@@ -78,11 +79,11 @@
                 ),
                 value = Value(
                     content = HtmlContent(Seq(
-                        Some(claim.importerAddress.name),
-                        Some(claim.importerAddress.addressLine1),
-                        claim.importerAddress.addressLine2,
-                        Some(claim.importerAddress.city),
-                        Some(claim.importerAddress.postCode)
+                        Some(claim.claimantAddress.name),
+                        Some(claim.claimantAddress.addressLine1),
+                        claim.claimantAddress.addressLine2,
+                        Some(claim.claimantAddress.city),
+                        Some(claim.claimantAddress.postCode)
                     ).flatten.mkString("<br>"))
                 ),
                 actions = None
@@ -178,10 +179,76 @@
         )
     )
 
+    @claim.importerBeingRepresentedDetails.map(importer =>
+        summaryList(
+            id = "importer_section",
+            heading = Some(messages("check_answers.importer.title")),
+            summaryListRows = Seq(
+                Some(
+                    SummaryListRow(
+                        classes = "importer_has_eori_row",
+                        key = Key(
+                            content = Text(messages("check_answers.importer.hasEori"))
+                        ),
+                        value = Value(
+                            content = Text(MessageKey.apply("check_answers.importer.hasEori", importer.eoriNumber.isDefined.toString))
+                        ),
+                        actions = None
+                    )
+                ),
+                importer.eoriNumber.map(eori =>
+                    SummaryListRow(
+                        classes = "importer_eori_row",
+                        key = Key(
+                            content = Text(messages("check_answers.importer.eori"))
+                        ),
+                        value = Value(
+                            content = Text(eori.number)
+                        ),
+                        actions = None
+                    )
+                ),
+                Some(
+                    SummaryListRow(
+                        classes = "importer_contact_details_row",
+                        key = Key(
+                            content = Text(messages("check_answers.importer.contactDetails"))
+                        ),
+                        value = Value(
+                            content = HtmlContent(Seq(
+                                Some(importer.contactDetails.name),
+                                Some(importer.contactDetails.addressLine1),
+                                importer.contactDetails.addressLine2,
+                                Some(importer.contactDetails.city),
+                                Some(importer.contactDetails.postCode),
+                                Some(importer.contactDetails.emailAddress),
+                                Some(importer.contactDetails.telephoneNumber)
+                            ).flatten.mkString("<br>"))
+                        ),
+                        actions = None
+                    )
+                )
+            )
+        )
+
+    )
+
     @summaryList(
         id = "payment_section",
         heading = Some(messages("check_answers.payment.title")),
         summaryListRows = Seq(
+            claim.importerBeingRepresentedDetails.map(_.repayTo).map(payTo =>
+                SummaryListRow(
+                    classes = "pay_to_row",
+                    key = Key(
+                        content = Text(messages("check_answers.payment.payTo"))
+                    ),
+                    value = Value(
+                        content = Text(MessageKey.apply("check_answers.payment.payTo", payTo.toString))
+                    ),
+                    actions = None
+                )
+            ),
             Some(SummaryListRow(
                 classes = "bank_details_type_row",
                 key = Key(

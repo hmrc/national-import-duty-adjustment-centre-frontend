@@ -19,20 +19,21 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors
 import javax.inject.Inject
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.bankaccountreputation.{AccountRequest, AccountResponse}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.bars.{
+  ValidateBankDetailsRequest,
+  ValidateBankDetailsResponse
+}
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class BankAccountReputationConnector @Inject()(httpClient: HttpClient, appConfig: AppConfig)(implicit ec: ExecutionContext) {
+class BARSConnector @Inject() (httpClient: HttpClient, appConfig: AppConfig)(implicit ec: ExecutionContext) {
 
-  private val url = appConfig.bankaccountReputationValidateUrl
+  private val baseUrl     = appConfig.bankAccountReputationBaseUrl
+  private val validateUrl = s"$baseUrl/v2/validateBankDetails"
 
-  def validate(request: AccountRequest)(implicit
-                                        hc: HeaderCarrier
-  ): Future[AccountResponse] =
-    httpClient.POST[AccountRequest, AccountResponse](
-      url,
-      request
-    )
+  def validateBankDetails(
+    request: ValidateBankDetailsRequest
+  )(implicit hc: HeaderCarrier): Future[ValidateBankDetailsResponse] =
+    httpClient.POST[ValidateBankDetailsRequest, ValidateBankDetailsResponse](validateUrl, request)
 
 }

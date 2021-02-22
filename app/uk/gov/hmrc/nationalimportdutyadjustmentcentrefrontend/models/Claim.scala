@@ -27,12 +27,13 @@ import scala.util.Try
 
 case class Claim(
   contactDetails: ContactDetails,
-  importerAddress: Address,
+  claimantAddress: Address,
   representationType: RepresentationType,
   claimType: ClaimType,
   claimReason: ClaimReason,
   uploads: Seq[UploadedFile],
   reclaimDutyPayments: Map[ReclaimDutyType, DutyPaid],
+  importerBeingRepresentedDetails: Option[ImporterBeingRepresentedDetails],
   bankDetails: BankDetails,
   entryDetails: EntryDetails,
   itemNumbers: ItemNumbers,
@@ -50,7 +51,7 @@ object Claim {
     if (userAnswers.reclaimDutyTypes.isEmpty) missing(ReclaimDutyTypePage)
     new Claim(
       contactDetails = userAnswers.contactDetails.getOrElse(missing(ContactDetailsPage)),
-      importerAddress = userAnswers.importerAddress.getOrElse(missing(AddressPage)),
+      claimantAddress = userAnswers.claimantAddress.getOrElse(missing(AddressPage)),
       representationType = userAnswers.representationType.getOrElse(missing(ReclaimDutyTypePage)),
       claimType = userAnswers.claimType.getOrElse(missing(ClaimTypePage)),
       claimReason = userAnswers.claimReason.getOrElse(missing(ClaimReasonPage)),
@@ -59,12 +60,29 @@ object Claim {
         dutyType =>
           dutyType -> Try(userAnswers.reclaimDutyPayments(dutyType)).getOrElse(missing(s"DutyPayment $dutyType"))
       ).toMap,
+      importerBeingRepresentedDetails = importerBeingRepresentedDetails(userAnswers),
       bankDetails = userAnswers.bankDetails.getOrElse(missing(BankDetailsPage)),
       entryDetails = userAnswers.entryDetails.getOrElse(missing(EntryDetailsPage)),
       itemNumbers = userAnswers.itemNumbers.getOrElse(missing(ItemNumbersPage)),
       submissionDate = LocalDate.now()
     )
   }
+
+  private def importerBeingRepresentedDetails(userAnswers: UserAnswers): Option[ImporterBeingRepresentedDetails] =
+    userAnswers.representationType match {
+      case Some(RepresentationType.Importer) => None
+      case Some(RepresentationType.Representative) =>
+        Some(
+          ImporterBeingRepresentedDetails(
+            repayTo = userAnswers.repayTo.getOrElse(missing(RepayToPage)),
+            eoriNumber =
+              if (userAnswers.importerHasEori.contains(true))
+                Some(userAnswers.importerEori.getOrElse(missing(ImporterEoriNumberPage)))
+              else None,
+            contactDetails = userAnswers.importerContactDetails.getOrElse(missing(ImporterContactDetailsPage))
+          )
+        )
+    }
 
   private def missing(answer: Any) = {
     val message = s"Missing answer - $answer"

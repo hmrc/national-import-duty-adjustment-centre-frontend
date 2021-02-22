@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.bankaccountreputation
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models
 
-import play.api.libs.json.{Json, OFormat}
+object Implicits {
 
-case class AccountRequest(account: AccountDetails)
+  implicit class SanitizedString(unwrap: String) {
+    def stripSpacesAndDashes() = unwrap.replaceAll("""[ \-]""", "")
 
-object AccountRequest {
-  implicit val format: OFormat[AccountRequest] = Json.format[AccountRequest]
+    def leftPadToLength(length: Int, padChar: Char) = unwrap.reverse.padTo(length, padChar).reverse
+  }
+
 }

@@ -22,10 +22,10 @@ import reactivemongo.bson.BSONObjectID
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.Reference
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType.AntiDumping
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ReclaimDutyType.{Customs, Other, Vat}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.RepresentationType.Representative
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models._
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.bars.BARSResult
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UpscanNotification.Quarantine
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan._
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{RepayTo, RepresentationType, _}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.UploadDetails
 
 trait TestData {
@@ -36,7 +36,7 @@ trait TestData {
   // UserAnswers
   val emptyAnswers: UserAnswers = UserAnswers()
 
-  val representationTypeAnswer: RepresentationType = Representative
+  val representationTypeAnswer: RepresentationType = RepresentationType.Representative
 
   val claimTypeAnswer: ClaimType = AntiDumping
 
@@ -60,6 +60,8 @@ trait TestData {
 
   val bankDetailsAnswer: BankDetails = BankDetails("account name", "001100", "12345678")
 
+  val repayToAnswer = RepayTo.Importer
+
   val claimReasonAnswer: ClaimReason = ClaimReason("some valid reason")
 
   val contactDetailsAnswer: ContactDetails = ContactDetails("Jane", "Doe", "jane@example.com", "01234567890")
@@ -68,20 +70,38 @@ trait TestData {
 
   val entryDetailsAnswer: EntryDetails = EntryDetails("010", "123456Q", fixedDate)
 
-  var itemNumbersAnswer: ItemNumbers = ItemNumbers("1,2,3,4")
+  val itemNumbersAnswer: ItemNumbers = ItemNumbers("1,2,3,4")
+
+  val importerHasEoriAnswer = true
+
+  val importerEoriNumberAnswer = EoriNumber("GB232454456746")
+
+  val importerContactDetailsAnswer = ImporterContactDetails(
+    "Importer Name",
+    "Importer Line 1",
+    Some("Importer Line 2"),
+    "Importer City",
+    "PCode",
+    "importer@example.com",
+    "01234567890"
+  )
 
   val completeAnswers: UserAnswers = UserAnswers(
     representationType = Some(representationTypeAnswer),
     claimType = Some(claimTypeAnswer),
     claimReason = Some(claimReasonAnswer),
     contactDetails = Some(contactDetailsAnswer),
-    importerAddress = Some(addressAnswer),
+    claimantAddress = Some(addressAnswer),
     uploads = Seq(uploadAnswer),
     reclaimDutyTypes = reclaimDutyTypesAnswer,
     reclaimDutyPayments = reclaimDutyPayments,
+    repayTo = Some(repayToAnswer),
     bankDetails = Some(bankDetailsAnswer),
     entryDetails = Some(entryDetailsAnswer),
-    itemNumbers = Some(itemNumbersAnswer)
+    itemNumbers = Some(itemNumbersAnswer),
+    importerHasEori = Some(importerHasEoriAnswer),
+    importerEori = Some(importerEoriNumberAnswer),
+    importerContactDetails = Some(importerContactDetailsAnswer)
   )
 
   // Upscan
@@ -99,5 +119,9 @@ trait TestData {
 
   val uploadFileSuccess: UploadStatus =
     UploadedFile("upscanRef1", "downloadUrl", ZonedDateTime.now(), "checksum", "fileName", "fileMimeType")
+
+  // BARS
+  val barsSuccessResult        = BARSResult(accountNumberWithSortCodeIsValid = "yes")
+  val barsInvalidAccountResult = BARSResult(accountNumberWithSortCodeIsValid = "no")
 
 }
