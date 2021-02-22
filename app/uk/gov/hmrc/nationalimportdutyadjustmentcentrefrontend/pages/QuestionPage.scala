@@ -22,54 +22,70 @@ trait QuestionPage[A] extends Page {
   def hasAnswer: UserAnswers => Boolean
 }
 
-case object RepresentationTypePage     extends QuestionPage[RepresentationType] {
+case object RepresentationTypePage extends QuestionPage[RepresentationType] {
   override def hasAnswer: UserAnswers => Boolean = _.representationType.nonEmpty
 }
-case object ClaimTypePage              extends QuestionPage[ClaimType] {
+
+case object ClaimTypePage extends QuestionPage[ClaimType] {
   override def hasAnswer: UserAnswers => Boolean = _.claimType.nonEmpty
 }
-case object ContactDetailsPage         extends QuestionPage[ContactDetails] {
+
+case object ContactDetailsPage extends QuestionPage[ContactDetails] {
   override def hasAnswer: UserAnswers => Boolean = _.contactDetails.nonEmpty
 }
-case object AddressPage                extends QuestionPage[Address] {
+
+case object AddressPage extends QuestionPage[Address] {
   override def hasAnswer: UserAnswers => Boolean = _.claimantAddress.nonEmpty
 }
-case object ImporterHasEoriNumberPage  extends QuestionPage[Boolean] {
-  override def hasAnswer: UserAnswers => Boolean= _.importerHasEori.nonEmpty
+
+case object ImporterHasEoriNumberPage extends QuestionPage[Boolean] {
+  override def hasAnswer: UserAnswers => Boolean = _.importerHasEori.nonEmpty
 }
-case object ImporterEoriNumberPage     extends QuestionPage[EoriNumber] {
+
+case object ImporterEoriNumberPage extends QuestionPage[EoriNumber] {
   override def hasAnswer: UserAnswers => Boolean = _.importerEori.nonEmpty
 }
+
 case object ImporterContactDetailsPage extends QuestionPage[ImporterContactDetails] {
   override def hasAnswer: UserAnswers => Boolean = _.importerContactDetails.nonEmpty
 }
-case object ReclaimDutyTypePage        extends QuestionPage[Set[ReclaimDutyType]] {
+
+case object ReclaimDutyTypePage extends QuestionPage[Set[ReclaimDutyType]] {
   override def hasAnswer: UserAnswers => Boolean = _.reclaimDutyTypes.nonEmpty
 }
-case object CustomsDutyRepaymentPage   extends QuestionPage[DutyPaid] {
+
+case object CustomsDutyRepaymentPage extends QuestionPage[DutyPaid] {
   override def hasAnswer: UserAnswers => Boolean = _.reclaimDutyPayments.contains(ReclaimDutyType.Customs.toString)
 }
-case object ImportVatRepaymentPage     extends QuestionPage[DutyPaid] {
+
+case object ImportVatRepaymentPage extends QuestionPage[DutyPaid] {
   override def hasAnswer: UserAnswers => Boolean = _.reclaimDutyPayments.contains(ReclaimDutyType.Vat.toString)
 }
-case object OtherDutyRepaymentPage     extends QuestionPage[DutyPaid] {
+
+case object OtherDutyRepaymentPage extends QuestionPage[DutyPaid] {
   override def hasAnswer: UserAnswers => Boolean = _.reclaimDutyPayments.contains(ReclaimDutyType.Other.toString)
 }
-case object RepayToPage                extends QuestionPage[RepayTo] {
+
+case object RepayToPage extends QuestionPage[RepayTo] {
   override def hasAnswer: UserAnswers => Boolean = _.repayTo.nonEmpty
 }
-case object BankDetailsPage            extends QuestionPage[BankDetails] {
+
+case object BankDetailsPage extends QuestionPage[BankDetails] {
   override def hasAnswer: UserAnswers => Boolean = _.bankDetails.nonEmpty
 }
-case object ClaimReasonPage            extends QuestionPage[ClaimReason] {
+
+case object ClaimReasonPage extends QuestionPage[ClaimReason] {
   override def hasAnswer: UserAnswers => Boolean = _.claimReason.nonEmpty
 }
-case object UploadSummaryPage          extends QuestionPage[Boolean] {
+
+case object UploadSummaryPage extends QuestionPage[Boolean] {
   override def hasAnswer: UserAnswers => Boolean = _.uploads.nonEmpty
 }
-case object EntryDetailsPage           extends QuestionPage[EntryDetails] {
+
+case object EntryDetailsPage extends QuestionPage[EntryDetails] {
   override def hasAnswer: UserAnswers => Boolean = _.entryDetails.nonEmpty
 }
-case object ItemNumbersPage            extends QuestionPage[ItemNumbers] {
+
+case object ItemNumbersPage extends QuestionPage[ItemNumbers] {
   override def hasAnswer: UserAnswers => Boolean = _.itemNumbers.nonEmpty
 }

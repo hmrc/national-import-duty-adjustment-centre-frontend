@@ -21,7 +21,12 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, Un
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.routes
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ReclaimDutyType.{Customs, Other, Vat}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UploadedFile
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{ItemNumbers, ReclaimDutyType, RepresentationType, UserAnswers}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{
+  ItemNumbers,
+  ReclaimDutyType,
+  RepresentationType,
+  UserAnswers
+}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.utils.Injector
 
@@ -224,14 +229,33 @@ class NavigatorSpec extends UnitSpec with Injector with TestData {
     "changing from importer to representative" should {
       "goto 'does importer have EORI' page" in {
         val changedAnswers = completeImporterAnswers.copy(representationType = Some(RepresentationType.Representative))
-        navigator.nextPageInCYAMode(RepresentationTypePage, changedAnswers) mustBe routes.ImporterHasEoriController.onPageLoad()
+        navigator.nextPageInCYAMode(
+          RepresentationTypePage,
+          changedAnswers
+        ) mustBe routes.ImporterHasEoriController.onPageLoad()
+      }
+    }
+
+    "adding an extra duty type" should {
+      "goto new duty input page" in {
+        val changedAnswers = completeAnswers.copy(
+          reclaimDutyTypes = Set(Customs, Other),
+          reclaimDutyPayments = Map(Customs.toString -> customsDutyRepaymentAnswer)
+        )
+        navigator.nextPageInCYAMode(
+          ReclaimDutyTypePage,
+          changedAnswers
+        ) mustBe routes.DutyRepaymentController.onPageLoadOtherDuty()
       }
     }
 
     "changing answer when all required answers present" should {
       "goto straight back to CYA page" in {
         val changedAnswers = completeAnswers.copy(itemNumbers = Some(ItemNumbers("4,6,7,8,9")))
-        navigator.nextPageInCYAMode(ItemNumbersPage, changedAnswers) mustBe routes.CheckYourAnswersController.onPageLoad()
+        navigator.nextPageInCYAMode(
+          ItemNumbersPage,
+          changedAnswers
+        ) mustBe routes.CheckYourAnswersController.onPageLoad()
       }
     }
   }

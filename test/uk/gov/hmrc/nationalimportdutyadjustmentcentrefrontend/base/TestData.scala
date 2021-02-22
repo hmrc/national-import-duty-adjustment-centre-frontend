@@ -104,11 +104,8 @@ trait TestData {
     importerContactDetails = Some(importerContactDetailsAnswer)
   )
 
-  val completeImporterAnswers = completeAnswers.copy(
-    importerHasEori = None,
-    importerEori = None,
-    importerContactDetails = None
-  )
+  val completeImporterAnswers =
+    completeAnswers.copy(importerHasEori = None, importerEori = None, importerContactDetails = None)
 
   // Upscan
   val uploadId: UploadId   = UploadId.generate
