@@ -21,7 +21,7 @@ object Implicits {
   implicit class SanitizedString(unwrap: String) {
     def stripSpacesAndDashes() = unwrap.replaceAll("""[ \-]""", "")
 
-    def leftPadToLength(length: Int, padChar: Char) = unwrap.reverse.padTo(length, padChar).reverse
+    def leftPadAccountNumber() = f"${unwrap.toInt}%08d"
   }
 
 }

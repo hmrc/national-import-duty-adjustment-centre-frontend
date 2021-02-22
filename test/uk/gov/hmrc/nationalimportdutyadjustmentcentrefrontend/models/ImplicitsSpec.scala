@@ -23,8 +23,9 @@ class ImplicitsSpec extends UnitSpec with TestData {
 
   "Implicits.SanitizedString" should {
 
-    "left-pad a string" in {
-      "1234".leftPadToLength(7, 'x') mustBe "xxx1234"
+    "left-pad a sort code" in {
+      "123456".leftPadAccountNumber() mustBe "00123456"
+      "0123456".leftPadAccountNumber() mustBe "00123456"
     }
 
     "strip spaces" in {
