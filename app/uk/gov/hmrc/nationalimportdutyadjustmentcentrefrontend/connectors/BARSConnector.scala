@@ -28,7 +28,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class BARSConnector @Inject() (httpClient: HttpClient, appConfig: AppConfig)(implicit ec: ExecutionContext) {
 
-  private val validateUrl = appConfig.bankAccountReputationValidateBankDetailsUrl
+  private val validateUrl = appConfig.barsValidateBankDetailsUrl
 
   def validateBankDetails(
     request: ValidateBankDetailsRequest
