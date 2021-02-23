@@ -54,8 +54,11 @@ class Navigator @Inject() () extends Conditions with Ordering {
 
   private val reversePageOrder = pageOrder.reverse
 
-  def nextPage(currentPage: Page, userAnswers: UserAnswers): Call =
-    viewFor(pageOrder, nextPageFor(pageOrder, currentPage, userAnswers)).getOrElse(pageOrder.head.destination())
+  def nextPage(currentPage: Page, userAnswers: UserAnswers): Call = userAnswers.mode match {
+    case Some(mode) if mode == "Change" => nextPageInCYAMode(currentPage, userAnswers)
+    case _ =>
+      viewFor(pageOrder, nextPageFor(pageOrder, currentPage, userAnswers)).getOrElse(pageOrder.head.destination())
+  }
 
   def previousPage(currentPage: Page, userAnswers: UserAnswers): NavigatorBack =
     NavigatorBack(viewFor(pageOrder, nextPageFor(reversePageOrder, currentPage, userAnswers)))

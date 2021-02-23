@@ -49,7 +49,15 @@
                 value = Value(
                     content = Text(MessageKey.apply("check_answers.information.representation", claim.representationType.toString))
                 ),
-                actions = None
+                actions = Some(Actions(
+                    items = Seq(
+                        ActionItem(
+                            href = makeclaim.routes.RepresentationTypeController.onChange().url,
+                            content = Text(messages("check_answers.change")),
+                            visuallyHiddenText = Some(messages("check_answers.claim.claimType"))
+                        )
+                    )
+                ))
             ))
         )
     )
@@ -86,7 +94,15 @@
                         Some(claim.claimantAddress.postCode)
                     ).flatten.mkString("<br>"))
                 ),
-                actions = None
+                actions = Some(Actions(
+                    items = Seq(
+                        ActionItem(
+                            href = makeclaim.routes.AddressController.onPageLoad().url,
+                            content = Text(messages("check_answers.change")),
+                            visuallyHiddenText = Some(messages("check_answers.yourDetails.yourAddress"))
+                        )
+                    )
+                ))
             ))
         )
     )
@@ -164,7 +180,15 @@
                 value = Value(
                     content = HtmlContent(claim.reclaimDutyPayments.keys.map(dutyType => MessageKey.apply("check_answers.repayment.reclaimDutyType", dutyType)).mkString(", "))
                 ),
-                actions = None
+                actions = Some(Actions(
+                    items = Seq(
+                        ActionItem(
+                            href = makeclaim.routes.ReclaimDutyTypeController.onChange().url,
+                            content = Text(messages("check_answers.change")),
+                            visuallyHiddenText = Some(messages("check_answers.repayment.reclaimDutyType"))
+                        )
+                    )
+                ))
             )),
             Some(SummaryListRow(
                 classes = "reclaim_duty_total_row",

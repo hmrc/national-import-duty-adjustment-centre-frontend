@@ -21,6 +21,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.Representat
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UploadedFile
 
 final case class UserAnswers(
+  mode: Option[String] = None,
   journeyId: JourneyId = JourneyId.generate,
   contactDetails: Option[ContactDetails] = None,
   claimantAddress: Option[Address] = None,

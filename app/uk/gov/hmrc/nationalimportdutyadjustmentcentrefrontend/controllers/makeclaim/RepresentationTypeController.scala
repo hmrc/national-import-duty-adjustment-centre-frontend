@@ -22,6 +22,7 @@ import play.api.mvc._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.Navigation
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.IdentifierAction
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.RepresentationTypeFormProvider
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.requests.IdentifierRequest
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.Navigator
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{Page, RepresentationTypePage}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.CacheDataService
@@ -46,9 +47,18 @@ class RepresentationTypeController @Inject() (
   private val form = formProvider()
 
   def onPageLoad(): Action[AnyContent] = identify.async { implicit request =>
-    data.getAnswers map { answers =>
-      val preparedForm = answers.representationType.fold(form)(form.fill)
-      Ok(representationTypeView(preparedForm, backLink(answers)))
+    onView(None)
+  }
+
+  def onChange(): Action[AnyContent] = identify.async { implicit request =>
+    onView(Some("Change"))
+  }
+
+  private def onView(mode: Option[String])(implicit request: IdentifierRequest[_]) = {
+    data.updateAnswers(answers => answers.copy(mode = mode)) map {
+      answers =>
+        val preparedForm = answers.representationType.fold(form)(form.fill)
+        Ok(representationTypeView(preparedForm, backLink(answers)))
     }
   }
 

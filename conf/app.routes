@@ -13,6 +13,7 @@ GET         /assets/*file                       controllers.Assets.versioned(pat
 
 # make claim
 GET         /importer-representative            uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.RepresentationTypeController.onPageLoad()
+GET         /change-importer-representative     uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.RepresentationTypeController.onChange()
 POST        /importer-representative            uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.RepresentationTypeController.onSubmit()
 
 GET         /claim-type                         uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.ClaimTypeController.onPageLoad()
@@ -36,6 +37,7 @@ POST        /uploaded-files                     uk.gov.hmrc.nationalimportdutyad
 GET         /uploaded-files/remove              uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.UploadFormSummaryController.onRemove(documentReference: String)
 
 GET         /reclaiming                         uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.ReclaimDutyTypeController.onPageLoad()
+GET         /change-reclaiming                  uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.ReclaimDutyTypeController.onChange()
 POST        /reclaiming                         uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.ReclaimDutyTypeController.onSubmit()
 
 GET         /enter-customs-duty                 uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.DutyRepaymentController.onPageLoadCustomsDuty()
