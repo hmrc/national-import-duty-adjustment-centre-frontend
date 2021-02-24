@@ -67,7 +67,7 @@ class UploadFormController @Inject() (
     appConfig.upscan.redirectBase + routes.UploadFormController.onProgress(uploadId).url
 
   def onPageLoad(): Action[AnyContent] = identify.async { implicit request =>
-    data.getCreateAnswers flatMap { answers =>
+    data.updateCreateAnswers(answers => answers) flatMap { answers =>
       initiateForm(answers)
     }
   }
