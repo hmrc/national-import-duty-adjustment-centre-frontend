@@ -34,8 +34,8 @@ class CacheDataService @Inject() (repository: CacheDataRepository)(implicit ec: 
         repository.set(data) map { _ => data }
     }
 
-  def getJourneyId(implicit request: IdentifierRequest[_]): Future[JourneyId] =
-    getCacheData map (_.journeyId)
+  def getCreateAnswersWithJourneyId(implicit request: IdentifierRequest[_]): Future[(CreateAnswers, JourneyId)] =
+    getCacheData map (cache => (cache.getCreateAnswers, cache.journeyId))
 
   def getCreateAnswers(implicit request: IdentifierRequest[_]): Future[CreateAnswers] =
     getCacheData map (_.getCreateAnswers)

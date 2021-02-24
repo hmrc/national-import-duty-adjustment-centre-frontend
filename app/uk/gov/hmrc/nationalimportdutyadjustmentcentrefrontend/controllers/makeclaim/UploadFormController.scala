@@ -67,37 +67,32 @@ class UploadFormController @Inject() (
     appConfig.upscan.redirectBase + routes.UploadFormController.onProgress(uploadId).url
 
   def onPageLoad(): Action[AnyContent] = identify.async { implicit request =>
-    data.getJourneyId flatMap { journeyId =>
-      data.getCreateAnswers flatMap { answers =>
-        initiateForm(journeyId, answers)
-      }
+    data.getCreateAnswersWithJourneyId flatMap { answersWithJourneyID =>
+      initiateForm(answersWithJourneyID._1, answersWithJourneyID._2)
     }
   }
 
   def onProgress(uploadId: UploadId): Action[AnyContent] = identify.async { implicit request =>
-    data.getJourneyId flatMap { journeyId =>
-      data.getCreateAnswers flatMap { answers =>
-        uploadProgressTracker.getUploadResult(uploadId, journeyId) flatMap {
-          case Some(successUpload: UploadedFile) =>
-            processSuccessfulUpload(successUpload)
-          case Some(failed: Failed) =>
-            Future(Redirect(controllers.makeclaim.routes.UploadFormController.onError(failed.errorCode)))
-          case Some(_) => Future(Ok(uploadProgressView(answers.claimType, backLink(answers))))
-          case None    => Future(Redirect(controllers.makeclaim.routes.UploadFormController.onError("NOT_FOUND")))
-        }
+    data.getCreateAnswersWithJourneyId flatMap { answersWithJourneyID =>
+      uploadProgressTracker.getUploadResult(uploadId, answersWithJourneyID._2) flatMap {
+        case Some(successUpload: UploadedFile) =>
+          processSuccessfulUpload(successUpload)
+        case Some(failed: Failed) =>
+          Future(Redirect(controllers.makeclaim.routes.UploadFormController.onError(failed.errorCode)))
+        case Some(_) =>
+          Future(Ok(uploadProgressView(answersWithJourneyID._1.claimType, backLink(answersWithJourneyID._1))))
+        case None => Future(Redirect(controllers.makeclaim.routes.UploadFormController.onError("NOT_FOUND")))
       }
     }
   }
 
   def onError(errorCode: String): Action[AnyContent] = identify.async { implicit request =>
-    data.getJourneyId flatMap { journeyId =>
-      data.getCreateAnswers flatMap { answers =>
-        initiateForm(journeyId, answers, Some(mapError(errorCode)))
-      }
+    data.getCreateAnswersWithJourneyId flatMap { answersWithJourneyID =>
+      initiateForm(answersWithJourneyID._1, answersWithJourneyID._2, Some(mapError(errorCode)))
     }
   }
 
-  private def initiateForm(journeyId: JourneyId, answers: CreateAnswers, maybeError: Option[FormError] = None)(implicit
+  private def initiateForm(answers: CreateAnswers, journeyId: JourneyId, maybeError: Option[FormError] = None)(implicit
     request: IdentifierRequest[_]
   ) = {
     val uploadId = UploadId.generate
