@@ -14,26 +14,25 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create
 
 import play.api.data.FormError
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.behaviours.OptionFieldBehaviours
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create.RepresentationTypeFormProvider
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.RepresentationType
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ClaimType
 
-class RepresentationTypeFormProviderSpec extends OptionFieldBehaviours {
+class ClaimTypeFormProviderSpec extends OptionFieldBehaviours {
 
-  val form = new RepresentationTypeFormProvider()()
+  val form = new ClaimTypeFormProvider()()
 
-  "RepresentationTypeFormProvider" must {
+  "ClaimTypeFormProvider" must {
 
-    val fieldName   = "representation_type"
-    val requiredKey = "representation_type.error.required"
+    val fieldName   = "claim_type"
+    val requiredKey = "claim_type.error.required"
 
-    behave like optionsField[RepresentationType](
+    behave like optionsField[ClaimType](
       form,
       fieldName,
-      validValues = RepresentationType.values,
+      validValues = ClaimType.values,
       invalidError = FormError(fieldName, "error.invalid")
     )
 

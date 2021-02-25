@@ -14,23 +14,22 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create
 
 import org.scalacheck.Gen
 import play.api.data.FormError
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.behaviours.StringFieldBehaviours
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create.ImporterDetailsFormProvider
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.mappings.Validation
 
-class ImporterDetailsFormProviderSpec extends StringFieldBehaviours {
+class ContactDetailsFormProviderSpec extends StringFieldBehaviours {
 
-  val form = new ImporterDetailsFormProvider()()
+  val form = new ContactDetailsFormProvider()()
 
-  ".Name" must {
+  ".FirstName" must {
 
-    val fieldName   = "name"
-    val requiredKey = "address.name.error.required"
-    val lengthKey   = "address.name.error.length"
+    val fieldName   = "firstName"
+    val requiredKey = "contactDetails.firstName.error.required"
+    val lengthKey   = "contactDetails.firstName.error.length"
     val maxLength   = 40
 
     behave like fieldThatBindsValidData(form, fieldName, safeInputsWithMaxLength(maxLength))
@@ -45,49 +44,12 @@ class ImporterDetailsFormProviderSpec extends StringFieldBehaviours {
     behave like mandatoryField(form, fieldName, requiredError = FormError(fieldName, requiredKey))
   }
 
-  ".AddressLine1" must {
+  ".LastName" must {
 
-    val fieldName   = "addressLine1"
-    val requiredKey = "address.line1.error.required"
-    val lengthKey   = "address.line1.error.length"
-    val maxLength   = 100
-
-    behave like fieldThatBindsValidData(form, fieldName, safeInputsWithMaxLength(maxLength))
-
-    behave like fieldWithMaxLength(
-      form,
-      fieldName,
-      maxLength = maxLength,
-      lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
-    )
-
-    behave like mandatoryField(form, fieldName, requiredError = FormError(fieldName, requiredKey))
-  }
-
-  ".AddressLine2" must {
-
-    val fieldName = "addressLine2"
-    val lengthKey = "address.line2.error.length"
-    val maxLength = 50
-
-    behave like fieldThatBindsValidData(form, fieldName, safeInputsWithMaxLength(maxLength))
-
-    behave like fieldWithMaxLength(
-      form,
-      fieldName,
-      maxLength = maxLength,
-      lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
-    )
-
-    behave like optionalField(form, fieldName)
-  }
-
-  ".City" must {
-
-    val fieldName   = "city"
-    val requiredKey = "address.city.error.required"
-    val lengthKey   = "address.city.error.length"
-    val maxLength   = 50
+    val fieldName   = "lastName"
+    val requiredKey = "contactDetails.lastName.error.required"
+    val lengthKey   = "contactDetails.lastName.error.length"
+    val maxLength   = 40
 
     behave like fieldThatBindsValidData(form, fieldName, safeInputsWithMaxLength(maxLength))
 
@@ -99,38 +61,6 @@ class ImporterDetailsFormProviderSpec extends StringFieldBehaviours {
     )
 
     behave like mandatoryField(form, fieldName, requiredError = FormError(fieldName, requiredKey))
-  }
-
-  ".Postcode" must {
-
-    val fieldName   = "postcode"
-    val requiredKey = "address.postcode.error.required"
-    val lengthKey   = "address.postcode.error.length"
-    val invalidKey  = "address.postcode.error.invalid"
-    val minLength   = 1
-    val maxLength   = 7
-
-    val validPostCodeGen = for {
-      length <- Gen.choose(minLength, maxLength)
-      digits <- Gen.listOfN(length, Gen.numChar)
-    } yield digits.mkString
-
-    behave like fieldThatBindsValidData(form, fieldName, validPostCodeGen)
-
-    behave like mandatoryField(form, fieldName, requiredError = FormError(fieldName, requiredKey))
-
-    behave like fieldWithMaxLength(
-      form,
-      fieldName,
-      maxLength = maxLength,
-      lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
-    )
-
-    "not bind strings with invalid characters" in {
-      val result        = form.bind(Map(fieldName -> "P!24KF")).apply(fieldName)
-      val expectedError = FormError(fieldName, invalidKey, Seq(Validation.postcodePattern))
-      result.errors mustEqual Seq(expectedError)
-    }
   }
 
   ".EmailAddress" must {
@@ -144,16 +74,8 @@ class ImporterDetailsFormProviderSpec extends StringFieldBehaviours {
     val basicEmail            = Gen.const("foo@example.com")
     val emailWithSpecialChars = Gen.const("aBcD.!#$%&'*+/=?^_`{|}~-123@foo-bar.example.com")
     val validData             = Gen.oneOf(basicEmail, emailWithSpecialChars)
-    val invalidEmail          = Gen.const("fooAtexampleDOTcom")
 
     behave like fieldThatBindsValidData(form, fieldName, validData)
-
-    behave like fieldThatPreventsUnsafeInput(
-      form,
-      fieldName,
-      invalidEmail,
-      invalidError = FormError(fieldName, invalidKey, Seq(Validation.emailAddressPattern))
-    )
 
     behave like mandatoryField(form, fieldName, requiredError = FormError(fieldName, requiredKey))
 

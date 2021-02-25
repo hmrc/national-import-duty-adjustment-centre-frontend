@@ -14,29 +14,33 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create
 
 import play.api.data.FormError
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.behaviours.OptionFieldBehaviours
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create.ClaimTypeFormProvider
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ClaimType
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.behaviours.StringFieldBehaviours
 
-class ClaimTypeFormProviderSpec extends OptionFieldBehaviours {
+class ItemNumbersFormProviderSpec extends StringFieldBehaviours {
 
-  val form = new ClaimTypeFormProvider()()
+  val requiredKey = "itemNumbers.error.required"
+  val lengthKey   = "itemNumbers.error.length"
 
-  "ClaimTypeFormProvider" must {
+  val form = new ItemNumbersFormProvider()()
 
-    val fieldName   = "claim_type"
-    val requiredKey = "claim_type.error.required"
+  ".ItemNumbers" must {
 
-    behave like optionsField[ClaimType](
+    val fieldName = "itemNumbers"
+    val maxLength = 500
+
+    behave like fieldThatBindsValidData(form, fieldName, stringsWithMinAndMaxLength(1, maxLength))
+
+    behave like fieldWithMaxLength(
       form,
       fieldName,
-      validValues = ClaimType.values,
-      invalidError = FormError(fieldName, "error.invalid")
+      maxLength = maxLength,
+      lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
     )
 
     behave like mandatoryField(form, fieldName, requiredError = FormError(fieldName, requiredKey))
   }
+
 }
