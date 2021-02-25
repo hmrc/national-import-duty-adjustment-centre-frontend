@@ -18,6 +18,7 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation
 
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.Answers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ReclaimDutyType.{Customs, Other, Vat}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{CreateAnswers, ReclaimDutyType}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages._
@@ -51,6 +52,8 @@ class CreateNavigator @Inject() () extends Navigator[CreateAnswers] with CreateA
 }
 
 protected trait CreateAnswerConditions {
+
+  protected val always: Answers => Boolean = (_: Answers) => true
 
   protected val hasDutyType: ReclaimDutyType => CreateAnswers => Boolean = (dutyType: ReclaimDutyType) =>
     _.reclaimDutyTypes.contains(dutyType)

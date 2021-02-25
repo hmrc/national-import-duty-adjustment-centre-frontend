@@ -34,12 +34,12 @@ trait Navigator[T <: Answers] {
   def previousPage(currentPage: Page, userAnswers: T): NavigatorBack =
     NavigatorBack(viewFor(pageOrder, nextPageFor(reversePageOrder, currentPage, userAnswers)))
 
-  protected val nextPageFor: (Seq[P], Page, T) => Option[Page] = (pages, currentPage, userAnswers) =>
+  private val nextPageFor: (Seq[P], Page, T) => Option[Page] = (pages, currentPage, userAnswers) =>
     after(pages, currentPage)
       .find(_.canAccessGiven(userAnswers))
       .map(_.page)
 
-  protected val viewFor: (Seq[P], Option[Page]) => Option[Call] = (pages, page) =>
+  private val viewFor: (Seq[P], Option[Page]) => Option[Call] = (pages, page) =>
     page.flatMap(
       p =>
         pages
@@ -52,5 +52,4 @@ trait Navigator[T <: Answers] {
     case s              => s.tail
   }
 
-  protected val always: Answers => Boolean = (_: Answers) => true
 }
