@@ -20,6 +20,7 @@ import java.time.LocalDate
 
 import play.api.data.FormError
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.behaviours.StringFieldBehaviours
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create.EntryDetailsFormProvider
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.mappings.Validation
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.EntryDetails
 
