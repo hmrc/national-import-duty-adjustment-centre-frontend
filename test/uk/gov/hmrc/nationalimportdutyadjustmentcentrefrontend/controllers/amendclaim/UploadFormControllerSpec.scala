@@ -149,14 +149,13 @@ class UploadFormControllerSpec extends ControllerSpec with TestData {
       verify(dataRepository, never()).set(any())
     }
 
-    "update UserAnswers and redirect to summary when upload succeeds" in {
+    "update UserAnswers and redirect to CYA when upload succeeds" in {
 
       givenUploadStatus(uploadFileSuccess)
       val result = controller.onProgress(uploadId)(fakeGetRequest)
 
       status(result) mustBe SEE_OTHER
-      // TODO - update url once summary page exists
-      redirectLocation(result) mustBe Some(routes.CaseReferenceController.onPageLoad().url)
+      redirectLocation(result) mustBe Some(routes.CheckYourAnswersController.onPageLoad().url)
 
       theUpdatedAmendAnswers.uploads mustBe Seq(uploadFileSuccess)
     }

@@ -40,10 +40,10 @@
 )(implicit request: Request[_], messages: Messages)
 
 
-@layout(pageTitle = Title(messages("upload_documents.title")), backLink) {
+@layout(pageTitle = Title(messages("amend.upload_documents.title")), backLink) {
     @errorSummary(error.map(Seq(_)).getOrElse(Seq.empty))
 
-    @components.heading(messages("upload_documents.title"))
+    @components.heading(messages("amend.upload_documents.title"))
 
     @uploadBody(uploadForm(upscanInitiateResponse, isFirstUpload, error))
 
