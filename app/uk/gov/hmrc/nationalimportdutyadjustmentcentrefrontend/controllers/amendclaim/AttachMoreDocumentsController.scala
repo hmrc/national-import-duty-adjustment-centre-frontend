@@ -21,8 +21,8 @@ import play.api.mvc._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.Navigation
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.IdentifierAction
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.YesNoFormProvider
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.CreateAnswers
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.CreateNavigator
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.AmendAnswers
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.{AmendNavigator}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{AttachMoreDocumentsPage, Page}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.CacheDataService
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.amendclaim.AttachMoreDocumentsView
@@ -32,23 +32,23 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class AttachMoreDocumentsController @Inject()(
+class AttachMoreDocumentsController @Inject() (
   identify: IdentifierAction,
   data: CacheDataService,
   formProvider: YesNoFormProvider,
   val controllerComponents: MessagesControllerComponents,
-  val navigator: CreateNavigator,
+  val navigator: AmendNavigator,
   attachMoreDocumentsView: AttachMoreDocumentsView
 )(implicit ec: ExecutionContext)
-    extends FrontendBaseController with I18nSupport with Navigation[CreateAnswers] {
+    extends FrontendBaseController with I18nSupport with Navigation[AmendAnswers] {
 
   override val page: Page = AttachMoreDocumentsPage
 
   private val form = formProvider("amend.attach_more_documents.required")
 
   def onPageLoad(): Action[AnyContent] = identify.async { implicit request =>
-    data.getCreateAnswers map { answers =>
-      val preparedForm = answers.importerHasEori.fold(form)(form.fill)
+    data.getAmendAnswers map { answers =>
+      val preparedForm = answers.hasMoreDocuments.fold(form)(form.fill)
       Ok(attachMoreDocumentsView(preparedForm, backLink(answers)))
     }
   }
@@ -56,9 +56,11 @@ class AttachMoreDocumentsController @Inject()(
   def onSubmit(): Action[AnyContent] = identify.async { implicit request =>
     form.bindFromRequest().fold(
       formWithErrors =>
-        data.getCreateAnswers map { answers => BadRequest(attachMoreDocumentsView(formWithErrors, backLink(answers))) },
+        data.getAmendAnswers map { answers =>
+          BadRequest(attachMoreDocumentsView(formWithErrors, backLink(answers)))
+        },
       value =>
-        data.updateCreateAnswers(answers => answers.copy(importerHasEori = Some(value))) map {
+        data.updateAmendAnswers(answers => answers.copy(hasMoreDocuments = Some(value))) map {
           updatedAnswers => Redirect(nextPage(updatedAnswers))
         }
     )

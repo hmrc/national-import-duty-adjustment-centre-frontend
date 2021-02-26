@@ -19,7 +19,10 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend
 import play.api.libs.json.{Json, OFormat}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.Answers
 
-final case class AmendAnswers(caseReference: Option[CaseReference] = None) extends Answers
+final case class AmendAnswers(caseReference: Option[CaseReference] = None, hasMoreDocuments: Option[Boolean] = None)
+    extends Answers {
+  val doesHaveMoreDocuments: Boolean = hasMoreDocuments.contains(true)
+}
 
 object AmendAnswers {
   implicit val formats: OFormat[AmendAnswers] = Json.format[AmendAnswers]

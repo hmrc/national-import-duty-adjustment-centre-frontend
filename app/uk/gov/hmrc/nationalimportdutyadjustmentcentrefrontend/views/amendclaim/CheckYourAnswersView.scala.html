@@ -21,6 +21,7 @@
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html._
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components._
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.NavigatorBack
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.MessageKey
 
 @this(
         layout: Layout,
@@ -48,7 +49,18 @@
                     content = Text(amendClaim.caseReference.number)
                 ),
                 actions = None
-            ))
+            )),
+            Some(SummaryListRow(
+                classes = "has_supporting_documents_row",
+                key = Key(
+                    content = Text(messages("amend.check_answers.information.hasNoSupportingDocuments"))
+                ),
+                value = Value(
+                    content = Text(MessageKey.apply("amend.check_answers.information.hasNoSupportingDocuments", amendClaim.hasAttachedDocuments.toString ))
+                ),
+                actions = None
+                )
+            )
         )
     )
 

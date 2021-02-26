@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim
 
 import org.mockito.ArgumentCaptor
 import org.mockito.ArgumentMatchers.any
@@ -25,23 +25,23 @@ import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{ControllerSpec, TestData}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.YesNoFormProvider
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.CreateAnswers
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.RepayToPage
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ImporterHasEoriView
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.AmendAnswers
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{AttachMoreDocumentsPage}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.amendclaim.AttachMoreDocumentsView
 import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
 
-class ImporterHasEoriControllerSpec extends ControllerSpec with TestData {
+class AttachMoreDocumentsControllerSpec extends ControllerSpec with TestData {
 
-  private val page         = mock[ImporterHasEoriView]
+  private val page         = mock[AttachMoreDocumentsView]
   private val formProvider = new YesNoFormProvider
 
   private def controller =
-    new ImporterHasEoriController(
+    new AttachMoreDocumentsController(
       fakeAuthorisedIdentifierAction,
       cacheDataService,
       formProvider,
       stubMessagesControllerComponents(),
-      navigator,
+      amendNavigator,
       page
     )(executionContext)
 
@@ -72,7 +72,7 @@ class ImporterHasEoriControllerSpec extends ControllerSpec with TestData {
     }
 
     "display page when cache has positive answer" in {
-      withCacheCreateAnswers(CreateAnswers(importerHasEori = Some(true)))
+      withCacheAmendAnswers(AmendAnswers(hasMoreDocuments = Some(true)))
       val result = controller.onPageLoad()(fakeGetRequest)
       status(result) mustBe Status.OK
 
@@ -80,7 +80,7 @@ class ImporterHasEoriControllerSpec extends ControllerSpec with TestData {
     }
 
     "display page when cache has negative answer" in {
-      withCacheCreateAnswers(CreateAnswers(importerHasEori = Some(false)))
+      withCacheAmendAnswers(AmendAnswers(hasMoreDocuments = Some(false)))
       val result = controller.onPageLoad()(fakeGetRequest)
       status(result) mustBe Status.OK
 
@@ -94,12 +94,12 @@ class ImporterHasEoriControllerSpec extends ControllerSpec with TestData {
 
     "update cache and redirect when valid answer is submitted" in {
 
-      withCacheCreateAnswers(emptyAnswers)
+      withCacheAmendAnswers(emptyAmendAnswers)
 
       val result = controller.onSubmit()(validRequest)
       status(result) mustEqual SEE_OTHER
-      theUpdatedCreateAnswers.importerHasEori mustBe Some(true)
-      redirectLocation(result) mustBe Some(navigator.nextPage(RepayToPage, emptyAnswers).url)
+      theUpdatedAmendAnswers.hasMoreDocuments mustBe Some(true)
+      redirectLocation(result) mustBe Some(amendNavigator.nextPage(AttachMoreDocumentsPage, theUpdatedAmendAnswers).url)
     }
 
     "return 400 (BAD REQUEST) when invalid data posted" in {

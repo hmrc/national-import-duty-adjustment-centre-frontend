@@ -19,15 +19,16 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend
 import play.api.Logger
 import play.api.libs.json.{Json, OFormat}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.exceptions.MissingAnswersException
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.CaseReferencePage
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{AttachMoreDocumentsPage, CaseReferencePage}
 
-final case class AmendClaim(caseReference: CaseReference)
+final case class AmendClaim(caseReference: CaseReference, hasAttachedDocuments: Boolean)
 
 object AmendClaim {
   implicit val formats: OFormat[AmendClaim] = Json.format[AmendClaim]
 
   def apply(answers: AmendAnswers): AmendClaim = new AmendClaim(
-    caseReference = answers.caseReference.getOrElse(missing(CaseReferencePage))
+    caseReference = answers.caseReference.getOrElse(missing(CaseReferencePage)),
+    hasAttachedDocuments = answers.hasMoreDocuments.getOrElse(missing(AttachMoreDocumentsPage))
   )
 
   private def missing(answer: Any) = {
