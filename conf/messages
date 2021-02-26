@@ -260,5 +260,6 @@ amend.upload_documents.title = Upload your additional documents
 amend.check_answers.title = Check your answers before sending your application
 amend.check_answers.information.title = Important information
 amend.check_answers.information.caseReference = Claim reference number
+amend.check_answers.information.uploadedDocuments = Additional documents
 amend.check_answers.submit.heading = Submit your declaration
 amend.check_answers.submit.declaration = Before you proceed, ensure that you have fully reviewed the information you have provided above and ensure that it is correct.
