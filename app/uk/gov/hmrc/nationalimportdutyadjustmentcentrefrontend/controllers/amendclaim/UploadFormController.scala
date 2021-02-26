@@ -56,7 +56,7 @@ class UploadFormController @Inject() (
   override val page: Page = UploadPage
 
   protected val errorRedirectUrl =
-    appConfig.upscan.redirectBase + "/national-import-duty-adjustment-centre/amend/upload-supporting-documents/error"
+    appConfig.upscan.redirectBase + "/national-import-duty-adjustment-centre/amend/upload-additional-documents/error"
 
   protected def successRedirectUrl(uploadId: UploadId) =
     appConfig.upscan.redirectBase + routes.UploadFormController.onProgress(uploadId).url
