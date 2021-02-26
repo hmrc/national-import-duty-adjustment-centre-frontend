@@ -58,10 +58,8 @@ upload_documents.body.document.type.AirWorthinessCertificate = air worthiness ce
 upload_documents.body.document.type.CertificateOfOrigin = certificate of origin
 upload_documents.body.files.size = Each file must be 6MB or smaller.
 upload_documents.body.files.bullet.heading = Types of file you can upload
-upload_documents.body.files.bullet.1 = image (.jpeg, .jpg or .png)
-upload_documents.body.files.bullet.2 = PDF (.pdf)
-upload_documents.body.files.bullet.3 = MS Word document (.doc or .docx)
-upload_documents.body.files.bullet.4 = MS Excel spreadsheet (.xls or .xlsx)
+upload_documents.body.files.bullet.image = image (.jpeg, .jpg or .png)
+upload_documents.body.files.bullet.pdf = PDF (.pdf)
 
 upload_documents_summary.title.single = You have uploaded 1 file
 upload_documents_summary.title.multiple = You have uploaded {0} files

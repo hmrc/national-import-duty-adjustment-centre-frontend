@@ -1,4 +1,4 @@
-/*
+@*
  * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,17 +12,14 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *@
 
-package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components.uploadFileTypes
 
-import play.api.libs.json.{Json, OFormat}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.Answers
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UploadedFile
+@this(govukDetails : GovukDetails, uploadFileTypes: uploadFileTypes)
 
-final case class AmendAnswers(caseReference: Option[CaseReference] = None, uploads: Seq[UploadedFile] = Seq.empty)
-    extends Answers
+@(content: Html)(implicit messages: Messages)
 
-object AmendAnswers {
-  implicit val formats: OFormat[AmendAnswers] = Json.format[AmendAnswers]
-}
+@uploadFileTypes()
+
+@content

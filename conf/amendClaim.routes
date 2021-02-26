@@ -1,4 +1,10 @@
 
 # amend claim
-GET         /claim-reference-number            uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim.CaseReferenceController.onPageLoad()
-POST        /claim-reference-number            uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim.CaseReferenceController.onSubmit()
+GET         /                                            uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim.AmendController.start()
+
+GET         /claim-reference-number                      uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim.CaseReferenceController.onPageLoad()
+POST        /claim-reference-number                      uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim.CaseReferenceController.onSubmit()
+
+GET         /upload-supporting-documents                 uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim.UploadFormController.onPageLoad()
+GET         /upload-supporting-documents/progress        uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim.UploadFormController.onProgress(uploadId: UploadId)
+GET         /upload-supporting-documents/error           uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim.UploadFormController.onError(errorCode: String)

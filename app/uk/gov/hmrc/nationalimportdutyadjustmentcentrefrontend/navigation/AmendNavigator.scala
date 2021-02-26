@@ -26,7 +26,8 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages._
 class AmendNavigator @Inject() () extends Navigator[AmendAnswers] with AmendAnswerConditions {
 
   override protected val pageOrder: Seq[P] = Seq(
-    P(CaseReferencePage, amendclaim.routes.CaseReferenceController.onPageLoad, always)
+    P(CaseReferencePage, amendclaim.routes.CaseReferenceController.onPageLoad, always),
+    P(UploadPage, amendclaim.routes.UploadFormController.onPageLoad, always)
   )
 
 }

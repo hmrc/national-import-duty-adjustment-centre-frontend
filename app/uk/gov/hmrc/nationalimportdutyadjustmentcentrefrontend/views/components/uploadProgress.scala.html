@@ -1,4 +1,4 @@
-/*
+@*
  * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,17 +12,15 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *@
 
-package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components.continueButton
 
-import play.api.libs.json.{Json, OFormat}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.Answers
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UploadedFile
+@this(continueButton: continueButton)
 
-final case class AmendAnswers(caseReference: Option[CaseReference] = None, uploads: Seq[UploadedFile] = Seq.empty)
-    extends Answers
+@()(implicit messages: Messages)
 
-object AmendAnswers {
-  implicit val formats: OFormat[AmendAnswers] = Json.format[AmendAnswers]
-}
+<p class="govuk-body govuk-!-font-weight-bold">@messages("upload_documents.status.in_progress")</p>
+<p class="govuk-body ccms-loader"></p>
+
+<div>@continueButton(disabled = true)</div>
