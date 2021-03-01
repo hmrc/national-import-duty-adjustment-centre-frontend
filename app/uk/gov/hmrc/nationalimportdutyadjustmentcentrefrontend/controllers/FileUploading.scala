@@ -36,6 +36,9 @@ trait FileUploading {
   protected def successRedirectUrl(uploadId: UploadId): String
   protected val errorRedirectUrl: String
 
+  private val errorQuery                       = "?errorCode="
+  protected def trimErrorUrl: String => String = _.dropRight(errorQuery.length)
+
   protected def initiateForm(
     journeyId: JourneyId
   )(implicit request: IdentifierRequest[_], hc: HeaderCarrier, ec: ExecutionContext): Future[UpscanInitiateResponse] = {
