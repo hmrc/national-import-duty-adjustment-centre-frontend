@@ -22,7 +22,7 @@
         legendAsHeading: Boolean = true,
         legendClass: Option[String] = None,
         inline: Boolean = false,
-        hint: Option[String] = None,
+        hint: Option[Html] = None,
 )(implicit messages: Messages)
 
 @inputRadio(
@@ -44,5 +44,5 @@
     legendAsHeading = legendAsHeading,
     legendClass = legendClass,
     legend = Some(label),
-    hint = hint.map(h => Html(hint))
+    hint = hint
 )
