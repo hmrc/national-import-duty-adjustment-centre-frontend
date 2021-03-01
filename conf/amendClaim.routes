@@ -10,3 +10,5 @@ POST        /attach-more-documents              uk.gov.hmrc.nationalimportdutyad
 GET         /check-answers                      uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim.CheckYourAnswersController.onPageLoad()
 POST        /check-answers                      uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim.CheckYourAnswersController.onSubmit()
 
+GET         /additional-information             uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim.FurtherInformationController.onPageLoad()
+POST        /additional-information             uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim.FurtherInformationController.onSubmit()
