@@ -22,6 +22,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.Uplo
 
 final case class AmendAnswers(
   caseReference: Option[CaseReference] = None,
+  hasMoreDocuments: Option[Boolean] = None,
   uploads: Seq[UploadedFile] = Seq.empty,
   furtherInformation: Option[FurtherInformation] = None
 ) extends Answers

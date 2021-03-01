@@ -20,10 +20,15 @@ import play.api.Logger
 import play.api.libs.json.{Json, OFormat}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.exceptions.MissingAnswersException
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UploadedFile
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{CaseReferencePage, FurtherInformationPage}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{
+  AttachMoreDocumentsPage,
+  CaseReferencePage,
+  FurtherInformationPage
+}
 
 final case class AmendClaim(
   caseReference: CaseReference,
+  hasMoreDocuments: Boolean,
   uploads: Seq[UploadedFile],
   furtherInformation: FurtherInformation
 )
@@ -33,6 +38,7 @@ object AmendClaim {
 
   def apply(answers: AmendAnswers): AmendClaim = new AmendClaim(
     caseReference = answers.caseReference.getOrElse(missing(CaseReferencePage)),
+    hasMoreDocuments = answers.hasMoreDocuments.getOrElse(missing(AttachMoreDocumentsPage)),
     uploads = answers.uploads,
     furtherInformation = answers.furtherInformation.getOrElse(missing(FurtherInformationPage))
   )

@@ -135,14 +135,16 @@ trait TestData {
   // AmendAnswers
   val caseReferenceAnswer      = CaseReference("NID21134557697RM8WIB13")
   val furtherInformationAnswer = FurtherInformation("I also have this to tell which is additional information")
+  val hasMoreDocuments         = true
 
   val emptyAmendAnswers: AmendAnswers = AmendAnswers()
 
   val completeAmendAnswers: AmendAnswers =
     AmendAnswers(
       caseReference = Some(caseReferenceAnswer),
-      uploads = Seq(uploadAnswer, uploadAnswer2),
-      furtherInformation = Some(furtherInformationAnswer)
+      furtherInformation = Some(furtherInformationAnswer),
+      hasMoreDocuments = Some(hasMoreDocuments),
+      uploads = Seq(uploadAnswer, uploadAnswer2)
     )
 
 }

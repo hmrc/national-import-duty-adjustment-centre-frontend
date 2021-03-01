@@ -5,6 +5,9 @@ GET         /                                            uk.gov.hmrc.nationalimp
 GET         /claim-reference-number                      uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim.CaseReferenceController.onPageLoad()
 POST        /claim-reference-number                      uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim.CaseReferenceController.onSubmit()
 
+GET         /attach-more-documents              uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim.AttachMoreDocumentsController.onPageLoad()
+POST        /attach-more-documents              uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim.AttachMoreDocumentsController.onSubmit()
+
 GET         /upload-additional-documents                 uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim.UploadFormController.onPageLoad()
 GET         /upload-additional-documents/progress        uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim.UploadFormController.onProgress(uploadId: UploadId)
 GET         /upload-additional-documents/error           uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim.UploadFormController.onError(errorCode: String)

@@ -20,6 +20,7 @@
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html._
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components._
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.NavigatorBack
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.MessageKey
 
 @this(
         layout: Layout,
@@ -49,6 +50,18 @@
                 actions = None
             )),
             Some(SummaryListRow(
+                classes = "has_supporting_documents_row",
+                key = Key(
+                    content = Text(messages("amend.check_answers.information.attach_more_documents"))
+                ),
+                value = Value(
+                    content = Text(MessageKey.apply("amend.check_answers.information.attach_more_documents", amendClaim.hasMoreDocuments.toString ))
+                ),
+                actions = None
+            )
+            ),
+            if(amendClaim.hasMoreDocuments){
+            Some(SummaryListRow(
                 classes = "upload_row",
                 key = Key(
                     content = Text(messages("amend.check_answers.information.uploadedDocuments"))
@@ -57,7 +70,7 @@
                     content = HtmlContent(amendClaim.uploads.map(_.fileName).mkString("<br>"))
                 ),
                 actions = None
-            )),
+            ))} else None,
             Some(SummaryListRow(
                 classes = "further_information_row",
                 key = Key(
