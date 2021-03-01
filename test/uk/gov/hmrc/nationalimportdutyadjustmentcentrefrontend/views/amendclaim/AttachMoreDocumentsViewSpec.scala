@@ -76,7 +76,9 @@ class AttachMoreDocumentsViewSpec extends UnitViewSpec {
 
       val errorView = view(form.bind(Map("yesOrNo" -> "")))
 
-      errorView.getElementsByClass("govuk-error-summary__body").text() mustBe messages("amend.attach_more_documents.required")
+      errorView.getElementsByClass("govuk-error-summary__body").text() mustBe messages(
+        "amend.attach_more_documents.required"
+      )
 
     }
 

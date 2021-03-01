@@ -139,6 +139,10 @@ trait TestData {
   val emptyAmendAnswers: AmendAnswers = AmendAnswers()
 
   val completeAmendAnswers: AmendAnswers =
-    AmendAnswers(caseReference = Some(caseReferenceAnswer), furtherInformation = Some(furtherInformationAnswer), hasMoreDocuments = Some(hasMoreDocuments))
+    AmendAnswers(
+      caseReference = Some(caseReferenceAnswer),
+      furtherInformation = Some(furtherInformationAnswer),
+      hasMoreDocuments = Some(hasMoreDocuments)
+    )
 
 }
