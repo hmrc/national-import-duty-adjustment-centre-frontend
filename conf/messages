@@ -264,9 +264,9 @@ amend.attach_more_documents.hint = You may have been asked to provide additional
 amend.check_answers.title = Check your answers before sending your application
 amend.check_answers.information.title = Important information
 amend.check_answers.information.caseReference = Claim reference number
-amend.check_answers.information.hasNoSupportingDocuments = Do you need to attach more documents?
-amend.check_answers.information.hasNoSupportingDocuments.false = No
-amend.check_answers.information.hasNoSupportingDocuments.true = Yes
+amend.check_answers.information.attach_more_documents = Do you need to attach more documents?
+amend.check_answers.information.attach_more_documents.false = No
+amend.check_answers.information.attach_more_documents.true = Yes
 amend.check_answers.submit.heading = Submit your declaration
 amend.check_answers.submit.declaration = Before you proceed, ensure that you have fully reviewed the information you have provided above and ensure that it is correct.
 
