@@ -24,7 +24,6 @@ import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{ControllerSpec, TestData}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.UpscanInitiateConnector
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.JourneyId
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UploadStatus
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UpscanNotification.Quarantine
@@ -149,13 +148,13 @@ class UploadFormControllerSpec extends ControllerSpec with TestData {
       verify(dataRepository, never()).set(any())
     }
 
-    "update UserAnswers and redirect to CYA when upload succeeds" in {
+    "update UserAnswers and redirect to additional information when upload succeeds" in {
 
       givenUploadStatus(uploadFileSuccess)
       val result = controller.onProgress(uploadId)(fakeGetRequest)
 
       status(result) mustBe SEE_OTHER
-      redirectLocation(result) mustBe Some(routes.CheckYourAnswersController.onPageLoad().url)
+      redirectLocation(result) mustBe Some(routes.FurtherInformationController.onPageLoad().url)
 
       theUpdatedAmendAnswers.uploads mustBe Seq(uploadFileSuccess)
     }

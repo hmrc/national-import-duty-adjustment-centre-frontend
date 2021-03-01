@@ -16,7 +16,6 @@
 
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim.routes
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.AmendClaim
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.exceptions.MissingAnswersException
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.Title
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html._
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components._
@@ -56,6 +55,16 @@
                 ),
                 value = Value(
                     content = HtmlContent(amendClaim.uploads.map(_.fileName).mkString("<br>"))
+                ),
+                actions = None
+            )),
+            Some(SummaryListRow(
+                classes = "further_information_row",
+                key = Key(
+                    content = Text(messages("check_answers.claim.further_information"))
+                ),
+                value = Value(
+                    content = Text(amendClaim.furtherInformation.info)
                 ),
                 actions = None
             ))
