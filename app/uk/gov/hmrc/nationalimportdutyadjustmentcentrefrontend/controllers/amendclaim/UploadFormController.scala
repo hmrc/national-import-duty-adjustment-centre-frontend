@@ -22,6 +22,7 @@ import play.api.mvc._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.UpscanInitiateConnector
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.IdentifierAction
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.routes
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.{FileUploading, Navigation}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.UploadId
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.AmendAnswers
@@ -46,7 +47,7 @@ class UploadFormController @Inject() (
   val uploadProgressTracker: UploadProgressTracker,
   val upscanInitiateConnector: UpscanInitiateConnector,
   data: CacheDataService,
-  appConfig: AppConfig,
+  val appConfig: AppConfig,
   val navigator: AmendNavigator,
   uploadFormView: UploadFormView,
   uploadProgressView: UploadProgressView
@@ -55,11 +56,9 @@ class UploadFormController @Inject() (
 
   override val page: Page = UploadPage
 
-  protected lazy val errorRedirectUrl =
-    appConfig.upscan.redirectBase + trimErrorUrl(routes.UploadFormController.onError("").url)
+  override protected def successRedirectUrl(uploadId: UploadId): Call = routes.UploadFormController.onProgress(uploadId)
 
-  protected def successRedirectUrl(uploadId: UploadId) =
-    appConfig.upscan.redirectBase + routes.UploadFormController.onProgress(uploadId).url
+  override protected def errorRedirectUrl(errorCode: String): Call = routes.UploadFormController.onError(errorCode)
 
   def onPageLoad(): Action[AnyContent] = identify.async { implicit request =>
     data.getAmendAnswersWithJourneyId flatMap { answersWithJourneyID =>

@@ -17,7 +17,9 @@
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
 
 import play.api.data.FormError
+import play.api.mvc.Call
 import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.{Reference, UpscanInitiateConnector}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.requests.IdentifierRequest
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UpscanInitiateResponse
@@ -33,11 +35,13 @@ trait FileUploading {
 
   val upscanInitiateConnector: UpscanInitiateConnector
   val uploadProgressTracker: UploadProgressTracker
-  protected def successRedirectUrl(uploadId: UploadId): String
-  protected val errorRedirectUrl: String
+  val appConfig: AppConfig
 
-  private val errorQuery                       = "?errorCode="
-  protected def trimErrorUrl: String => String = _.dropRight(errorQuery.length)
+  protected def successRedirectUrl(uploadId: UploadId): Call
+  protected def errorRedirectUrl(errorCode: String): Call
+
+  private val errorQuery        = "?errorCode="
+  private lazy val errorBaseUrl = errorRedirectUrl("").url.dropRight(errorQuery.length)
 
   protected def initiateForm(
     journeyId: JourneyId
@@ -46,8 +50,8 @@ trait FileUploading {
     for {
       upscanInitiateResponse <- upscanInitiateConnector.initiateV2(
         journeyId,
-        Some(successRedirectUrl(uploadId)),
-        Some(errorRedirectUrl)
+        Some(appConfig.upscan.redirectBase + successRedirectUrl(uploadId).url),
+        Some(appConfig.upscan.redirectBase + errorBaseUrl)
       )
       _ <- uploadProgressTracker.requestUpload(
         uploadId,

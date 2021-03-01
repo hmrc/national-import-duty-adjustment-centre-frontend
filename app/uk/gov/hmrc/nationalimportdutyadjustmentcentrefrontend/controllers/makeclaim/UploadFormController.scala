@@ -48,7 +48,7 @@ class UploadFormController @Inject() (
   val uploadProgressTracker: UploadProgressTracker,
   val upscanInitiateConnector: UpscanInitiateConnector,
   data: CacheDataService,
-  appConfig: AppConfig,
+  val appConfig: AppConfig,
   val navigator: CreateNavigator,
   uploadFormView: UploadFormView,
   uploadProgressView: UploadProgressView
@@ -63,11 +63,9 @@ class UploadFormController @Inject() (
       case _                       => super.backLink(answers)
     }
 
-  protected lazy val errorRedirectUrl =
-    appConfig.upscan.redirectBase + trimErrorUrl(routes.UploadFormController.onError("").url)
+  override protected def successRedirectUrl(uploadId: UploadId): Call = routes.UploadFormController.onProgress(uploadId)
 
-  protected def successRedirectUrl(uploadId: UploadId) =
-    appConfig.upscan.redirectBase + routes.UploadFormController.onProgress(uploadId).url
+  override protected def errorRedirectUrl(errorCode: String): Call = routes.UploadFormController.onError(errorCode)
 
   def onPageLoad(): Action[AnyContent] = identify.async { implicit request =>
     data.getCreateAnswersWithJourneyId flatMap { answersWithJourneyID =>
