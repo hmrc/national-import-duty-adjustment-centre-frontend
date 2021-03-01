@@ -40,7 +40,7 @@ class AttachMoreDocumentsViewSpec extends UnitViewSpec {
     }
 
     "have correct hint" in {
-      view().getElementById("yesOrNo-hint") must containMessage("amend.attach_more_documents.hint")
+      view().getElementById("yesOrNo-hint") must includeMessage("amend.attach_more_documents.hint")
     }
 
     "have radio options for yes and no" in {
