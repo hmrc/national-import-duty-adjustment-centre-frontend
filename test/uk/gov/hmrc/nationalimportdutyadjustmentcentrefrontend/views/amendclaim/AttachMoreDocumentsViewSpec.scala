@@ -39,6 +39,10 @@ class AttachMoreDocumentsViewSpec extends UnitViewSpec {
       view().getElementsByTag("h1") must containMessage("amend.attach_more_documents.title")
     }
 
+    "have correct hint" in {
+      view().getElementById("yesOrNo-hint") must containMessage("amend.attach_more_documents.hint")
+    }
+
     "have radio options for yes and no" in {
       val yesRadio = view().getElementsByAttributeValue("name", "yesOrNo").get(0)
       yesRadio.attr("value") mustBe "true"

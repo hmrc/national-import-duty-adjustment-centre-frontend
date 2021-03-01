@@ -33,15 +33,13 @@
 
 @layout(pageTitle = Title(form, messages("amend.attach_more_documents.title")), backLink) {
 
-    @components.heading(messages("amend.attach_more_documents.title"))
-
     @formHelper(action = AttachMoreDocumentsController.onSubmit(), 'autoComplete -> "off") {
         @errorSummary(form.errors)
 
         @yesNo(
             form = form,
-            label = messages("amend.attach_more_documents.hint"),
-            legendAsHeading = false,
+            label = messages("amend.attach_more_documents.title"),
+            hint = Some(messages("amend.attach_more_documents.hint")),
             inline = true
         )
 
