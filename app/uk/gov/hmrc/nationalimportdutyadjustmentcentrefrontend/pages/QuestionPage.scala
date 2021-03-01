@@ -39,5 +39,5 @@ case object UploadSummaryPage          extends QuestionPage[Boolean]
 case object EntryDetailsPage           extends QuestionPage[EntryDetails]
 case object ItemNumbersPage            extends QuestionPage[ItemNumbers]
 
-case object CaseReferencePage extends QuestionPage[CaseReference]
-case object AttachMoreDocumentsPage  extends QuestionPage[Boolean]
+case object CaseReferencePage       extends QuestionPage[CaseReference]
+case object AttachMoreDocumentsPage extends QuestionPage[Boolean]
