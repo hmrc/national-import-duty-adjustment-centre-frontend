@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         NIDAC Create Claim AutoComplete
 // @namespace    http://tampermonkey.net/
-// @version      0.8
+// @version      0.9
 
 // @description  NIDAC Create Claim AutoComplete
 // @author       NIDAC Team
