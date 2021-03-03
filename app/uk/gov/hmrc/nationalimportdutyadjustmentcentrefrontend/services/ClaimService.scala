@@ -16,18 +16,21 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services
 
-import java.util.UUID
-
-import javax.inject.Inject
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.NIDACConnector
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.eis.EISCreateCaseRequest
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.{AmendClaim, AmendClaimResponse}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{Claim, CreateClaimResponse}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.requests.CreateEISClaimRequest
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.eis.{EISAmendCaseRequest, EISCreateCaseRequest}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.requests.{
+  AmendEISClaimRequest,
+  CreateEISClaimRequest
+}
 
+import java.util.UUID
+import javax.inject.Inject
 import scala.concurrent.Future
 
-class CreateClaimService @Inject() (connector: NIDACConnector) {
+class ClaimService @Inject() (connector: NIDACConnector) {
   private val acknowledgementReferenceMaxLength = 32
 
   def submitClaim(claim: Claim)(implicit hc: HeaderCarrier): Future[CreateClaimResponse] = {
@@ -41,6 +44,20 @@ class CreateClaimService @Inject() (connector: NIDACConnector) {
     )
 
     connector.submitClaim(CreateEISClaimRequest(eisRequest, claim.uploads), correlationId)
+
+  }
+
+  def amendClaim(amendClaim: AmendClaim)(implicit hc: HeaderCarrier): Future[AmendClaimResponse] = {
+
+    val correlationId = hc.requestId.map(_.value).getOrElse(UUID.randomUUID().toString)
+    val eisRequest: EISAmendCaseRequest = EISAmendCaseRequest(
+      AcknowledgementReference = correlationId.replace("-", "").takeRight(acknowledgementReferenceMaxLength),
+      ApplicationType = "NIDAC",
+      OriginatingSystem = "Digital",
+      Content = EISAmendCaseRequest.Content(amendClaim)
+    )
+
+    connector.amendClaim(AmendEISClaimRequest(eisRequest, amendClaim.uploads), correlationId)
 
   }
 
