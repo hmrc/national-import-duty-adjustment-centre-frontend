@@ -31,6 +31,8 @@ import javax.inject.Inject
 import scala.concurrent.Future
 
 class ClaimService @Inject() (connector: NIDACConnector) {
+  private val APPLICATION_TYPE_NIDAC            = "NIDAC"
+  private val ORIGINATING_SYSTEM_DIGITAL        = "Digital"
   private val acknowledgementReferenceMaxLength = 32
 
   def submitClaim(claim: Claim)(implicit hc: HeaderCarrier): Future[CreateClaimResponse] = {
@@ -38,8 +40,8 @@ class ClaimService @Inject() (connector: NIDACConnector) {
     val correlationId = hc.requestId.map(_.value).getOrElse(UUID.randomUUID().toString)
     val eisRequest: EISCreateCaseRequest = EISCreateCaseRequest(
       AcknowledgementReference = correlationId.replace("-", "").takeRight(acknowledgementReferenceMaxLength),
-      ApplicationType = "NIDAC",
-      OriginatingSystem = "Digital",
+      ApplicationType = APPLICATION_TYPE_NIDAC,
+      OriginatingSystem = ORIGINATING_SYSTEM_DIGITAL,
       Content = EISCreateCaseRequest.Content(claim)
     )
 
@@ -52,8 +54,8 @@ class ClaimService @Inject() (connector: NIDACConnector) {
     val correlationId = hc.requestId.map(_.value).getOrElse(UUID.randomUUID().toString)
     val eisRequest: EISAmendCaseRequest = EISAmendCaseRequest(
       AcknowledgementReference = correlationId.replace("-", "").takeRight(acknowledgementReferenceMaxLength),
-      ApplicationType = "NIDAC",
-      OriginatingSystem = "Digital",
+      ApplicationType = APPLICATION_TYPE_NIDAC,
+      OriginatingSystem = ORIGINATING_SYSTEM_DIGITAL,
       Content = EISAmendCaseRequest.Content(amendClaim)
     )
 

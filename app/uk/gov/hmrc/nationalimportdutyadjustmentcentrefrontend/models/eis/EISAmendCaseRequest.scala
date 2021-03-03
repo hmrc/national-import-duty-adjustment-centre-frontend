@@ -20,8 +20,9 @@ import play.api.libs.json.{Format, Json}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.AmendClaim
 
 /**
-  * Create specified case in the PEGA system.
-  * Based on spec "CSG_NIDAC_AutoCreateCase_API_Spec_V0.2.docx"  (NOTE: PEGA spec)
+  * Amend specified case in the PEGA system.
+  * Based on spec for "CSG_NIDAC_AutoUpdateCase_API_Spec" (NOTE: PEGA spec)
+  * see tests/pega-update-case-spec for latest implemented
   */
 case class EISAmendCaseRequest(
   AcknowledgementReference: String,
