@@ -117,8 +117,7 @@ contactDetails.emailAddress.error.required = Enter an email address
 contactDetails.emailAddress.error.invalid = Enter an email address in the correct format, like name@example.com
 contactDetails.emailAddress.error.length = Email must be 85 characters or fewer
 contactDetails.telephoneNumber.heading = UK telephone number
-contactDetails.telephoneNumber.error.required = Enter a telephone number
-contactDetails.telephoneNumber.error.invalid = Telephone number must be 11 numbers
+contactDetails.telephoneNumber.error.length = Telephone number must be between 9 and 32 characters
 
 address.title = What is your UK correspondence address?
 address.hint = We will use this to send letters about this claim.
@@ -280,3 +279,6 @@ amend.check_answers.information.attach_more_documents.true = Yes
 amend.check_answers.information.uploadedDocuments = Additional documents
 amend.check_answers.submit.heading = Submit your declaration
 amend.check_answers.submit.declaration = Before you proceed, ensure that you have fully reviewed the information you have provided above and ensure that it is correct.
+
+amend.confirmation.title = Information sent
+amend.confirmation.reference = Your reference number<br><strong>{0}</strong>

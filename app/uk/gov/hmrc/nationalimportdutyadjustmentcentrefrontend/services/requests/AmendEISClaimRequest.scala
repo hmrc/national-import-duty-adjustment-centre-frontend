@@ -14,20 +14,15 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.eis
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.requests
 
 import play.api.libs.json.{Json, OFormat}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.eis.EISAmendCaseRequest
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UploadedFile
 
-case class AgentAddress(
-  AddressLine1: String,
-  AddressLine2: Option[String],
-  City: String,
-  PostalCode: String,
-  CountryCode: String,
-  TelephoneNumber: Option[String],
-  EmailAddress: String
-)
+case class AmendEISClaimRequest(eisRequest: EISAmendCaseRequest, uploadedFiles: Seq[UploadedFile])
 
-object AgentAddress {
-  implicit val format: OFormat[AgentAddress] = Json.format[AgentAddress]
+object AmendEISClaimRequest {
+
+  implicit val format: OFormat[AmendEISClaimRequest] = Json.format[AmendEISClaimRequest]
 }

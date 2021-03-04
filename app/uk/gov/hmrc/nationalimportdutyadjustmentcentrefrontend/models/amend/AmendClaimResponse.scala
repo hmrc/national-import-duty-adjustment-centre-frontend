@@ -14,20 +14,17 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.eis
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend
 
 import play.api.libs.json.{Json, OFormat}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ApiError
 
-case class AgentAddress(
-  AddressLine1: String,
-  AddressLine2: Option[String],
-  City: String,
-  PostalCode: String,
-  CountryCode: String,
-  TelephoneNumber: Option[String],
-  EmailAddress: String
+case class AmendClaimResponse(
+  correlationId: String,
+  error: Option[ApiError] = None,
+  result: Option[AmendClaimResult] = None
 )
 
-object AgentAddress {
-  implicit val format: OFormat[AgentAddress] = Json.format[AgentAddress]
+object AmendClaimResponse {
+  implicit val format: OFormat[AmendClaimResponse] = Json.format[AmendClaimResponse]
 }
