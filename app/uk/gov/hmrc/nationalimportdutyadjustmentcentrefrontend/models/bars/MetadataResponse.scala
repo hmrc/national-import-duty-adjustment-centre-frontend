@@ -20,7 +20,7 @@ import play.api.libs.json.{Json, OFormat}
 
 case class MetadataResponse(bacsOfficeStatus: String, disallowedTransactions: Seq[String] = Seq.empty) {
 
-  val acceptsBacsPayments = bacsOfficeStatus != "N" && !disallowedTransactions.contains("CR")
+  val acceptsBacsPayments: Boolean = bacsOfficeStatus != "N" && !disallowedTransactions.contains("CR")
 }
 
 object MetadataResponse {

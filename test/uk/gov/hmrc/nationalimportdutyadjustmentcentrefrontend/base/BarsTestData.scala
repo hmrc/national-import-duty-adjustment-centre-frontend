@@ -25,19 +25,28 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.bars.{
 trait BarsTestData extends TestData {
 
   // Metadata
-  val validMetaDataResponse        = MetadataResponse("M")
-  val noBacsMetaDataResponse       = MetadataResponse("N")
-  val noBacsCreditMetaDataResponse = MetadataResponse("M", Seq("CR"))
+  val validMetaDataResponse: MetadataResponse  = MetadataResponse("M")
+  val noBacsMetaDataResponse: MetadataResponse = MetadataResponse("N")
 
   // Assess
-  val validAssessResponse                           = AssessBusinessBankDetailsResponse("yes", "no", "yes", "yes")
-  val invalidAccountNumberAssessResponse            = AssessBusinessBankDetailsResponse("no", "no", "yes", "yes")
-  val invalidNonStandardAccountNumberAssessResponse = AssessBusinessBankDetailsResponse("yes", "yes", "yes", "yes")
+  val validAssessResponse: AssessBusinessBankDetailsResponse =
+    AssessBusinessBankDetailsResponse("yes", "no", "yes", "yes")
+
+  val invalidAccountNumberAssessResponse: AssessBusinessBankDetailsResponse =
+    AssessBusinessBankDetailsResponse("no", "no", "yes", "yes")
+
+  val invalidNonStandardAccountNumberAssessResponse: AssessBusinessBankDetailsResponse =
+    AssessBusinessBankDetailsResponse("yes", "yes", "yes", "yes")
 
   // Bars
-  val barsSuccessResult          = BARSResult(validMetaDataResponse, validAssessResponse)
-  val barsBacsNotSupportedResult = BARSResult(noBacsMetaDataResponse, AssessBusinessBankDetailsResponse.notApplicable)
-  val barsInvalidAccountResult   = BARSResult(validMetaDataResponse, invalidAccountNumberAssessResponse)
-  val barsRollRequiredResult     = BARSResult(validMetaDataResponse, invalidNonStandardAccountNumberAssessResponse)
+  val barsSuccessResult: BARSResult = BARSResult(validMetaDataResponse, validAssessResponse)
+
+  val barsBacsNotSupportedResult: BARSResult =
+    BARSResult(noBacsMetaDataResponse, AssessBusinessBankDetailsResponse.notApplicable)
+
+  val barsInvalidAccountResult: BARSResult = BARSResult(validMetaDataResponse, invalidAccountNumberAssessResponse)
+
+  val barsRollRequiredResult: BARSResult =
+    BARSResult(validMetaDataResponse, invalidNonStandardAccountNumberAssessResponse)
 
 }
