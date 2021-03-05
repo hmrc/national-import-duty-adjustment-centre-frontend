@@ -40,7 +40,7 @@ final case class CacheData(
 
 object CacheData {
 
-  implicit private val formatLastUpdated: OFormat[LocalDateTime] = JsonFormats.formatLocalDateTime
+//  implicit private val formatLastUpdated: OFormat[LocalDateTime] = JsonFormats.formatLocalDateTime
 
   implicit val formats: OFormat[CacheData] = Json.format[CacheData]
 }
