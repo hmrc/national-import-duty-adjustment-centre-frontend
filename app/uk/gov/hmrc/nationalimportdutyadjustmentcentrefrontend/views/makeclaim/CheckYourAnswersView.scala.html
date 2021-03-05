@@ -242,12 +242,11 @@
             Some(SummaryListRow(
                 classes = "bank_details_type_row",
                 key = Key(
-                    content = HtmlContent(messages("check_answers.payment.bankDetails"))
+                    content = Text(messages("check_answers.payment.bankDetails"))
                 ),
                 value = Value(
                     content = HtmlContent(Seq(
                         claim.bankDetails.accountName,
-                        "",
                         claim.bankDetails.sortCode,
                         claim.bankDetails.accountNumber
                     ).mkString("<br>"))
