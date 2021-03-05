@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.bars
 
 import play.api.libs.json.{Json, OFormat}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.Implicits.SanitizedString
 
-case class BankDetails(accountName: String, sortCode: String, accountNumber: String)
+case class MetadataResponse(bacsOfficeStatus: String, disallowedTransactions: Seq[String] = Seq.empty) {
 
-object BankDetails {
-  implicit val format: OFormat[BankDetails] = Json.format[BankDetails]
+  val acceptsBacsPayments: Boolean = bacsOfficeStatus != "N" && !disallowedTransactions.contains("CR")
+}
 
-  def apply(accountName: String, sortCode: String, accountNumber: String): BankDetails =
-    new BankDetails(accountName, sortCode.stripSpacesAndDashes(), accountNumber.leftPadAccountNumber())
+object MetadataResponse {
+  implicit val format: OFormat[MetadataResponse] = Json.format[MetadataResponse]
 
+  val notFound: MetadataResponse = MetadataResponse("Unknown")
 }
