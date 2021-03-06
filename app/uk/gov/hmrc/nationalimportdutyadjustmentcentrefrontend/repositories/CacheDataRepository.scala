@@ -28,7 +28,6 @@ import uk.gov.hmrc.mongo.MongoComponent
 import uk.gov.hmrc.mongo.play.json.{Codecs, PlayMongoRepository}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.CacheData
-//import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.JsonFormats.formatLocalDateTime
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -46,20 +45,18 @@ class CacheDataRepository @Inject() (mongoComponent: MongoComponent, config: App
       replaceIndexes = true
     ) {
 
-  def get(id: String): Future[Option[CacheData]] = collection.findOneAndUpdate(
-    equal("id", Codecs.toBson(id)),
-    set("lastUpdated", LocalDateTime.now())
-  ).toFutureOption()
+  def get(id: String): Future[Option[CacheData]] =
+    collection.findOneAndUpdate(filter(id), set("lastUpdated", LocalDateTime.now())).toFutureOption()
 
   def insert(data: CacheData): Future[Unit] =
     collection.insertOne(data).toFuture().map(_ => Unit)
 
   def update(data: CacheData): Future[Option[CacheData]] =
-    collection.findOneAndReplace(
-      equal("id", Codecs.toBson(data.id)),
-      data.copy(lastUpdated = LocalDateTime.now)
-    ).toFutureOption()
+    collection.findOneAndReplace(filter(data.id), data.copy(lastUpdated = LocalDateTime.now)).toFutureOption()
 
-  def delete(id: String): Future[Unit] = collection.deleteOne(equal("id", Codecs.toBson(id))).toFuture().map(_ => Unit)
+  def delete(id: String): Future[Unit] = collection.deleteOne(filter(id)).toFuture().map(_ => Unit)
+
+  private def filter(id: String) =
+    equal("id", Codecs.toBson(id))
 
 }
