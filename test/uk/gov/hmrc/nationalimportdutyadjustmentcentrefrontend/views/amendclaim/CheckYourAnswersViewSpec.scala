@@ -50,6 +50,10 @@ class CheckYourAnswersViewSpec extends UnitViewSpec with TestData {
 
         caseRow must haveSummaryKey(messages("amend.check_answers.information.caseReference"))
         caseRow must haveSummaryValue(caseReferenceAnswer.number)
+
+        caseRow must haveSummaryChangeLinkText(
+          s"${messages("site.change")} ${messages("amend.check_answers.information.caseReference")}"
+        )
       }
 
       "contains uploaded documents" in {
