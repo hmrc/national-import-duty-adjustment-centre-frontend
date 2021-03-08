@@ -37,12 +37,13 @@ class CacheDataRepository @Inject() (mongoComponent: MongoComponent, config: App
       mongoComponent = mongoComponent,
       domainFormat = CacheData.formats,
       indexes = Seq(
+        IndexModel(ascending("id"), IndexOptions().name("idIdx").unique(true)),
         IndexModel(
           ascending("lastUpdated"),
           IndexOptions().name("userAnswersExpiry").expireAfter(config.mongoTimeToLiveInSeconds, TimeUnit.SECONDS)
         )
       ),
-      replaceIndexes = true
+      replaceIndexes = config.mongoReplaceIndexes
     ) {
 
   def get(id: String): Future[Option[CacheData]] =

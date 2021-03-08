@@ -87,12 +87,14 @@ class UploadRepository @Inject() (mongoComponent: MongoComponent, config: AppCon
       mongoComponent = mongoComponent,
       domainFormat = UploadDetails.format,
       indexes = Seq(
+        IndexModel(ascending("uploadId", "journeyId"), IndexOptions().name("uploadJourneyIdx").unique(true)),
+        IndexModel(ascending("reference", "journeyId"), IndexOptions().name("referenceJourneyIdx").unique(true)),
         IndexModel(
           ascending("created"),
           IndexOptions().name("uploadExpiry").expireAfter(config.mongoTimeToLiveInSeconds, TimeUnit.SECONDS)
         )
       ),
-      replaceIndexes = true
+      replaceIndexes = config.mongoReplaceIndexes
     ) {
 
   def add(uploadDetails: UploadDetails): Future[Boolean] =
