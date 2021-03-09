@@ -52,8 +52,8 @@ continueButton: components.continueButton
                     items = Seq(
                         ActionItem(
                             href = routes.CheckYourAnswersController.onChange(AmendPageNames.claimReference).url,
-                            content = Text(messages("site.change")),
-                            visuallyHiddenText = Some(messages("amend.check_answers.information.caseReference"))
+                            content = HtmlContent(linkContent(messages("site.change"))),
+                            visuallyHiddenText = Some(messages("amend.check_answers.information.caseReference.accessible"))
                         )
                     )
                 ))
@@ -70,8 +70,8 @@ continueButton: components.continueButton
                     items = Seq(
                         ActionItem(
                             href = routes.CheckYourAnswersController.onChange(AmendPageNames.attachMoreDocuments).url,
-                            content = Text(messages("site.change")),
-                            visuallyHiddenText = Some(messages("amend.check_answers.information.attach_more_documents"))
+                            content = HtmlContent(linkContent(messages("site.change"))),
+                            visuallyHiddenText = Some(messages("amend.check_answers.information.attach_more_documents.accessible"))
                         )
                     )
                 ))
@@ -90,8 +90,8 @@ continueButton: components.continueButton
                     items = Seq(
                         ActionItem(
                             href = routes.CheckYourAnswersController.onChange(AmendPageNames.uploadSummary).url,
-                            content = Text(messages("site.change")),
-                            visuallyHiddenText = Some(messages("amend.check_answers.information.uploadedDocuments"))
+                            content = HtmlContent(linkContent(messages("site.change"))),
+                            visuallyHiddenText = Some(messages("amend.check_answers.information.uploadedDocuments.accessible"))
                         )
                     )
                 ))
@@ -99,7 +99,7 @@ continueButton: components.continueButton
             Some(SummaryListRow(
                 classes = "further_information_row",
                 key = Key(
-                    content = Text(messages("check_answers.claim.further_information"))
+                    content = Text(messages("amend.check_answers.information.further_information"))
                 ),
                 value = Value(
                     content = Text(amendClaim.furtherInformation.info)
@@ -108,8 +108,8 @@ continueButton: components.continueButton
                     items = Seq(
                         ActionItem(
                             href = routes.CheckYourAnswersController.onChange(AmendPageNames.furtherInformation).url,
-                            content = Text(messages("site.change")),
-                            visuallyHiddenText = Some(messages("check_answers.claim.further_information"))
+                            content = HtmlContent(linkContent(messages("site.change"))),
+                            visuallyHiddenText = Some(messages("amend.check_answers.information.further_information.accessible"))
                         )
                     )
                 ))
