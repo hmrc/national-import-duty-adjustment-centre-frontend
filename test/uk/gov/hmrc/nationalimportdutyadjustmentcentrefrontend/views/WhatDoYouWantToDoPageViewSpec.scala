@@ -59,7 +59,7 @@ class WhatDoYouWantToDoPageViewSpec extends UnitViewSpec {
 
   "WhatDoYouWantToDoPage on filled form" should {
 
-    "have no selected radio options" in {
+    "have selected radio options" in {
       val checked = view(form.fill(NewClaim)).getElementsByAttribute("checked")
       checked.attr("value") mustBe NewClaim.toString
     }

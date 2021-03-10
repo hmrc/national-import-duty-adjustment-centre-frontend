@@ -64,7 +64,6 @@ class WhatDoYouWantToDoControllerSpec extends ControllerSpec with TestData {
 
   override protected def beforeEach(): Unit = {
     super.beforeEach()
-    withEmptyCache()
     when(page.apply(any())(any(), any())).thenReturn(HtmlFormat.empty)
   }
 
