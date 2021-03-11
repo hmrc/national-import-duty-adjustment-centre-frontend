@@ -130,6 +130,34 @@ class CheckYourAnswersViewSpec extends UnitViewSpec with TestData {
       }
     }
 
+    "have payment section" which {
+      val paymentSection = view().getElementById("payment_section")
+
+      "contains payTo" in {
+        val payToRow = paymentSection.getElementsByClass("pay_to_row")
+        payToRow must haveSummaryKey(messages("check_answers.payment.payTo"))
+        payToRow must haveSummaryValue(MessageKey.apply("check_answers.payment.payTo", repayToAnswer.toString))
+      }
+
+      "contains account name" in {
+        val accountNameRow = paymentSection.getElementsByClass("bank_details_account_name_row")
+        accountNameRow must haveSummaryKey(messages("check_answers.payment.accountName"))
+        accountNameRow must haveSummaryValue(bankDetailsAnswer.accountName)
+      }
+
+      "does account sort code" in {
+        val accountSortCodeRow = paymentSection.getElementsByClass("bank_details_sortCode_row")
+        accountSortCodeRow must haveSummaryKey(messages("check_answers.payment.sortCode"))
+        accountSortCodeRow must haveSummaryValue(bankDetailsAnswer.sortCode)
+      }
+
+      "contains account number" in {
+        val accountNumberRow = paymentSection.getElementsByClass("bank_details_accountNumber_row")
+        accountNumberRow must haveSummaryKey(messages("check_answers.payment.accountNumber"))
+        accountNumberRow must haveSummaryValue(bankDetailsAnswer.accountNumber)
+      }
+    }
+
     "have 'Submit' button" in {
       view().getElementById("submit") must includeMessage("check_answers.submit")
     }
