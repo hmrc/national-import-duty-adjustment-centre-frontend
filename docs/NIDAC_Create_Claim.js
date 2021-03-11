@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name         NIDAC Create Claim AutoComplete
 // @namespace    http://tampermonkey.net/
-// @version      0.11
+// @version      0.13
 
 // @description  NIDAC Create Claim AutoComplete
 // @author       NIDAC Team
-// @match        http*://*/national-import-duty-adjustment-centre/create/*
+// @match        http*://*/national-import-duty-adjustment-centre/*
 // @grant        none
 // @updateURL    https://raw.githubusercontent.com/hmrc/national-import-duty-adjustment-centre-frontend/master/docs/NIDAC_Create_Claim.js
 // ==/UserScript==
@@ -40,6 +40,35 @@ function submit() {
 }
 
 function completePage() {
+
+    /* START */
+    if (currentPageIs("/national-import-duty-adjustment-centre/what-do-you-want-to-do")) {
+        document.getElementById("what_do_you_want_to_do").checked = true;
+        submit();
+    }
+
+    /* AMEND */
+    if (currentPageIs("/national-import-duty-adjustment-centre/amend/claim-reference-number")) {
+        document.getElementById("caseReference").value = "NID21134557697RM8WIB13";
+        submit();
+    }
+
+    if (currentPageIs("/national-import-duty-adjustment-centre/amend/attach-more-documents")) {
+        document.getElementById("yesOrNo").checked = true;
+        submit();
+    }
+
+    if (currentPageIs("/national-import-duty-adjustment-centre/amend/your-uploads")) {
+        document.getElementById("yesOrNo-2").checked = true;
+        submit();
+    }
+
+    if (currentPageIs("/national-import-duty-adjustment-centre/amend/additional-information")) {
+        document.getElementById("furtherInformation").value = "Some new information that has been added";
+        submit();
+    }
+
+    /* CREATE */
     if (currentPageIs("/national-import-duty-adjustment-centre/create/importer-representative")) {
         document.getElementById("representation_type-2").checked = true;
         submit();
