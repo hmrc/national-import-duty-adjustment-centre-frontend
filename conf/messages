@@ -1,5 +1,4 @@
 service.name = Apply for return of import duty secured by deposit or guarantee
-service.homePageUrl = /national-import-duty-adjustment-centre
 
 site.continue = Continue
 site.back = Back
