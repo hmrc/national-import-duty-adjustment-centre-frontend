@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name     NIDAC Authorisation
 // @namespace  http://tampermonkey.net/
-// @version   0.2
+// @version   0.3
 // @description Authenticates for NIDAC
 // @author    NIDAC Team
 // @match     http*://*/auth-login-stub/gg-sign-in?continue=*apply-for-return-import-duty-paid-on-deposit-or-guarantee*
@@ -11,7 +11,7 @@
 
 (function () {
     'use strict';
-    document.getElementsByName("redirectionUrl")[0].value = getBaseUrl() + "/apply-for-refund-import-duty-paid-on-deposit-or-guarantee";
+    document.getElementsByName("redirectionUrl")[0].value = getBaseUrl() + "/apply-for-return-import-duty-paid-on-deposit-or-guarantee";
     document.getElementById('global-header').appendChild(createQuickButton())
 })();
 
