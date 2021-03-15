@@ -165,7 +165,7 @@ class CheckYourAnswersViewSpec extends UnitViewSpec with TestData {
         reclaimDutyTotalRow must haveSummaryValue(s"£${completeClaim.repaymentTotal}")
 
         reclaimDutyTotalRow must haveSummaryChangeLinkText(
-          s"${messages("site.change")} ${messages("check_answers.repayment.total.accessible")}"
+          s"${messages("check_answers.repayment.total.change")} ${messages("check_answers.repayment.total.accessible")}"
         )
 
         reclaimDutyTotalRow must haveSummaryActionsHref(
