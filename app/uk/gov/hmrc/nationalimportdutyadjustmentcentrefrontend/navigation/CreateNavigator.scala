@@ -189,7 +189,15 @@ protected trait CreateHasAnsweredConditions {
 
   protected val bankDetailsAnswered: CreateAnswers => Boolean = _.bankDetails.nonEmpty
 
+  private val dutyPages: Set[String] = Set(
+    CreatePageNames.dutyTypes,
+    CreatePageNames.dutyCustoms,
+    CreatePageNames.dutyVAT,
+    CreatePageNames.dutyOther,
+    CreatePageNames.dutySummary
+  )
+
   protected val returnSummaryAnswered: CreateAnswers => Boolean = (answers: CreateAnswers) =>
-    answers.changePage.exists(page => !page.startsWith("duty"))
+    answers.changePage.exists(page => !dutyPages.contains(page))
 
 }
