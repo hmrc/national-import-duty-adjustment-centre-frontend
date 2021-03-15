@@ -28,6 +28,8 @@ trait Navigator[T <: Answers] {
 
   protected def checkYourAnswersPage: Call
 
+  def firstPage: Page = pageOrder.head.page
+
   protected def pageFor: String => Option[Page]
 
   private lazy val reversePageOrder = pageOrder.reverse

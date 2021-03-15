@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim
 
+import javax.inject.{Inject, Singleton}
 import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
@@ -29,8 +30,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.{CacheDat
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.CheckYourAnswersView
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
-import javax.inject.{Inject, Singleton}
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class CheckYourAnswersController @Inject() (
@@ -46,11 +46,16 @@ class CheckYourAnswersController @Inject() (
   override val page: Page = CheckYourAnswersPage
 
   def onPageLoad(): Action[AnyContent] = identify.async { implicit request =>
-    data.updateCreateAnswers(answers => answers.copy(changePage = None)) map { answers =>
-      Ok(checkYourAnswersView(Claim(answers), backLink(answers)))
-    } recover {
-      case _: MissingAnswersException =>
-        Redirect(controllers.routes.StartController.start())
+    data.getCreateAnswers flatMap { answers =>
+      try {
+        val claim = Claim(answers)
+        data.updateCreateAnswers(answers => answers.copy(changePage = None)) map { ans =>
+          Ok(checkYourAnswersView(claim, backLink(ans)))
+        }
+      } catch {
+        case _: MissingAnswersException =>
+          Future.successful(Redirect(navigator.nextPage(navigator.firstPage, answers)))
+      }
     }
   }
 
