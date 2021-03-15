@@ -16,9 +16,9 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim
 
+import javax.inject.{Inject, Singleton}
 import play.api.i18n.I18nSupport
 import play.api.mvc._
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.Navigation
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.IdentifierAction
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{Claim, CreateAnswers}
@@ -29,7 +29,6 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.{CacheDat
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.CheckYourAnswersView
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
-import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton
@@ -46,11 +45,14 @@ class CheckYourAnswersController @Inject() (
   override val page: Page = CheckYourAnswersPage
 
   def onPageLoad(): Action[AnyContent] = identify.async { implicit request =>
-    data.updateCreateAnswers(answers => answers.copy(changePage = None)) map { answers =>
-      Ok(checkYourAnswersView(Claim(answers), backLink(answers)))
+    data.getCreateAnswers flatMap { answers =>
+      val claim = Claim(answers)
+      data.updateCreateAnswers(answers => answers.copy(changePage = None)) map { ans =>
+        Ok(checkYourAnswersView(claim, backLink(ans)))
+      }
     } recover {
-      case _: MissingAnswersException =>
-        Redirect(controllers.routes.StartController.start())
+      case missing: MissingAnswersException =>
+        Redirect(navigator.gotoPage(missing.getMissingPage))
     }
   }
 
@@ -71,8 +73,8 @@ class CheckYourAnswersController @Inject() (
           }
       }
     } recover {
-      case _: MissingAnswersException =>
-        Redirect(controllers.routes.StartController.start())
+      case missing: MissingAnswersException =>
+        Redirect(navigator.gotoPage(missing.getMissingPage))
     }
 
   }

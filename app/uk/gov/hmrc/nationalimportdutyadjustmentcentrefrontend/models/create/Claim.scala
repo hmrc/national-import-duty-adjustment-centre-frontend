@@ -19,10 +19,10 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create
 import java.time.LocalDate
 
 import play.api.Logger
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.exceptions.MissingAnswersException
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UploadedFile
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{create, _}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages._
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.CreatePageNames
 
 import scala.util.Try
 
@@ -48,25 +48,31 @@ case class Claim(
 object Claim {
 
   def apply(userAnswers: CreateAnswers): Claim = {
-    if (userAnswers.uploads.isEmpty) missing(UploadSummaryPage)
-    if (userAnswers.reclaimDutyTypes.isEmpty) missing(ReclaimDutyTypePage)
+    if (userAnswers.uploads.isEmpty) missing(CreatePageNames.uploadSummary)
+    if (userAnswers.reclaimDutyTypes.isEmpty) missing(CreatePageNames.dutyTypes)
     new Claim(
-      contactDetails = userAnswers.contactDetails.getOrElse(missing(ContactDetailsPage)),
-      claimantAddress = userAnswers.claimantAddress.getOrElse(missing(AddressPage)),
-      representationType = userAnswers.representationType.getOrElse(missing(ReclaimDutyTypePage)),
-      claimType = userAnswers.claimType.getOrElse(missing(ClaimTypePage)),
-      claimReason = userAnswers.claimReason.getOrElse(missing(ClaimReasonPage)),
+      contactDetails = userAnswers.contactDetails.getOrElse(missing(CreatePageNames.contactDetails)),
+      claimantAddress = userAnswers.claimantAddress.getOrElse(missing(CreatePageNames.contactAddress)),
+      representationType = userAnswers.representationType.getOrElse(missing(CreatePageNames.representationType)),
+      claimType = userAnswers.claimType.getOrElse(missing(CreatePageNames.claimType)),
+      claimReason = userAnswers.claimReason.getOrElse(missing(CreatePageNames.claimReason)),
       uploads = userAnswers.uploads,
       reclaimDutyPayments = userAnswers.reclaimDutyTypes.map(
         dutyType =>
-          dutyType -> Try(userAnswers.reclaimDutyPayments(dutyType)).getOrElse(missing(s"DutyPayment $dutyType"))
+          dutyType -> Try(userAnswers.reclaimDutyPayments(dutyType)).getOrElse(missing(dutyTypePage(dutyType)))
       ).toMap,
       importerBeingRepresentedDetails = importerBeingRepresentedDetails(userAnswers),
-      bankDetails = userAnswers.bankDetails.getOrElse(missing(BankDetailsPage)),
-      entryDetails = userAnswers.entryDetails.getOrElse(missing(EntryDetailsPage)),
-      itemNumbers = userAnswers.itemNumbers.getOrElse(missing(ItemNumbersPage)),
+      bankDetails = userAnswers.bankDetails.getOrElse(missing(CreatePageNames.bankDetails)),
+      entryDetails = userAnswers.entryDetails.getOrElse(missing(CreatePageNames.entryDetails)),
+      itemNumbers = userAnswers.itemNumbers.getOrElse(missing(CreatePageNames.itemNumbers)),
       submissionDate = LocalDate.now()
     )
+  }
+
+  private def dutyTypePage(dutyType: ReclaimDutyType) = dutyType match {
+    case ReclaimDutyType.Customs => CreatePageNames.dutyCustoms
+    case ReclaimDutyType.Vat     => CreatePageNames.dutyVAT
+    case ReclaimDutyType.Other   => CreatePageNames.dutyOther
   }
 
   private def importerBeingRepresentedDetails(userAnswers: CreateAnswers): Option[ImporterBeingRepresentedDetails] =
@@ -75,20 +81,20 @@ object Claim {
       case Some(RepresentationType.Representative) =>
         Some(
           create.ImporterBeingRepresentedDetails(
-            repayTo = userAnswers.repayTo.getOrElse(missing(RepayToPage)),
+            repayTo = userAnswers.repayTo.getOrElse(missing(CreatePageNames.repayTo)),
             eoriNumber =
               if (userAnswers.repayTo.contains(RepayTo.Importer))
-                Some(userAnswers.importerEori.getOrElse(missing(ImporterEoriNumberPage)))
+                Some(userAnswers.importerEori.getOrElse(missing(CreatePageNames.importerEori)))
               else None,
-            contactDetails = userAnswers.importerContactDetails.getOrElse(missing(ImporterContactDetailsPage))
+            contactDetails = userAnswers.importerContactDetails.getOrElse(missing(CreatePageNames.importerDetails))
           )
         )
     }
 
-  private def missing(answer: Any) = {
-    val message = s"Missing answer - $answer"
-    Logger(this.getClass).warn(message)
-    throw new MissingAnswersException(message)
+  private def missing(pageName: String) = {
+    val missing = new MissingAnswersException(pageName)
+    Logger(this.getClass).warn(missing.getMessage)
+    throw missing
   }
 
 }

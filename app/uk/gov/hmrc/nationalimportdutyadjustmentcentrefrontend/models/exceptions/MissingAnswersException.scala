@@ -16,4 +16,6 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.exceptions
 
-class MissingAnswersException(message: String) extends RuntimeException(message)
+class MissingAnswersException(pageName: String) extends RuntimeException(s"Missing answer - $pageName"){
+  val getMissingPage: String = pageName
+}
