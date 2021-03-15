@@ -268,7 +268,7 @@ class CreateNavigatorSpec extends UnitSpec with Injector with TestData {
       navigator.nextPage(RepresentationTypePage, answers) mustBe routes.RepayToController.onPageLoad
     }
 
-    "goto repayment summary page when changing duty" in {
+    "goto repayment summary page when changing duty types" in {
       val answers = completeAnswers.copy(changePage = Some(CreatePageNames.dutyTypes))
       navigator.nextPage(ReclaimDutyTypePage, answers) mustBe routes.ReturnAmountSummaryController.onPageLoad
     }
