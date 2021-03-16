@@ -29,6 +29,7 @@ class CreateNavigator @Inject() ()
     extends Navigator[CreateAnswers] with CreateAnswerConditions with CreateHasAnsweredConditions {
 
   override protected val pageOrder: Seq[P] = Seq(
+    P(FirstPage, makeclaim.routes.RepresentationTypeController.onPageLoad, never, always),
     P(
       RepresentationTypePage,
       makeclaim.routes.RepresentationTypeController.onPageLoad,
@@ -198,6 +199,6 @@ protected trait CreateHasAnsweredConditions {
   )
 
   protected val returnSummaryAnswered: CreateAnswers => Boolean = (answers: CreateAnswers) =>
-    answers.changePage.exists(page => !dutyPages.contains(page))
+    !answers.changePage.exists(page => dutyPages.contains(page))
 
 }

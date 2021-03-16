@@ -28,13 +28,16 @@ trait Navigator[T <: Answers] {
 
   protected def checkYourAnswersPage: Call
 
-  def firstPage: Page = pageOrder.head.page
-
   protected def pageFor: String => Option[Page]
 
   private lazy val reversePageOrder = pageOrder.reverse
 
   def gotoPage(pageName: String): Call = viewFor(pageOrder, pageFor(pageName)).getOrElse(pageOrder.head.destination())
+
+  def firstMissingAnswer(userAnswers: T): Call =
+    viewFor(pageOrder, nextPageAfterChangeFor(pageOrder, pageOrder.head.page, userAnswers)).getOrElse(
+      checkYourAnswersPage
+    )
 
   def nextPage(currentPage: Page, userAnswers: T): Call = userAnswers.changePage match {
     case None =>

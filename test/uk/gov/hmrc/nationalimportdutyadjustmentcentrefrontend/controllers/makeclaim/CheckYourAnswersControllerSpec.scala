@@ -23,7 +23,11 @@ import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{ControllerSpec, TestData}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{CreateClaimResponse, CreateClaimResult}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{
+  CreateClaimResponse,
+  CreateClaimResult,
+  RepresentationType
+}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.ClaimService
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.CheckYourAnswersView
 import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
@@ -69,21 +73,30 @@ class CheckYourAnswersControllerSpec extends ControllerSpec with TestData {
       status(result) mustBe Status.OK
     }
 
-    "redirect to start when cache empty" in {
+    "redirect to first question when cache empty" in {
       withEmptyCache
       val result = controller.onPageLoad()(fakeGetRequest)
 
       status(result) mustBe Status.SEE_OTHER
-      redirectLocation(result) mustBe Some(controllers.routes.StartController.start().url)
+      redirectLocation(result) mustBe Some(controllers.makeclaim.routes.RepresentationTypeController.onPageLoad().url)
     }
 
-    "redirect to start when answers missing" in {
+    "redirect to first question when answers missing" in {
       withCacheCreateAnswers(emptyAnswers)
 
       val result = controller.onPageLoad()(fakeGetRequest)
 
       status(result) mustBe Status.SEE_OTHER
-      redirectLocation(result) mustBe Some(controllers.routes.StartController.start().url)
+      redirectLocation(result) mustBe Some(controllers.makeclaim.routes.RepresentationTypeController.onPageLoad().url)
+    }
+
+    "redirect to first missing question when answers incomplete" in {
+      withCacheCreateAnswers(completeAnswers.copy(uploads = Seq.empty))
+
+      val result = controller.onPageLoad()(fakeGetRequest)
+
+      status(result) mustBe Status.SEE_OTHER
+      redirectLocation(result) mustBe Some(controllers.makeclaim.routes.UploadFormController.onPageLoad().url)
     }
   }
 
