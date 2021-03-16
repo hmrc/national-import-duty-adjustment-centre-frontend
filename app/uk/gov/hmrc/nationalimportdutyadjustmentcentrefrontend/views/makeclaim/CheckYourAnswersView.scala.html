@@ -378,7 +378,7 @@
     @components.paragraph(messages("check_answers.submit.declaration"))
 
     @formHelper(action = makeclaim.routes.CheckYourAnswersController.onSubmit(), 'autoComplete -> "off") {
-        @continueButton("check_answers.submit")
+        @continueButton("check_answers.submit", "nidac-submit")
     }
 
 }

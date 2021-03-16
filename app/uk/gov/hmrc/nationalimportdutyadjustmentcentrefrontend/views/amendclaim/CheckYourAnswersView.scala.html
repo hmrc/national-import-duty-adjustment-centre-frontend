@@ -122,7 +122,7 @@ continueButton: components.continueButton
     @components.paragraph(messages("amend.check_answers.submit.declaration"))
 
     @formHelper(action = routes.CheckYourAnswersController.onSubmit(), 'autoComplete -> "off") {
-        @continueButton("check_answers.submit")
+        @continueButton("check_answers.submit", "nidac-submit")
     }
 
 }
