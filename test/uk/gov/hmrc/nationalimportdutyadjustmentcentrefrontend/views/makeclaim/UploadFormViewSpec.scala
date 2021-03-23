@@ -18,11 +18,11 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.makeclaim
 
 import org.jsoup.nodes.Document
 import play.api.data.FormError
-import play.twirl.api.Html
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, UnitViewSpec}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType.{
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ClaimType
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ClaimType.{
+  AccountSales,
   Airworthiness,
   AntiDumping,
   Preference,
@@ -69,7 +69,7 @@ class UploadFormViewSpec extends UnitViewSpec with TestData {
 
     "display error when no choice is made" in {
       val errorView = view(error = Some(FormError("key", "error.file-upload.required")))
-      errorView.getElementsByClass("govuk-error-summary__body").text() mustBe messages("error.file-upload.required")
+      errorView must havePageError("error.file-upload.required")
     }
 
     "have label for file selector" when {
@@ -108,6 +108,11 @@ class UploadFormViewSpec extends UnitViewSpec with TestData {
       "claim type is AntiDumping" in {
         val types = documentTypes(AntiDumping)
         types mustBe List("C88", "commercial invoice", "E2")
+      }
+
+      "claim type is AccountSales" in {
+        val types = documentTypes(AccountSales)
+        types mustBe List("C88", "certificate of origin", "commercial invoice", "E2")
       }
     }
   }

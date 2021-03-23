@@ -21,8 +21,9 @@ import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.Navigation
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.IdentifierAction
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.RepayToFormProvider
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.Navigator
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create.RepayToFormProvider
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{CreateAnswers, RepayTo}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.CreateNavigator
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{Page, RepayToPage}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.CacheDataService
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.RepayToView
@@ -36,17 +37,17 @@ class RepayToController @Inject() (
   data: CacheDataService,
   formProvider: RepayToFormProvider,
   val controllerComponents: MessagesControllerComponents,
-  val navigator: Navigator,
+  val navigator: CreateNavigator,
   representationTypeView: RepayToView
 )(implicit ec: ExecutionContext)
-    extends FrontendBaseController with I18nSupport with Navigation {
+    extends FrontendBaseController with I18nSupport with Navigation[CreateAnswers] {
 
   override val page: Page = RepayToPage
 
   private val form = formProvider()
 
   def onPageLoad(): Action[AnyContent] = identify.async { implicit request =>
-    data.getAnswers map { answers =>
+    data.getCreateAnswers map { answers =>
       val preparedForm = answers.repayTo.fold(form)(form.fill)
       Ok(representationTypeView(preparedForm, backLink(answers)))
     }
@@ -55,12 +56,18 @@ class RepayToController @Inject() (
   def onSubmit(): Action[AnyContent] = identify.async { implicit request =>
     form.bindFromRequest().fold(
       formWithErrors =>
-        data.getAnswers map { answers => BadRequest(representationTypeView(formWithErrors, backLink(answers))) },
+        data.getCreateAnswers map { answers => BadRequest(representationTypeView(formWithErrors, backLink(answers))) },
       value =>
-        data.updateAnswers(answers => answers.copy(repayTo = Some(value))) map {
+        data.updateCreateAnswers(answers => updateAnswers(value, answers)) map {
           updatedAnswers => Redirect(nextPage(updatedAnswers))
         }
     )
   }
+
+  private def updateAnswers(repayTo: RepayTo, answers: CreateAnswers) =
+    if (answers.repayTo.contains(repayTo))
+      answers
+    else
+      answers.copy(repayTo = Some(repayTo), bankDetails = None)
 
 }

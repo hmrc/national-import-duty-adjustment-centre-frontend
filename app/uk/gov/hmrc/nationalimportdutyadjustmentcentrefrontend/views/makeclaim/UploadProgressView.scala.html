@@ -14,13 +14,14 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.Title
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ClaimType
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.InformationTitle
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html._
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components.uploadBody
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components.uploadBodyCreate
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components.uploadProgress
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.NavigatorBack
 
-@this(layout: Layout, continueButton: components.continueButton,uploadBody: uploadBody)
+@this(layout: Layout, continueButton: components.continueButton,uploadBody: uploadBodyCreate, uploadProgress: uploadProgress)
 
 @(claimType: Option[ClaimType], backLink: NavigatorBack)(implicit request: Request[_], messages: Messages)
 
@@ -28,17 +29,10 @@
     <meta http-equiv="refresh" content="1"/>
 }
 
-@inProgressContent = {
-    <p class="govuk-body govuk-!-font-weight-bold">@messages("upload_documents.status.in_progress")</p>
-    <p class="govuk-body ccms-loader"></p>
-
-    <div>@continueButton(disabled = true)</div>
-}
-
-@layout(pageTitle = Title(messages("upload_documents.title")), headBlock = Some(refreshHeader), backLink = backLink) {
+@layout(pageTitle = InformationTitle(messages("upload_documents.title")), headBlock = Some(refreshHeader), backLink = backLink) {
 
     @components.heading(messages("upload_documents.title"))
 
-    @uploadBody(inProgressContent, claimType)
+    @uploadBody(uploadProgress(), claimType)
 
 }

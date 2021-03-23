@@ -19,26 +19,32 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makec
 import org.mockito.ArgumentCaptor
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{reset, verify, when}
-import play.api.data.Form
+import play.api.data.{Form, FormError}
 import play.api.http.Status
 import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{ControllerSpec, TestData}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.BankDetailsFormProvider
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{BankDetails, UserAnswers}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{BarsTestData, ControllerSpec, TestData}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create.BankDetailsFormProvider
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{BankDetails, CreateAnswers}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.BankDetailsPage
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.BankAccountReputationService
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.BankDetailsView
 import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
 
-class BankDetailsControllerSpec extends ControllerSpec with TestData {
+import scala.concurrent.Future
+
+class BankDetailsControllerSpec extends ControllerSpec with TestData with BarsTestData {
 
   private val page         = mock[BankDetailsView]
   private val formProvider = new BankDetailsFormProvider
+
+  private val bankAccountReputationService = mock[BankAccountReputationService]
 
   private def controller =
     new BankDetailsController(
       fakeAuthorisedIdentifierAction,
       cacheDataService,
+      bankAccountReputationService,
       formProvider,
       stubMessagesControllerComponents(),
       navigator,
@@ -49,10 +55,11 @@ class BankDetailsControllerSpec extends ControllerSpec with TestData {
     super.beforeEach()
     withEmptyCache()
     when(page.apply(any(), any(), any())(any(), any())).thenReturn(HtmlFormat.empty)
+    when(bankAccountReputationService.validate(any())(any())).thenReturn(Future.successful(barsSuccessResult))
   }
 
   override protected def afterEach(): Unit = {
-    reset(page)
+    reset(page, bankAccountReputationService)
     super.afterEach()
   }
 
@@ -72,7 +79,7 @@ class BankDetailsControllerSpec extends ControllerSpec with TestData {
     }
 
     "display page when cache has answer" in {
-      withCacheUserAnswers(UserAnswers(bankDetails = Some(bankDetailsAnswer)))
+      withCacheCreateAnswers(CreateAnswers(bankDetails = Some(bankDetailsAnswer)))
       val result = controller.onPageLoad()(fakeGetRequest)
       status(result) mustBe Status.OK
 
@@ -90,12 +97,41 @@ class BankDetailsControllerSpec extends ControllerSpec with TestData {
 
     "update cache and redirect when valid answer is submitted" in {
 
-      withCacheUserAnswers(emptyAnswers)
+      withCacheCreateAnswers(emptyAnswers)
 
       val result = controller.onSubmit()(validRequest)
       status(result) mustEqual SEE_OTHER
-      theUpdatedUserAnswers.bankDetails mustBe Some(bankDetailsAnswer)
+      theUpdatedCreateAnswers.bankDetails mustBe Some(bankDetailsAnswer)
       redirectLocation(result) mustBe Some(navigator.nextPage(BankDetailsPage, emptyAnswers).url)
+    }
+
+    "return 400 (BAD REQUEST) when BARS mod check fails" in {
+
+      when(bankAccountReputationService.validate(any())(any())).thenReturn(Future.successful(barsInvalidAccountResult))
+      val result = controller.onSubmit()(validRequest)
+      status(result) mustEqual BAD_REQUEST
+
+      theResponseForm.errors mustBe Seq(FormError("accountNumber", "bankDetails.bars.validation.modCheckFailed"))
+    }
+
+    "return 400 (BAD REQUEST) when BARS roll required check fails" in {
+
+      when(bankAccountReputationService.validate(any())(any())).thenReturn(Future.successful(barsRollRequiredResult))
+      val result = controller.onSubmit()(validRequest)
+      status(result) mustEqual BAD_REQUEST
+
+      theResponseForm.errors mustBe Seq(FormError("sortCode", "bankDetails.bars.validation.rollRequired"))
+    }
+
+    "return 400 (BAD REQUEST) when BARS BACS supported check fails" in {
+
+      when(bankAccountReputationService.validate(any())(any())).thenReturn(
+        Future.successful(barsBacsNotSupportedResult)
+      )
+      val result = controller.onSubmit()(validRequest)
+      status(result) mustEqual BAD_REQUEST
+
+      theResponseForm.errors mustBe Seq(FormError("sortCode", "bankDetails.bars.validation.bacsNotSupported"))
     }
 
     "return 400 (BAD REQUEST) when invalid data posted" in {
@@ -103,6 +139,5 @@ class BankDetailsControllerSpec extends ControllerSpec with TestData {
       val result = controller.onSubmit()(postRequest())
       status(result) mustEqual BAD_REQUEST
     }
-
   }
 }

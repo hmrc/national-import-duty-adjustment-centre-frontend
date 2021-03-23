@@ -1,0 +1,53 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.ErrorTitle
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.InformationTitle
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html._
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UpscanInitiateResponse
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components.errorSummary
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components.uploadBodyAmend
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components.uploadForm
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.NavigatorBack
+
+@this(
+        layout: Layout,
+        uploadBody: uploadBodyAmend,
+        uploadForm: uploadForm,
+        errorSummary: errorSummary,
+        continueButton: components.continueButton,
+        appConfig: AppConfig
+)
+
+@(
+        upscanInitiateResponse : UpscanInitiateResponse,
+        isFirstUpload: Boolean,
+        error: Option[FormError] = None,
+        backLink: NavigatorBack
+)(implicit request: Request[_], messages: Messages)
+
+@title = @{
+ error.map(_ => ErrorTitle(messages("upload_documents.title"))).getOrElse(InformationTitle(messages("upload_documents.title")))
+}
+
+@layout(pageTitle = title, backLink) {
+    @errorSummary(error.map(Seq(_)).getOrElse(Seq.empty))
+
+    @components.heading(messages("amend.upload_documents.title"))
+
+    @uploadBody(uploadForm(upscanInitiateResponse, isFirstUpload, error))
+
+}

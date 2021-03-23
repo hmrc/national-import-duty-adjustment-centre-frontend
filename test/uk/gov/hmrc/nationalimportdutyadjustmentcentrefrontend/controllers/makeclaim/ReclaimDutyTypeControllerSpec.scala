@@ -24,9 +24,9 @@ import play.api.http.Status
 import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{ControllerSpec, TestData}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.ReclaimDutyTypeFormProvider
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ReclaimDutyType.Customs
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{ReclaimDutyType, UserAnswers}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create.ReclaimDutyTypeFormProvider
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ReclaimDutyType.Customs
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{CreateAnswers, ReclaimDutyType}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.ReclaimDutyTypePage
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ReclaimDutyTypeView
 import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
@@ -73,7 +73,7 @@ class ReclaimDutyTypeControllerSpec extends ControllerSpec with TestData {
     }
 
     "display page when cache has answer" in {
-      withCacheUserAnswers(UserAnswers(reclaimDutyTypes = reclaimDutyTypesAnswer))
+      withCacheCreateAnswers(CreateAnswers(reclaimDutyTypes = reclaimDutyTypesAnswer))
       val result = controller.onPageLoad()(fakeGetRequest)
       status(result) mustBe Status.OK
 
@@ -87,12 +87,21 @@ class ReclaimDutyTypeControllerSpec extends ControllerSpec with TestData {
 
     "update cache and redirect when valid answer is submitted" in {
 
-      withCacheUserAnswers(emptyAnswers)
+      withCacheCreateAnswers(emptyAnswers)
 
       val result = controller.onSubmit()(validRequest)
       status(result) mustEqual SEE_OTHER
-      theUpdatedUserAnswers.reclaimDutyTypes mustBe Set(Customs)
-      redirectLocation(result) mustBe Some(navigator.nextPage(ReclaimDutyTypePage, theUpdatedUserAnswers).url)
+      theUpdatedCreateAnswers.reclaimDutyTypes mustBe Set(Customs)
+      redirectLocation(result) mustBe Some(navigator.nextPage(ReclaimDutyTypePage, theUpdatedCreateAnswers).url)
+    }
+
+    "remove existing duty values when type de-selected" in {
+
+      withCacheCreateAnswers(completeAnswers)
+
+      val result = controller.onSubmit()(validRequest)
+      status(result) mustEqual SEE_OTHER
+      theUpdatedCreateAnswers.reclaimDutyPayments mustBe Map(Customs.toString -> customsDutyRepaymentAnswer)
     }
 
     "return 400 (BAD REQUEST) when invalid data posted" in {

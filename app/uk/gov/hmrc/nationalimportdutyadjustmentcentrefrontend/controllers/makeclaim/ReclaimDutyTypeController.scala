@@ -21,8 +21,9 @@ import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.Navigation
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.IdentifierAction
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.ReclaimDutyTypeFormProvider
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.Navigator
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create.ReclaimDutyTypeFormProvider
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{CreateAnswers, ReclaimDutyType}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.CreateNavigator
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{Page, ReclaimDutyTypePage}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.CacheDataService
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ReclaimDutyTypeView
@@ -36,17 +37,17 @@ class ReclaimDutyTypeController @Inject() (
   data: CacheDataService,
   formProvider: ReclaimDutyTypeFormProvider,
   val controllerComponents: MessagesControllerComponents,
-  val navigator: Navigator,
+  val navigator: CreateNavigator,
   reclaimDutyTypeView: ReclaimDutyTypeView
 )(implicit ec: ExecutionContext)
-    extends FrontendBaseController with I18nSupport with Navigation {
+    extends FrontendBaseController with I18nSupport with Navigation[CreateAnswers] {
 
   override val page: Page = ReclaimDutyTypePage
 
   private val form = formProvider()
 
   def onPageLoad(): Action[AnyContent] = identify.async { implicit request =>
-    data.getAnswers map { answers =>
+    data.getCreateAnswers map { answers =>
       val preparedForm = form.fill(answers.reclaimDutyTypes)
       Ok(reclaimDutyTypeView(preparedForm, backLink(answers)))
     }
@@ -55,12 +56,19 @@ class ReclaimDutyTypeController @Inject() (
   def onSubmit(): Action[AnyContent] = identify.async { implicit request =>
     form.bindFromRequest().fold(
       formWithErrors =>
-        data.getAnswers map { answers => BadRequest(reclaimDutyTypeView(formWithErrors, backLink(answers))) },
+        data.getCreateAnswers map { answers => BadRequest(reclaimDutyTypeView(formWithErrors, backLink(answers))) },
       value =>
-        data.updateAnswers(answers => answers.copy(reclaimDutyTypes = value)) map {
+        data.updateCreateAnswers(answers => updateAnswers(value, answers)) map {
           updatedAnswers => Redirect(nextPage(updatedAnswers))
         }
     )
   }
+
+  private def updateAnswers(dutyTypes: Set[ReclaimDutyType], answers: CreateAnswers) =
+    answers.copy(
+      reclaimDutyTypes = dutyTypes,
+      reclaimDutyPayments =
+        answers.reclaimDutyPayments.filterKeys(key => dutyTypes.map(_.toString).contains(key))
+    )
 
 }

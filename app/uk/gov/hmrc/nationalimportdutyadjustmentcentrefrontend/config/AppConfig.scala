@@ -57,9 +57,15 @@ class AppConfig @Inject() (
   val timeoutDialogCountdown: Int = servicesConfig.getInt("timeoutDialog.countdownSeconds")
 
   val mongoTimeToLiveInSeconds: Int = sessionTimeoutSeconds + 60
+  val mongoReplaceIndexes: Boolean  = config.getOptional[Boolean]("mongodb.replaceIndexes").getOrElse(false)
 
   val nidacServiceBaseUrl: String = servicesConfig.baseUrl("national-import-duty-adjustment-centre")
   val upscanInitiateV2Url: String = servicesConfig.baseUrl("upscan-initiate") + "/upscan/v2/initiate"
+
+  private val barsBaseUrl: String = servicesConfig.baseUrl("bank-account-reputation")
+
+  val barsBusinessAssessUrl: String =
+    s"$barsBaseUrl${servicesConfig("bank-account-reputation.businessAssess")}"
 
   val upscan: Upscan = Upscan(
     callbackBase = loadConfig("upscan.callback-base"),
@@ -69,7 +75,12 @@ class AppConfig @Inject() (
     approvedFileTypes = loadConfig("upscan.approved-file-types")
   )
 
+  private def servicesConfig(key: String): String = servicesConfig.getConfString(key, throwNotFound(key))
+
   private def loadConfig(key: String) =
-    config.getOptional[String](key).getOrElse(throw new Exception(s"Missing configuration key: $key"))
+    config.getOptional[String](key).getOrElse(throwNotFound(key))
+
+  private def throwNotFound(key: String) =
+    throw new Exception(s"Missing configuration key: $key")
 
 }

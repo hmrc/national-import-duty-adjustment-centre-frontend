@@ -19,8 +19,8 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.makeclaim
 import org.jsoup.nodes.Document
 import play.api.data.Form
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, UnitViewSpec}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.AddressFormProvider
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.Address
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create.AddressFormProvider
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.Address
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.AddressView
 
 class AddressViewSpec extends UnitViewSpec with TestData {
@@ -67,7 +67,7 @@ class AddressViewSpec extends UnitViewSpec with TestData {
     }
 
     "have 'Continue' button" in {
-      view().getElementById("submit") must includeMessage("site.continue")
+      view().getElementById("nidac-continue") must includeMessage("site.continue")
     }
 
   }
@@ -95,22 +95,27 @@ class AddressViewSpec extends UnitViewSpec with TestData {
       )
 
       "name missing" in {
-        view(form.bind(answers - "name")) must haveFieldError("name", "address.name.error.required")
+        val errorView = view(form.bind(answers - "name"))
+        errorView must haveFieldError("name", "address.name.error.required")
+        errorView must havePageError("address.name.error.required")
       }
 
       "line 1 missing" in {
-        view(form.bind(answers - "addressLine1")) must haveFieldError("addressLine1", "address.line1.error.required")
+        val errorView = view(form.bind(answers - "addressLine1"))
+        errorView must haveFieldError("addressLine1", "address.line1.error.required")
+        errorView must havePageError("address.line1.error.required")
       }
 
       "city missing" in {
-        view(form.bind(answers - "city")) must haveFieldError("city", "address.city.error.required")
+        val errorView = view(form.bind(answers - "city"))
+        errorView must haveFieldError("city", "address.city.error.required")
+        errorView must havePageError("address.city.error.required")
       }
 
       "postcode" in {
-        view(form.bind(answers + ("postcode" -> "PO1!FG"))) must haveFieldError(
-          "postcode",
-          "address.postcode.error.invalid"
-        )
+        val errorView = view(form.bind(answers + ("postcode" -> "PO1!FG")))
+        errorView must haveFieldError("postcode", "address.postcode.error.invalid")
+        errorView must havePageError("address.postcode.error.invalid")
       }
 
     }

@@ -17,18 +17,22 @@
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim
 
 import javax.inject.{Inject, Singleton}
-import play.api.data.FormError
 import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.{Reference, UpscanInitiateConnector}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.Navigation
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.UpscanInitiateConnector
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.IdentifierAction
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim.routes
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.{FileUploading, Navigation}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.UploadId
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.CreateAnswers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.requests.IdentifierRequest
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.{Failed, UploadedFile}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{JourneyId, UploadId, UserAnswers}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.Navigator
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.{
+  Failed,
+  UploadedFile,
+  UpscanInitiateResponse
+}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.CreateNavigator
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{Page, UploadPage}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.{CacheDataService, UploadProgressTracker}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.NavigatorBack
@@ -41,98 +45,81 @@ import scala.concurrent.{ExecutionContext, Future}
 class UploadFormController @Inject() (
   mcc: MessagesControllerComponents,
   identify: IdentifierAction,
-  uploadProgressTracker: UploadProgressTracker,
-  upscanInitiateConnector: UpscanInitiateConnector,
+  val uploadProgressTracker: UploadProgressTracker,
+  val upscanInitiateConnector: UpscanInitiateConnector,
   data: CacheDataService,
-  appConfig: AppConfig,
-  val navigator: Navigator,
+  val appConfig: AppConfig,
+  val navigator: CreateNavigator,
   uploadFormView: UploadFormView,
   uploadProgressView: UploadProgressView
 )(implicit ec: ExecutionContext)
-    extends FrontendController(mcc) with I18nSupport with Navigation {
+    extends FrontendController(mcc) with I18nSupport with Navigation[CreateAnswers] with FileUploading {
 
   override val page: Page = UploadPage
 
-  override def backLink: UserAnswers => NavigatorBack = (answers: UserAnswers) =>
+  override def backLink: CreateAnswers => NavigatorBack = (answers: CreateAnswers) =>
     answers.uploads match {
       case files if files.nonEmpty => NavigatorBack(Some(routes.UploadFormSummaryController.onPageLoad()))
       case _                       => super.backLink(answers)
     }
 
-  private val errorRedirectUrl =
-    appConfig.upscan.redirectBase + "/national-import-duty-adjustment-centre/upload-supporting-documents/error"
+  override protected def successRedirectUrl(uploadId: UploadId): Call = routes.UploadFormController.onProgress(uploadId)
 
-  private def successRedirectUrl(uploadId: UploadId) =
-    appConfig.upscan.redirectBase + routes.UploadFormController.onProgress(uploadId).url
+  override protected def errorRedirectUrl(errorCode: String): Call = routes.UploadFormController.onError(errorCode)
 
   def onPageLoad(): Action[AnyContent] = identify.async { implicit request =>
-    data.getAnswers flatMap { answers =>
-      initiateForm(answers)
+    data.getCreateAnswersWithJourneyId flatMap { answersWithJourneyID =>
+      initiateForm(answersWithJourneyID._2) map { upscanInitiateResponse =>
+        uploadInitialView(upscanInitiateResponse, answersWithJourneyID._1, None)
+      }
     }
   }
 
   def onProgress(uploadId: UploadId): Action[AnyContent] = identify.async { implicit request =>
-    data.getAnswers flatMap { answers =>
-      uploadProgressTracker.getUploadResult(uploadId, answers.journeyId) flatMap {
+    data.getCreateAnswersWithJourneyId flatMap { answersWithJourneyID =>
+      uploadProgressTracker.getUploadResult(uploadId, answersWithJourneyID._2) flatMap {
         case Some(successUpload: UploadedFile) =>
           processSuccessfulUpload(successUpload)
         case Some(failed: Failed) =>
-          Future(Redirect(controllers.makeclaim.routes.UploadFormController.onError(failed.errorCode)))
-        case Some(_) => Future(Ok(uploadProgressView(answers.claimType, backLink(answers))))
-        case None    => Future(Redirect(controllers.makeclaim.routes.UploadFormController.onError("NOT_FOUND")))
+          Future(Redirect(routes.UploadFormController.onError(failed.errorCode)))
+        case Some(_) =>
+          Future(Ok(uploadProgressView(answersWithJourneyID._1.claimType, backLink(answersWithJourneyID._1))))
+        case None => Future(Redirect(routes.UploadFormController.onError(UNKNOWN)))
       }
     }
   }
 
   def onError(errorCode: String): Action[AnyContent] = identify.async { implicit request =>
-    data.getAnswers flatMap { answers =>
-      initiateForm(answers, Some(mapError(errorCode)))
+    data.getCreateAnswersWithJourneyId flatMap { answersWithJourneyID =>
+      initiateForm(answersWithJourneyID._2) map { upscanInitiateResponse =>
+        uploadInitialView(upscanInitiateResponse, answersWithJourneyID._1, Some(errorCode))
+      }
     }
   }
 
-  private def initiateForm(answers: UserAnswers, maybeError: Option[FormError] = None)(implicit
-    request: IdentifierRequest[_]
-  ) = {
-    val uploadId = UploadId.generate
-    for {
-      upscanInitiateResponse <- upscanInitiateConnector.initiateV2(
-        answers.journeyId: JourneyId,
-        Some(successRedirectUrl(uploadId)),
-        Some(errorRedirectUrl)
-      )
-      _ <- uploadProgressTracker.requestUpload(
-        uploadId,
-        answers.journeyId,
-        Reference(upscanInitiateResponse.fileReference.reference)
-      )
-    } yield Ok(
-      uploadFormView(upscanInitiateResponse, answers.claimType, answers.uploads.isEmpty, maybeError, backLink(answers))
+  private def uploadInitialView(
+    upscanInitiateResponse: UpscanInitiateResponse,
+    answers: CreateAnswers,
+    errorCode: Option[String]
+  )(implicit request: IdentifierRequest[_]) = Ok(
+    uploadFormView(
+      upscanInitiateResponse,
+      answers.claimType,
+      answers.uploads.isEmpty,
+      errorCode.map(code => mapError(code)),
+      backLink(answers)
     )
-  }
+  )
 
   private def processSuccessfulUpload(successUpload: UploadedFile)(implicit request: IdentifierRequest[_]) =
-    data.getAnswers flatMap { answers =>
+    data.getCreateAnswers flatMap { answers =>
       val uploads = answers.uploads
       if (uploads.exists(_.checksum == successUpload.checksum))
-        Future(Redirect(controllers.makeclaim.routes.UploadFormController.onError("DUPLICATE")))
+        Future(Redirect(routes.UploadFormController.onError(DUPLICATE)))
       else
-        data.updateAnswers(answers => answers.copy(uploads = uploads :+ successUpload)) map {
+        data.updateCreateAnswers(answers => answers.copy(uploads = uploads :+ successUpload)) map {
           updatedAnswers => Redirect(nextPage(updatedAnswers))
         }
     }
-
-  private def mapError(code: String): FormError = {
-    def error(message: String) = FormError("upload-file", message)
-    code match {
-      case "400" | "InvalidArgument" => error("error.file-upload.required")
-      case "InternalError"           => error("error.file-upload.try-again")
-      case "EntityTooLarge"          => error("error.file-upload.invalid-size-large")
-      case "EntityTooSmall"          => error("error.file-upload.invalid-size-small")
-      case "QUARANTINE"              => error("error.file-upload.quarantine")
-      case "REJECTED"                => error("error.file-upload.invalid-type")
-      case "DUPLICATE"               => error("error.file-upload.duplicate")
-      case _                         => error("error.file-upload.unknown")
-    }
-  }
 
 }

@@ -62,7 +62,7 @@ class UploadFormControllerSpec extends ControllerSpec with TestData {
   override protected def beforeEach(): Unit = {
     super.beforeEach()
 
-    withCacheUserAnswers(emptyAnswers)
+    withCacheCreateAnswers(emptyAnswers)
 
     when(mockInitiateConnector.initiateV2(any[JourneyId], any(), any())(any())).thenReturn(
       Future.successful(upscanInitiateResponse)
@@ -107,15 +107,15 @@ class UploadFormControllerSpec extends ControllerSpec with TestData {
     "produce back link" when {
 
       "user has not uploaded any files" in {
-        withCacheUserAnswers(completeAnswers.copy(uploads = Seq.empty))
+        withCacheCreateAnswers(completeAnswers.copy(uploads = Seq.empty))
         val result = controller.onPageLoad()(fakeGetRequest)
         status(result) mustBe OK
 
-        theFormViewBackLink mustBe NavigatorBack(Some(routes.ClaimReasonController.onPageLoad()))
+        theFormViewBackLink mustBe NavigatorBack(Some(routes.ReturnAmountSummaryController.onPageLoad()))
       }
 
       "user has uploaded some files" in {
-        withCacheUserAnswers(completeAnswers)
+        withCacheCreateAnswers(completeAnswers)
         val result = controller.onPageLoad()(fakeGetRequest)
         status(result) mustBe OK
 
@@ -148,14 +148,14 @@ class UploadFormControllerSpec extends ControllerSpec with TestData {
 
     "redirect when uploading a duplicate file" in {
 
-      withCacheUserAnswers(completeAnswers.copy(uploads = Seq(uploadAnswer)))
+      withCacheCreateAnswers(completeAnswers.copy(uploads = Seq(uploadAnswer)))
       givenUploadStatus(uploadFileSuccess)
       val result = controller.onProgress(uploadId)(fakeGetRequest)
 
       status(result) mustBe SEE_OTHER
       redirectLocation(result) mustBe Some(controllers.makeclaim.routes.UploadFormController.onError("DUPLICATE").url)
 
-      verify(dataRepository, never()).set(any())
+      verify(dataRepository, never()).update(any())
     }
 
     "update UserAnswers and redirect to summary when upload succeeds" in {
@@ -166,22 +166,22 @@ class UploadFormControllerSpec extends ControllerSpec with TestData {
       status(result) mustBe SEE_OTHER
       redirectLocation(result) mustBe Some(controllers.makeclaim.routes.UploadFormSummaryController.onPageLoad().url)
 
-      theUpdatedUserAnswers.uploads mustBe Seq(uploadFileSuccess)
+      theUpdatedCreateAnswers.uploads mustBe Seq(uploadFileSuccess)
     }
 
     "produce back link" when {
 
       "user has not uploaded any files" in {
-        withCacheUserAnswers(completeAnswers.copy(uploads = Seq.empty))
+        withCacheCreateAnswers(completeAnswers.copy(uploads = Seq.empty))
         givenUploadStatus(uploadInProgress)
         val result = controller.onProgress(uploadId)(fakeGetRequest)
         status(result) mustBe OK
 
-        theProgressViewBackLink mustBe NavigatorBack(Some(routes.ClaimReasonController.onPageLoad()))
+        theProgressViewBackLink mustBe NavigatorBack(Some(routes.ReturnAmountSummaryController.onPageLoad()))
       }
 
       "user has uploaded some files" in {
-        withCacheUserAnswers(completeAnswers)
+        withCacheCreateAnswers(completeAnswers)
         givenUploadStatus(uploadInProgress)
         val result = controller.onProgress(uploadId)(fakeGetRequest)
         status(result) mustBe OK

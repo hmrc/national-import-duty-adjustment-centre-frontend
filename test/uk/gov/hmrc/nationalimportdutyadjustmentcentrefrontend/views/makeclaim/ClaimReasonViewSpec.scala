@@ -19,8 +19,8 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.makeclaim
 import org.jsoup.nodes.Document
 import play.api.data.Form
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, UnitViewSpec}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.ClaimReasonFormProvider
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimReason
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create.ClaimReasonFormProvider
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ClaimReason
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ClaimReasonView
 
 class ClaimReasonViewSpec extends UnitViewSpec with TestData {
@@ -49,7 +49,7 @@ class ClaimReasonViewSpec extends UnitViewSpec with TestData {
     }
 
     "have 'Continue' button" in {
-      view().getElementById("submit") must includeMessage("site.continue")
+      view().getElementById("nidac-continue") must includeMessage("site.continue")
     }
 
   }
@@ -65,7 +65,9 @@ class ClaimReasonViewSpec extends UnitViewSpec with TestData {
     "display error when" when {
 
       "claim reason missing" in {
-        view(form.bind(Map("claimReason" -> ""))) must haveFieldError("claimReason", "claim_reason.error.required")
+        val errorView = view(form.bind(Map("claimReason" -> "")))
+        errorView must haveFieldError("claimReason", "claim_reason.error.required")
+        errorView must havePageError("claim_reason.error.required")
       }
     }
   }

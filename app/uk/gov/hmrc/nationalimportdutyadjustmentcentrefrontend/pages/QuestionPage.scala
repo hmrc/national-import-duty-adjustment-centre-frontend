@@ -16,7 +16,8 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages
 
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models._
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.{CaseReference, FurtherInformation}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create._
 
 trait QuestionPage[A] extends Page
 
@@ -24,16 +25,20 @@ case object RepresentationTypePage     extends QuestionPage[RepresentationType]
 case object ClaimTypePage              extends QuestionPage[ClaimType]
 case object ContactDetailsPage         extends QuestionPage[ContactDetails]
 case object AddressPage                extends QuestionPage[Address]
-case object ImporterHasEoriNumberPage  extends QuestionPage[Boolean]
 case object ImporterEoriNumberPage     extends QuestionPage[ItemNumbers]
 case object ImporterContactDetailsPage extends QuestionPage[ImporterContactDetails]
 case object ReclaimDutyTypePage        extends QuestionPage[Set[ReclaimDutyType]]
 case object CustomsDutyRepaymentPage   extends QuestionPage[DutyPaid]
 case object ImportVatRepaymentPage     extends QuestionPage[DutyPaid]
 case object OtherDutyRepaymentPage     extends QuestionPage[DutyPaid]
+case object ReturnAmountSummaryPage    extends QuestionPage[DutyPaid]
 case object RepayToPage                extends QuestionPage[RepayTo]
 case object BankDetailsPage            extends QuestionPage[BankDetails]
 case object ClaimReasonPage            extends QuestionPage[ClaimReason]
 case object UploadSummaryPage          extends QuestionPage[Boolean]
+case object FurtherInformationPage     extends QuestionPage[FurtherInformation]
 case object EntryDetailsPage           extends QuestionPage[EntryDetails]
 case object ItemNumbersPage            extends QuestionPage[ItemNumbers]
+
+case object CaseReferencePage       extends QuestionPage[CaseReference]
+case object AttachMoreDocumentsPage extends QuestionPage[Boolean]

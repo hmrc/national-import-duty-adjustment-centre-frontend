@@ -17,8 +17,9 @@
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models
 
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, UnitSpec}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ReclaimDutyType.{Customs, Other, Vat}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.exceptions.MissingUserAnswersException
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ReclaimDutyType.{Customs, Other, Vat}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{Claim, RepayTo, RepresentationType}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.exceptions.MissingAnswersException
 
 class ClaimSpec extends UnitSpec with TestData {
 
@@ -28,7 +29,7 @@ class ClaimSpec extends UnitSpec with TestData {
 
       "reclaim Customs Duty specified but no calculations present" in {
 
-        intercept[MissingUserAnswersException] {
+        intercept[MissingAnswersException] {
           Claim(completeAnswers.copy(reclaimDutyPayments = reclaimDutyPayments - Customs))
         }.getMessage mustBe s"Missing answer - DutyPayment $Customs"
 
@@ -36,7 +37,7 @@ class ClaimSpec extends UnitSpec with TestData {
 
       "reclaim Import VAT specified but no calculations present" in {
 
-        intercept[MissingUserAnswersException] {
+        intercept[MissingAnswersException] {
           Claim(completeAnswers.copy(reclaimDutyPayments = reclaimDutyPayments - Vat))
         }.getMessage mustBe s"Missing answer - DutyPayment $Vat"
 
@@ -44,7 +45,7 @@ class ClaimSpec extends UnitSpec with TestData {
 
       "reclaim Other Duty specified but no calculations present" in {
 
-        intercept[MissingUserAnswersException] {
+        intercept[MissingAnswersException] {
           Claim(completeAnswers.copy(reclaimDutyPayments = reclaimDutyPayments - Other))
         }.getMessage mustBe s"Missing answer - DutyPayment $Other"
 
@@ -53,7 +54,7 @@ class ClaimSpec extends UnitSpec with TestData {
       "representation type is 'representative' but 'repay to' is missing" in {
         val invalidAnswer =
           completeAnswers.copy(representationType = Some(RepresentationType.Representative), repayTo = None)
-        intercept[MissingUserAnswersException] {
+        intercept[MissingAnswersException] {
           Claim(invalidAnswer)
         }.getMessage mustBe s"Missing answer - RepayToPage"
 
@@ -67,12 +68,12 @@ class ClaimSpec extends UnitSpec with TestData {
       Claim(completeAnswers).repaymentTotal mustBe expected
     }
 
-    "ignore 'repay to' answer when representation type is 'importer'" in {
+    "ignore 'importer being represented' answers when representation type is 'importer'" in {
       val answersWithRepayTo = completeAnswers.copy(
         representationType = Some(RepresentationType.Importer),
         repayTo = Some(RepayTo.Representative)
       )
-      Claim(answersWithRepayTo).repayTo mustBe None
+      Claim(answersWithRepayTo).importerBeingRepresentedDetails mustBe None
     }
   }
 

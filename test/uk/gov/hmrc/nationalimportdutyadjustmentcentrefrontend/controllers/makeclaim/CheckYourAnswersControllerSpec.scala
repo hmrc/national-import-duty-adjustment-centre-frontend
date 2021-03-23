@@ -23,8 +23,8 @@ import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{ControllerSpec, TestData}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{CreateClaimResponse, CreateClaimResult}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.CreateClaimService
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{CreateClaimResponse, CreateClaimResult}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.ClaimService
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.CheckYourAnswersView
 import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
 
@@ -33,9 +33,9 @@ import scala.util.Random
 
 class CheckYourAnswersControllerSpec extends ControllerSpec with TestData {
 
-  val page: CheckYourAnswersView  = mock[CheckYourAnswersView]
-  val service: CreateClaimService = mock[CreateClaimService]
-  val claimRef                    = Random.nextString(12)
+  val page: CheckYourAnswersView = mock[CheckYourAnswersView]
+  val service: ClaimService      = mock[ClaimService]
+  val claimRef                   = Random.nextString(12)
 
   override protected def beforeEach(): Unit = {
     super.beforeEach()
@@ -63,7 +63,7 @@ class CheckYourAnswersControllerSpec extends ControllerSpec with TestData {
   "GET" should {
 
     "return OK when user has answered all questions" in {
-      withCacheUserAnswers(completeAnswers)
+      withCacheCreateAnswers(completeAnswers)
       val result = controller.onPageLoad()(fakeGetRequest)
 
       status(result) mustBe Status.OK
@@ -78,7 +78,7 @@ class CheckYourAnswersControllerSpec extends ControllerSpec with TestData {
     }
 
     "redirect to start when answers missing" in {
-      withCacheUserAnswers(emptyAnswers)
+      withCacheCreateAnswers(emptyAnswers)
 
       val result = controller.onPageLoad()(fakeGetRequest)
 
@@ -90,7 +90,7 @@ class CheckYourAnswersControllerSpec extends ControllerSpec with TestData {
   "POST" should {
 
     "submit and redirect to confirmation page" in {
-      withCacheUserAnswers(completeAnswers)
+      withCacheCreateAnswers(completeAnswers)
       val result = controller.onSubmit()(postRequest())
 
       status(result) mustEqual SEE_OTHER

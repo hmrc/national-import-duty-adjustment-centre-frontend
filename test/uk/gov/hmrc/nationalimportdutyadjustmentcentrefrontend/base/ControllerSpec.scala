@@ -24,8 +24,10 @@ import org.scalatestplus.mockito.MockitoSugar
 import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded, Request}
 import play.api.test.FakeRequest
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.FakeIdentifierActions
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{CacheData, CreateClaimResponse, UserAnswers}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.Navigator
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.CacheData
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.{AmendAnswers, AmendClaimResponse}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{CreateAnswers, CreateClaimResponse}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.{AmendNavigator, CreateNavigator}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.CacheDataRepository
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.CacheDataService
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.utils.FakeRequestCSRFSupport.CSRFFakeRequest
@@ -45,11 +47,13 @@ trait ControllerSpec
 
   val cacheDataService: CacheDataService = new CacheDataService(dataRepository)
 
-  val navigator = instanceOf[Navigator]
+  val navigator: CreateNavigator     = instanceOf[CreateNavigator]
+  val amendNavigator: AmendNavigator = instanceOf[AmendNavigator]
 
   override protected def beforeEach(): Unit = {
     super.beforeEach()
-    when(dataRepository.set(any[CacheData])).thenReturn(Future.successful(None))
+    when(dataRepository.insert(any[CacheData])).thenReturn(Future.successful(()))
+    when(dataRepository.update(any[CacheData])).thenReturn(Future.successful(None))
   }
 
   override protected def afterEach(): Unit = {
@@ -59,8 +63,13 @@ trait ControllerSpec
 
   def withEmptyCache(): Unit = when(dataRepository.get(anyString())).thenReturn(Future.successful(None))
 
-  def withCacheUserAnswers(answers: UserAnswers): Unit = {
-    val cacheData: Option[CacheData] = Some(CacheData("id", answers = answers))
+  def withCacheCreateAnswers(answers: CreateAnswers): Unit = {
+    val cacheData: Option[CacheData] = Some(CacheData("id", createAnswers = Some(answers)))
+    when(dataRepository.get(anyString())).thenReturn(Future.successful(cacheData))
+  }
+
+  def withCacheAmendAnswers(answers: AmendAnswers): Unit = {
+    val cacheData: Option[CacheData] = Some(CacheData("id", amendAnswers = Some(answers)))
     when(dataRepository.get(anyString())).thenReturn(Future.successful(cacheData))
   }
 
@@ -69,11 +78,21 @@ trait ControllerSpec
     when(dataRepository.get(anyString())).thenReturn(Future.successful(cacheData))
   }
 
-  protected def theUpdatedUserAnswers: UserAnswers = {
+  def withCachedAmendClaimResponse(amendClaimResponse: Option[AmendClaimResponse]): Unit = {
+    val cacheData: Option[CacheData] = Some(CacheData("id", amendClaimResponse = amendClaimResponse))
+    when(dataRepository.get(anyString())).thenReturn(Future.successful(cacheData))
+  }
+
+  protected def theUpdatedCreateAnswers: CreateAnswers =
+    theUpdatedCacheData.getCreateAnswers
+
+  protected def theUpdatedAmendAnswers: AmendAnswers =
+    theUpdatedCacheData.getAmendAnswers
+
+  private def theUpdatedCacheData: CacheData = {
     val captor = ArgumentCaptor.forClass(classOf[CacheData])
-    verify(dataRepository).set(captor.capture())
-    val cacheData: CacheData = captor.getValue
-    cacheData.answers
+    verify(dataRepository).update(captor.capture())
+    captor.getValue
   }
 
   protected def postRequest(data: (String, String)*): Request[AnyContentAsFormUrlEncoded] =

@@ -23,7 +23,8 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.ControllerSpec
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.IdentifierAction
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{CacheData, UserAnswers}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.CacheData
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.CreateAnswers
 import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
 
 class KeepAliveControllerSpec extends ControllerSpec {
@@ -36,11 +37,11 @@ class KeepAliveControllerSpec extends ControllerSpec {
   "GET /keep-alive" should {
 
     "update users session and data cache" in {
-      withCacheUserAnswers(UserAnswers())
+      withCacheCreateAnswers(CreateAnswers())
       val result = controller(fakeAuthorisedIdentifierAction).keepAlive(fakeGetRequest)
       status(result) mustBe Status.OK
 
-      verify(dataRepository).set(any[CacheData])
+      verify(dataRepository).update(any[CacheData])
 
     }
 

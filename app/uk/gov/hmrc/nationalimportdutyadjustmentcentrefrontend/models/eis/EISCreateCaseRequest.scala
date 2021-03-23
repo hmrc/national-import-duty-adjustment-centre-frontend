@@ -16,15 +16,16 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.eis
 
-import java.time.format.DateTimeFormatter
-
 import play.api.libs.json.{Format, Json}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.Claim
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.RepayTo.Importer
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.Claim
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.RepayTo.Importer
+
+import java.time.format.DateTimeFormatter
 
 /**
   * Create specified case in the PEGA system.
-  * Based on spec "CSG_NIDAC_AutoCreateCase_API_Spec_V0.2.docx"  (NOTE: PEGA spec)
+  * Based on spec for "CSG_NIDAC_AutoCreateCase_API_Spec" (NOTE: PEGA spec)
+  * * see tests/pega-create-case-spec for latest implemented
   */
 case class EISCreateCaseRequest(
   AcknowledgementReference: String,
@@ -69,7 +70,7 @@ object EISCreateCaseRequest {
         EntryNumber = claim.entryDetails.entryNumber,
         EntryDate = eisDateFormatter.format(claim.entryDetails.entryDate),
         DutyDetails = claim.reclaimDutyPayments.map(entry => DutyDetail(entry._1, entry._2)).toSeq,
-        PayTo = claim.repayTo.getOrElse(Importer).toString,
+        PayTo = claim.importerBeingRepresentedDetails.map(_.repayTo).getOrElse(Importer).toString,
         PaymentDetails = Some(PaymentDetails(claim.bankDetails)),
         ItemNumber = claim.itemNumbers.numbers,
         ClaimReason = claim.claimReason.reason,

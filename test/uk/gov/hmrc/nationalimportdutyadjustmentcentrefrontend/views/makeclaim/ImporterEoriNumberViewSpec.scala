@@ -19,7 +19,7 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.makeclaim
 import org.jsoup.nodes.Document
 import play.api.data.Form
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, UnitViewSpec}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.EoriNumberFormProvider
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create.EoriNumberFormProvider
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.EoriNumber
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ImporterEoriNumberView
 
@@ -49,7 +49,7 @@ class ImporterEoriNumberViewSpec extends UnitViewSpec with TestData {
     }
 
     "have 'Continue' button" in {
-      view().getElementById("submit") must includeMessage("site.continue")
+      view().getElementById("nidac-continue") must includeMessage("site.continue")
     }
 
   }
@@ -65,7 +65,9 @@ class ImporterEoriNumberViewSpec extends UnitViewSpec with TestData {
     "display error when " when {
 
       "eori number missing" in {
-        view(form.bind(Map("eoriNumber" -> ""))) must haveFieldError("eoriNumber", "importer.eori.error.required")
+        val errorView = view(form.bind(Map("eoriNumber" -> "")))
+        errorView must haveFieldError("eoriNumber", "importer.eori.error.required")
+        errorView must havePageError("importer.eori.error.required")
       }
 
     }

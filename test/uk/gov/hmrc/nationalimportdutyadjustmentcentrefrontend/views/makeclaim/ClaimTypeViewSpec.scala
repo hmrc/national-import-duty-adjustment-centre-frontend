@@ -20,9 +20,9 @@ import org.jsoup.nodes.Document
 import play.api.data.Form
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.UnitViewSpec
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.ClaimTypeFormProvider
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ClaimType.Quota
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create.ClaimTypeFormProvider
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ClaimType
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ClaimType.Quota
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ClaimTypeView
 
 class ClaimTypeViewSpec extends UnitViewSpec {
@@ -56,7 +56,7 @@ class ClaimTypeViewSpec extends UnitViewSpec {
     }
 
     "have 'Continue' button" in {
-      view().getElementById("submit") must includeMessage("site.continue")
+      view().getElementById("nidac-continue") must includeMessage("site.continue")
     }
 
   }
@@ -73,8 +73,7 @@ class ClaimTypeViewSpec extends UnitViewSpec {
 
       val errorView = view(form.bind(Map("claim-type" -> "")))
 
-      errorView.getElementsByClass("govuk-error-summary__body").text() mustBe messages("claim_type.error.required")
-
+      errorView must havePageError("claim_type.error.required")
     }
 
   }

@@ -18,12 +18,11 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.makeclaim
 
 import org.jsoup.nodes.Document
 import play.api.data.Form
-import play.twirl.api.Html
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.UnitViewSpec
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.RepayToFormProvider
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.RepayTo
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.RepayTo.Importer
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create.RepayToFormProvider
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.RepayTo
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.RepayTo.Importer
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.RepayToView
 
 class RepayToViewSpec extends UnitViewSpec {
@@ -53,7 +52,7 @@ class RepayToViewSpec extends UnitViewSpec {
     }
 
     "have 'Continue' button" in {
-      view().getElementById("submit") must includeMessage("site.continue")
+      view().getElementById("nidac-continue") must includeMessage("site.continue")
     }
 
     "have back link" in {
@@ -74,8 +73,7 @@ class RepayToViewSpec extends UnitViewSpec {
 
       val errorView = view(form.bind(Map("repay_to" -> "")))
 
-      errorView.getElementsByClass("govuk-error-summary__body").text() mustBe messages("repay_to.error.required")
-
+      errorView must havePageError("repay_to.error.required")
     }
 
   }

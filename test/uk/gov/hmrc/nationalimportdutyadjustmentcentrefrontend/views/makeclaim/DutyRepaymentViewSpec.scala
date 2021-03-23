@@ -21,8 +21,8 @@ import play.api.data.Form
 import play.api.mvc.Call
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, UnitViewSpec}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.routes
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.DutyPaidFormProvider
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.DutyPaid
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create.DutyPaidFormProvider
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.DutyPaid
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.DutyRepaymentView
 
 class DutyRepaymentViewSpec extends UnitViewSpec with TestData {
@@ -67,7 +67,9 @@ class DutyRepaymentViewSpec extends UnitViewSpec with TestData {
     }
 
     "have 'Continue' button" in {
-      messagePrefixs.foreach(prefix => view(prefix).getElementById("submit") must includeMessage("site.continue"))
+      messagePrefixs.foreach(
+        prefix => view(prefix).getElementById("nidac-continue") must includeMessage("site.continue")
+      )
     }
 
   }
@@ -86,10 +88,9 @@ class DutyRepaymentViewSpec extends UnitViewSpec with TestData {
       val answers = Map("actuallyPaid" -> "100.00", "shouldPaid" -> "89.99")
 
       "actuallyPaid missing" in {
-        view("customsDutyPaid", form.bind(answers - "actuallyPaid")) must haveFieldError(
-          "actuallyPaid",
-          "dutyPaid.actual.error.required"
-        )
+        val errorView = view("customsDutyPaid", form.bind(answers - "actuallyPaid"))
+        errorView must haveFieldError("actuallyPaid", "dutyPaid.actual.error.required")
+        errorView must havePageError("dutyPaid.actual.error.required")
       }
 
       "shouldPaid missing" in {

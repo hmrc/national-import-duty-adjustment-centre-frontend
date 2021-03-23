@@ -21,8 +21,9 @@ import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.Navigation
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.IdentifierAction
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.ClaimReasonFormProvider
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.Navigator
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create.ClaimReasonFormProvider
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.CreateAnswers
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.CreateNavigator
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{ClaimReasonPage, Page}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.CacheDataService
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ClaimReasonView
@@ -36,17 +37,17 @@ class ClaimReasonController @Inject() (
   data: CacheDataService,
   formProvider: ClaimReasonFormProvider,
   val controllerComponents: MessagesControllerComponents,
-  val navigator: Navigator,
+  val navigator: CreateNavigator,
   claimReasonView: ClaimReasonView
 )(implicit ec: ExecutionContext)
-    extends FrontendBaseController with I18nSupport with Navigation {
+    extends FrontendBaseController with I18nSupport with Navigation[CreateAnswers] {
 
   override val page: Page = ClaimReasonPage
 
   private val form = formProvider()
 
   def onPageLoad(): Action[AnyContent] = identify.async { implicit request =>
-    data.getAnswers map { answers =>
+    data.getCreateAnswers map { answers =>
       val preparedForm = answers.claimReason.fold(form)(form.fill)
       Ok(claimReasonView(preparedForm, backLink(answers)))
     }
@@ -55,9 +56,9 @@ class ClaimReasonController @Inject() (
   def onSubmit(): Action[AnyContent] = identify.async { implicit request =>
     form.bindFromRequest().fold(
       formWithErrors =>
-        data.getAnswers map { answers => BadRequest(claimReasonView(formWithErrors, backLink(answers))) },
+        data.getCreateAnswers map { answers => BadRequest(claimReasonView(formWithErrors, backLink(answers))) },
       value =>
-        data.updateAnswers(answers => answers.copy(claimReason = Some(value))) map {
+        data.updateCreateAnswers(answers => answers.copy(claimReason = Some(value))) map {
           updatedAnswers => Redirect(nextPage(updatedAnswers))
         }
     )

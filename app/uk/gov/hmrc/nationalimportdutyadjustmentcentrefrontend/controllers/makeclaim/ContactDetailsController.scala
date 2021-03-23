@@ -21,8 +21,9 @@ import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.Navigation
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.IdentifierAction
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.ContactDetailsFormProvider
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.Navigator
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create.ContactDetailsFormProvider
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.CreateAnswers
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.CreateNavigator
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{ContactDetailsPage, Page}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.CacheDataService
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ContactDetailsView
@@ -36,17 +37,17 @@ class ContactDetailsController @Inject() (
   data: CacheDataService,
   formProvider: ContactDetailsFormProvider,
   val controllerComponents: MessagesControllerComponents,
-  val navigator: Navigator,
+  val navigator: CreateNavigator,
   contactDetailsView: ContactDetailsView
 )(implicit ec: ExecutionContext)
-    extends FrontendBaseController with I18nSupport with Navigation {
+    extends FrontendBaseController with I18nSupport with Navigation[CreateAnswers] {
 
   override val page: Page = ContactDetailsPage
 
   private val form = formProvider()
 
   def onPageLoad(): Action[AnyContent] = identify.async { implicit request =>
-    data.getAnswers map { answers =>
+    data.getCreateAnswers map { answers =>
       val preparedForm = answers.contactDetails.fold(form)(form.fill)
       Ok(contactDetailsView(preparedForm, backLink(answers)))
     }
@@ -55,9 +56,9 @@ class ContactDetailsController @Inject() (
   def onSubmit(): Action[AnyContent] = identify.async { implicit request =>
     form.bindFromRequest().fold(
       formWithErrors =>
-        data.getAnswers map { answers => BadRequest(contactDetailsView(formWithErrors, backLink(answers))) },
+        data.getCreateAnswers map { answers => BadRequest(contactDetailsView(formWithErrors, backLink(answers))) },
       value =>
-        data.updateAnswers(answers => answers.copy(contactDetails = Some(value))) map {
+        data.updateCreateAnswers(answers => answers.copy(contactDetails = Some(value))) map {
           updatedAnswers => Redirect(nextPage(updatedAnswers))
         }
     )

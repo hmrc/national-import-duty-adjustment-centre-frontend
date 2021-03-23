@@ -129,6 +129,11 @@ trait Generators {
     chars     <- listOfN(length, arbitrary[Char])
   } yield chars.mkString
 
+  def stringsShorterThan(maxLength: Int): Gen[String] = for {
+    length <- Gen.chooseNum(1, maxLength - 1)
+    chars  <- listOfN(length, arbitrary[Char])
+  } yield chars.mkString
+
   def stringsExceptSpecificValues(excluded: Seq[String]): Gen[String] =
     nonEmptyString suchThat (!excluded.contains(_))
 
@@ -153,6 +158,13 @@ trait Generators {
       digits <- listOfN(length, arbitrary[Number])
 
     } yield s"GB$digits"
+
+  def caseReference(): Gen[String] =
+    for {
+      length <- Gen.oneOf(Seq(2, 22))
+      chars  <- listOfN(length, arbitrary[Char])
+
+    } yield s"$chars"
 
   def datesBetween(min: LocalDate, max: LocalDate): Gen[LocalDate] = {
 

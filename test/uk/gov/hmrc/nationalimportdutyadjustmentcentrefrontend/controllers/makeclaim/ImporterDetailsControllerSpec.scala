@@ -24,8 +24,8 @@ import play.api.http.Status
 import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{ControllerSpec, TestData}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.ImporterDetailsFormProvider
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{ImporterContactDetails, UserAnswers}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create.ImporterDetailsFormProvider
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{CreateAnswers, ImporterContactDetails}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.ImporterContactDetailsPage
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ImporterDetailsView
 import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
@@ -72,7 +72,7 @@ class ImporterDetailsControllerSpec extends ControllerSpec with TestData {
     }
 
     "display page when cache has answer" in {
-      withCacheUserAnswers(UserAnswers(importerContactDetails = Some(importerContactDetailsAnswer)))
+      withCacheCreateAnswers(CreateAnswers(importerContactDetails = Some(importerContactDetailsAnswer)))
       val result = controller.onPageLoad()(fakeGetRequest)
       status(result) mustBe Status.OK
 
@@ -83,23 +83,21 @@ class ImporterDetailsControllerSpec extends ControllerSpec with TestData {
   "POST" should {
 
     val validRequest = postRequest(
-      "name"            -> importerContactDetailsAnswer.name,
-      "addressLine1"    -> importerContactDetailsAnswer.addressLine1,
-      "addressLine2"    -> importerContactDetailsAnswer.addressLine2.getOrElse(""),
-      "city"            -> importerContactDetailsAnswer.city,
-      "postcode"        -> importerContactDetailsAnswer.postCode,
-      "emailAddress"    -> importerContactDetailsAnswer.emailAddress,
-      "telephoneNumber" -> importerContactDetailsAnswer.telephoneNumber
+      "name"         -> importerContactDetailsAnswer.name,
+      "addressLine1" -> importerContactDetailsAnswer.addressLine1,
+      "addressLine2" -> importerContactDetailsAnswer.addressLine2.getOrElse(""),
+      "city"         -> importerContactDetailsAnswer.city,
+      "postcode"     -> importerContactDetailsAnswer.postCode
     )
 
     "update cache and redirect when valid answer is submitted" in {
 
-      withCacheUserAnswers(emptyAnswers)
+      withCacheCreateAnswers(emptyAnswers)
 
       val result = controller.onSubmit()(validRequest)
       status(result) mustEqual SEE_OTHER
-      theUpdatedUserAnswers.importerContactDetails mustBe Some(importerContactDetailsAnswer)
-      redirectLocation(result) mustBe Some(navigator.nextPage(ImporterContactDetailsPage, theUpdatedUserAnswers).url)
+      theUpdatedCreateAnswers.importerContactDetails mustBe Some(importerContactDetailsAnswer)
+      redirectLocation(result) mustBe Some(navigator.nextPage(ImporterContactDetailsPage, theUpdatedCreateAnswers).url)
     }
 
     "return 400 (BAD REQUEST) when invalid data posted" in {

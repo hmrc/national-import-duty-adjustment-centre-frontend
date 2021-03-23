@@ -21,8 +21,9 @@ import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.Navigation
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.IdentifierAction
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.ItemNumbersFormProvider
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.Navigator
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create.ItemNumbersFormProvider
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.CreateAnswers
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.CreateNavigator
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{ItemNumbersPage, Page}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.CacheDataService
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ItemNumbersView
@@ -36,17 +37,17 @@ class ItemNumbersController @Inject() (
   data: CacheDataService,
   formProvider: ItemNumbersFormProvider,
   val controllerComponents: MessagesControllerComponents,
-  val navigator: Navigator,
+  val navigator: CreateNavigator,
   itemNumbersView: ItemNumbersView
 )(implicit ec: ExecutionContext)
-    extends FrontendBaseController with I18nSupport with Navigation {
+    extends FrontendBaseController with I18nSupport with Navigation[CreateAnswers] {
 
   override val page: Page = ItemNumbersPage
 
   private val form = formProvider()
 
   def onPageLoad(): Action[AnyContent] = identify.async { implicit request =>
-    data.getAnswers map { answers =>
+    data.getCreateAnswers map { answers =>
       val preparedForm = answers.itemNumbers.fold(form)(form.fill)
       Ok(itemNumbersView(preparedForm, backLink(answers)))
     }
@@ -55,9 +56,9 @@ class ItemNumbersController @Inject() (
   def onSubmit(): Action[AnyContent] = identify.async { implicit request =>
     form.bindFromRequest().fold(
       formWithErrors =>
-        data.getAnswers map { answers => BadRequest(itemNumbersView(formWithErrors, backLink(answers))) },
+        data.getCreateAnswers map { answers => BadRequest(itemNumbersView(formWithErrors, backLink(answers))) },
       value =>
-        data.updateAnswers(answers => answers.copy(itemNumbers = Some(value))) map {
+        data.updateCreateAnswers(answers => answers.copy(itemNumbers = Some(value))) map {
           updatedAnswers => Redirect(nextPage(updatedAnswers))
         }
     )

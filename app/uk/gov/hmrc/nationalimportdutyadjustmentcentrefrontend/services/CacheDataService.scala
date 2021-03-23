@@ -16,11 +16,13 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services
 
-import javax.inject.Inject
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.{AmendAnswers, AmendClaimResponse}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{CreateAnswers, CreateClaimResponse}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.requests.IdentifierRequest
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{CacheData, CreateClaimResponse, UserAnswers}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{CacheData, JourneyId}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.CacheDataRepository
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class CacheDataService @Inject() (repository: CacheDataRepository)(implicit ec: ExecutionContext) {
@@ -30,23 +32,49 @@ class CacheDataService @Inject() (repository: CacheDataRepository)(implicit ec: 
       case Some(data) => Future(data)
       case None =>
         val data = CacheData(request.identifier)
-        repository.set(data) map { _ => data }
+        repository.insert(data) map { _ => data }
     }
 
-  def getAnswers(implicit request: IdentifierRequest[_]): Future[UserAnswers] =
-    getCacheData map (_.answers)
+  def getCreateAnswersWithJourneyId(implicit request: IdentifierRequest[_]): Future[(CreateAnswers, JourneyId)] =
+    getCacheData map (cache => (cache.getCreateAnswers, cache.journeyId))
 
-  def updateAnswers(update: UserAnswers => UserAnswers)(implicit request: IdentifierRequest[_]): Future[UserAnswers] =
+  def getAmendAnswersWithJourneyId(implicit request: IdentifierRequest[_]): Future[(AmendAnswers, JourneyId)] =
+    getCacheData map (cache => (cache.getAmendAnswers, cache.journeyId))
+
+  def getCreateAnswers(implicit request: IdentifierRequest[_]): Future[CreateAnswers] =
+    getCacheData map (_.getCreateAnswers)
+
+  def getAmendAnswers(implicit request: IdentifierRequest[_]): Future[AmendAnswers] =
+    getCacheData map (_.getAmendAnswers)
+
+  def updateCreateAnswers(
+    update: CreateAnswers => CreateAnswers
+  )(implicit request: IdentifierRequest[_]): Future[CreateAnswers] =
     getCacheData flatMap { data =>
-      val updatedAnswers: UserAnswers = update(data.answers)
-      repository.set(data.copy(answers = updatedAnswers)) map { _ => updatedAnswers }
+      val updatedAnswers: CreateAnswers = update(data.getCreateAnswers)
+      repository.update(data.copy(createAnswers = Some(updatedAnswers))) map { _ => updatedAnswers }
     }
 
-  def updateResponse(
+  def updateAmendAnswers(
+    update: AmendAnswers => AmendAnswers
+  )(implicit request: IdentifierRequest[_]): Future[AmendAnswers] =
+    getCacheData flatMap { data =>
+      val updatedAnswers: AmendAnswers = update(data.getAmendAnswers)
+      repository.update(data.copy(amendAnswers = Some(updatedAnswers))) map { _ => updatedAnswers }
+    }
+
+  def storeCreateResponse(
     claimResponse: CreateClaimResponse
   )(implicit request: IdentifierRequest[_]): Future[Option[CacheData]] =
     getCacheData flatMap { data =>
-      repository.set(data.copy(answers = UserAnswers(), createClaimResponse = Some(claimResponse)))
+      repository.update(data.copy(createAnswers = None, createClaimResponse = Some(claimResponse)))
+    }
+
+  def storeAmendResponse(
+    amendClaimResponse: AmendClaimResponse
+  )(implicit request: IdentifierRequest[_]): Future[Option[CacheData]] =
+    getCacheData flatMap { data =>
+      repository.update(data.copy(amendAnswers = None, amendClaimResponse = Some(amendClaimResponse)))
     }
 
 }
