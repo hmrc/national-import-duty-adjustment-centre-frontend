@@ -65,7 +65,7 @@ class AuthenticatedIdentifierAction @Inject() (
             internalId => block(IdentifierRequest(request, internalId, EoriNumber(eoriNumber)))
           ).getOrElse(throw new UnauthorizedException("Unable to retrieve internal Id"))
         else
-          Future.successful(Redirect(routes.ServiceUnavailableController.onPageLoad()))
+          Future(Redirect(routes.ServiceUnavailableController.onPageLoad()))
 
     } recover {
       case _: InsufficientEnrolments =>
