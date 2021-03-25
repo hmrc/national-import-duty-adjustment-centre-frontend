@@ -48,12 +48,12 @@ class CheckYourAnswersController @Inject() (
     data.getAmendAnswers flatMap { answers =>
       try {
         val amendClaim = AmendClaim(answers)
-        data.updateCreateAnswers(answers => answers.copy(changePage = None)) map { ans =>
-          Ok(checkYourAnswersView(amendClaim, backLink(answers)))
+        data.updateAmendAnswers(answers => answers.copy(changePage = None)) map { updatedAnswers =>
+          Ok(checkYourAnswersView(amendClaim, backLink(updatedAnswers)))
         }
       } catch {
         case _: MissingAnswersException =>
-          Future.successful(Redirect(navigator.firstMissingAnswer(answers)))
+          Future(Redirect(navigator.firstMissingAnswer(answers)))
       }
     }
   }

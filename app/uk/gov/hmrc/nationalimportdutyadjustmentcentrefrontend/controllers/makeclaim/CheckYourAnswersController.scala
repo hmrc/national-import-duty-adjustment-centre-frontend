@@ -54,7 +54,7 @@ class CheckYourAnswersController @Inject() (
         }
       } catch {
         case _: MissingAnswersException =>
-          Future.successful(Redirect(navigator.firstMissingAnswer(answers)))
+          Future(Redirect(navigator.firstMissingAnswer(answers)))
       }
     }
   }

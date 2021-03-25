@@ -76,7 +76,7 @@ class CheckYourAnswersControllerSpec extends ControllerSpec with TestData {
       redirectLocation(result) mustBe Some(routes.CaseReferenceController.onPageLoad().url)
     }
 
-    "redirect to first missingn question when answers missing" in {
+    "redirect to first missing question when answers missing" in {
       withCacheAmendAnswers(completeAmendAnswers.copy(furtherInformation = None))
 
       val result = controller.onPageLoad()(fakeGetRequest)
