@@ -24,16 +24,16 @@ class CheckYourAnswersErrorViewSpec extends UnitViewSpec with TestData {
 
   private val page = instanceOf[CheckYourAnswersErrorView]
 
-  private def view(): Document = page(navigatorBack)
+  private def view(): Document = page(completeAnswers, navigatorBack)
 
   "CheckYourAnswersErrorView" should {
 
     "have correct title" in {
-      view().title() must startWith(messages("check_answers.title"))
+      view().title() must startWith(s"Error: ${messages("check_answers.missing.title")}")
     }
 
     "have correct heading" in {
-      view().getElementsByTag("h1") must containMessage("check_answers.title")
+      view().getElementsByTag("h1") must containMessage("check_answers.missing.title")
     }
 
     "have back link" in {
@@ -41,7 +41,7 @@ class CheckYourAnswersErrorViewSpec extends UnitViewSpec with TestData {
     }
 
     "have 'Submit' button" in {
-      view().getElementById("nidac-submit") must includeMessage("check_answers.resolve")
+      view().getElementById("nidac-submit") must includeMessage("check_answers.missing.resolve")
     }
 
   }

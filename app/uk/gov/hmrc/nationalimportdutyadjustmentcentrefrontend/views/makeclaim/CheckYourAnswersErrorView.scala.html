@@ -43,7 +43,7 @@
 @layout(pageTitle = ErrorTitle(messages("check_answers.missing.title")), backLink) {
 
     @formHelper(action = CheckYourAnswersController.onResolve(), 'autoComplete -> "off") {
-        @errorSummary(Seq(FormError("nidac-submit", messages("check_answers.missing.error"))))
+        @errorSummary(Seq(FormError("nidac-submit", "check_answers.missing.error")))
 
         @components.heading(messages("check_answers.missing.title"))
 
