@@ -23,13 +23,10 @@ import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{ControllerSpec, TestData}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{
-  CreateClaimResponse,
-  CreateClaimResult,
-  RepresentationType
-}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.ClaimService
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.CheckYourAnswersView
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.CheckYourAnswersErrorView
 import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
 
 import scala.concurrent.Future
@@ -37,20 +34,22 @@ import scala.util.Random
 
 class CheckYourAnswersControllerSpec extends ControllerSpec with TestData {
 
-  val page: CheckYourAnswersView = mock[CheckYourAnswersView]
-  val service: ClaimService      = mock[ClaimService]
-  val claimRef                   = Random.nextString(12)
+  val cyaView: CheckYourAnswersView        = mock[CheckYourAnswersView]
+  val errorView: CheckYourAnswersErrorView = mock[CheckYourAnswersErrorView]
+  val service: ClaimService                = mock[ClaimService]
+  val claimRef                             = Random.nextString(12)
 
   override protected def beforeEach(): Unit = {
     super.beforeEach()
-    when(page.apply(any(), any())(any(), any())).thenReturn(HtmlFormat.empty)
+    when(cyaView.apply(any(), any())(any(), any())).thenReturn(HtmlFormat.empty)
+    when(errorView.apply(any())(any(), any())).thenReturn(HtmlFormat.empty)
     when(service.submitClaim(any())(any(), any())).thenReturn(
       Future.successful(CreateClaimResponse("id", None, Some(CreateClaimResult(claimRef, Seq.empty))))
     )
   }
 
   override protected def afterEach(): Unit = {
-    reset(page, service)
+    reset(cyaView, service)
     super.afterEach()
   }
 
@@ -61,10 +60,11 @@ class CheckYourAnswersControllerSpec extends ControllerSpec with TestData {
       cacheDataService,
       service,
       navigator,
-      page
+      cyaView,
+      errorView
     )
 
-  "GET" should {
+  "onPageLoad" should {
 
     "return OK when user has answered all questions" in {
       withCacheCreateAnswers(completeAnswers)
@@ -73,34 +73,31 @@ class CheckYourAnswersControllerSpec extends ControllerSpec with TestData {
       status(result) mustBe Status.OK
     }
 
-    "redirect to first question when cache empty" in {
+    "return BAD REQUEST when cache empty" in {
       withEmptyCache
       val result = controller.onPageLoad()(fakeGetRequest)
 
-      status(result) mustBe Status.SEE_OTHER
-      redirectLocation(result) mustBe Some(controllers.makeclaim.routes.RepresentationTypeController.onPageLoad().url)
+      status(result) mustBe Status.BAD_REQUEST
     }
 
-    "redirect to first question when answers missing" in {
+    "return BAD REQUEST when answers missing" in {
       withCacheCreateAnswers(emptyAnswers)
 
       val result = controller.onPageLoad()(fakeGetRequest)
 
-      status(result) mustBe Status.SEE_OTHER
-      redirectLocation(result) mustBe Some(controllers.makeclaim.routes.RepresentationTypeController.onPageLoad().url)
+      status(result) mustBe Status.BAD_REQUEST
     }
 
-    "redirect to first missing question when answers incomplete" in {
+    "return BAD REQUEST when answers incomplete" in {
       withCacheCreateAnswers(completeAnswers.copy(uploads = Seq.empty))
 
       val result = controller.onPageLoad()(fakeGetRequest)
 
-      status(result) mustBe Status.SEE_OTHER
-      redirectLocation(result) mustBe Some(controllers.makeclaim.routes.UploadFormController.onPageLoad().url)
+      status(result) mustBe Status.BAD_REQUEST
     }
   }
 
-  "POST" should {
+  "onSubmit" should {
 
     "submit and redirect to confirmation page" in {
       withCacheCreateAnswers(completeAnswers)
@@ -110,12 +107,22 @@ class CheckYourAnswersControllerSpec extends ControllerSpec with TestData {
       redirectLocation(result) mustBe Some(routes.ConfirmationController.onPageLoad().url)
     }
 
-    "redirect to start when cache empty" in {
+    "return BAD REQUEST when cache empty" in {
       withEmptyCache
       val result = controller.onSubmit()(postRequest())
 
-      status(result) mustEqual SEE_OTHER
-      redirectLocation(result) mustBe Some(controllers.routes.StartController.start().url)
+      status(result) mustBe Status.BAD_REQUEST
+    }
+  }
+
+  "onResolve" should {
+
+    "redirect to first missing answer when answers incomplete" in {
+      withCacheCreateAnswers(completeAnswers.copy(uploads = Seq.empty))
+      val result = controller.onResolve()(postRequest())
+
+      status(result) mustBe Status.SEE_OTHER
+      redirectLocation(result) mustBe Some(controllers.makeclaim.routes.UploadFormController.onPageLoad().url)
     }
   }
 }

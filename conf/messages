@@ -306,6 +306,10 @@ check_answers.payment.bankDetails.accessible = Change the bank account details
 check_answers.submit.heading = Submit your declaration
 check_answers.submit.declaration = Before you proceed, ensure that you have fully reviewed the information you have provided above and ensure that it is correct.
 
+check_answers.missing.title = The application is incomplete
+check_answers.missing.error = You have not provided answers to all of the required questions to submit this application.  Please use the button below to continue the application.
+check_answers.missing.resolve = Resolve missing answers
+
 
 confirmation.title = Your application is confirmed
 confirmation.reference = Your reference number<br><strong>{0}</strong>

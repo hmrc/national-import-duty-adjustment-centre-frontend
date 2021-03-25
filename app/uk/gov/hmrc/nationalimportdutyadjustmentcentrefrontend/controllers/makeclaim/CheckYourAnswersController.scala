@@ -19,7 +19,6 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makec
 import javax.inject.{Inject, Singleton}
 import play.api.i18n.I18nSupport
 import play.api.mvc._
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.Navigation
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.IdentifierAction
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{Claim, CreateAnswers}
@@ -27,7 +26,10 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.exceptions.
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.CreateNavigator
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{CheckYourAnswersPage, Page}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.{CacheDataService, ClaimService}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.CheckYourAnswersView
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.{
+  CheckYourAnswersErrorView,
+  CheckYourAnswersView
+}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -39,7 +41,8 @@ class CheckYourAnswersController @Inject() (
   data: CacheDataService,
   service: ClaimService,
   val navigator: CreateNavigator,
-  checkYourAnswersView: CheckYourAnswersView
+  checkYourAnswersView: CheckYourAnswersView,
+  errorView: CheckYourAnswersErrorView
 )(implicit ec: ExecutionContext)
     extends FrontendController(mcc) with I18nSupport with Navigation[CreateAnswers] {
 
@@ -54,7 +57,7 @@ class CheckYourAnswersController @Inject() (
         }
       } catch {
         case _: MissingAnswersException =>
-          Future(Redirect(navigator.firstMissingAnswer(answers)))
+          Future(BadRequest(errorView(answers, backLink(answers))))
       }
     }
   }
@@ -65,21 +68,28 @@ class CheckYourAnswersController @Inject() (
     }
   }
 
+  def onResolve(): Action[AnyContent] = identify.async { implicit request =>
+    data.getCreateAnswers map { answers =>
+      Redirect(navigator.firstMissingAnswer(answers))
+    }
+  }
+
   def onSubmit(): Action[AnyContent] = identify.async { implicit request =>
     data.getCreateAnswers flatMap { answers =>
-      val claim = Claim(request.eoriNumber, answers)
-      service.submitClaim(claim) flatMap {
-        case response if response.error.isDefined => throw new Exception(s"Error - ${response.error}")
-        case response =>
-          data.storeCreateResponse(response) map {
-            _ => Redirect(nextPage(answers))
-          }
+      try {
+        val claim = Claim(request.eoriNumber, answers)
+        service.submitClaim(claim) flatMap {
+          case response if response.error.isDefined => throw new Exception(s"Error - ${response.error}")
+          case response =>
+            data.storeCreateResponse(response) map {
+              _ => Redirect(nextPage(answers))
+            }
+        }
+      } catch {
+        case _: MissingAnswersException =>
+          Future(BadRequest(errorView(answers, backLink(answers))))
       }
-    } recover {
-      case _: MissingAnswersException =>
-        Redirect(controllers.routes.StartController.start())
     }
-
   }
 
 }
