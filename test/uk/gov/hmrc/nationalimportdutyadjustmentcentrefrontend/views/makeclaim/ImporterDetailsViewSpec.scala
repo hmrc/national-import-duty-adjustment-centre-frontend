@@ -67,7 +67,7 @@ class ImporterDetailsViewSpec extends UnitViewSpec with TestData {
     }
 
     "have 'Continue' button" in {
-      view().getElementById("submit") must includeMessage("site.continue")
+      view().getElementById("nidac-continue") must includeMessage("site.continue")
     }
 
   }
@@ -90,6 +90,7 @@ class ImporterDetailsViewSpec extends UnitViewSpec with TestData {
 
       "name missing" in {
         missingView must haveFieldError("name", "address.name.error.required")
+        missingView must havePageError("address.name.error.required")
       }
 
       "line 1 missing" in {

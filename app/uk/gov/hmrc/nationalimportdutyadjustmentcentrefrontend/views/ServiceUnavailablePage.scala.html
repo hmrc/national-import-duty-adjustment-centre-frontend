@@ -15,14 +15,16 @@
  *@
 
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html._
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.ErrorTitle
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.InformationTitle
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.NavigatorBack
 
 @this(layout: Layout)
 
 @()(implicit request: Request[_], messages: Messages)
 
-    @layout(pageTitle = ErrorTitle(messages("unauthorised.title")), NavigatorBack(None)) {
+    @layout(pageTitle = InformationTitle(messages("service.unavailable.title")), NavigatorBack(None)) {
 
-        @components.heading(messages("unauthorised.title"))
+        @components.heading(messages("service.unavailable.title"))
+        @components.paragraph(messages("service.unavailable.paragraph.1"))
+        @components.paragraph(messages("service.unavailable.paragraph.2"))
     }

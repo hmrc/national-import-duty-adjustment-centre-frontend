@@ -284,6 +284,15 @@ class CreateNavigatorSpec extends UnitSpec with Injector with TestData {
     }
   }
 
+  "Previous back (back link) when changing answers" should {
+
+    "use javascript history function" in {
+      val answers = completeAnswers.copy(changePage = Some(CreatePageNames.claimReason))
+      navigator.previousPage(ClaimReasonPage, answers).maybeCall.map(_.url) mustBe Some("javascript:history.back()")
+
+    }
+  }
+
   "Navigating to first missing answer" should {
 
     "goto check your answers when no further answers required" in {

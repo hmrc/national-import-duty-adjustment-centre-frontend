@@ -28,7 +28,7 @@ class CheckYourAnswersViewSpec extends UnitViewSpec with TestData {
 
   private val page = instanceOf[CheckYourAnswersView]
 
-  private val completeClaim                                = Claim(completeAnswers)
+  private val completeClaim                                = Claim(claimantEori, completeAnswers)
   private def view(claim: Claim = completeClaim): Document = page(claim, navigatorBack)
 
   "CheckYourAnswersPage" should {
@@ -252,7 +252,9 @@ class CheckYourAnswersViewSpec extends UnitViewSpec with TestData {
 
       "does not contains Eori number when repayment is to representative" in {
         val importerNoEoriSection =
-          view(Claim(completeAnswers.copy(repayTo = Some(RepayTo.Representative)))).getElementById("importer_section")
+          view(Claim(claimantEori, completeAnswers.copy(repayTo = Some(RepayTo.Representative)))).getElementById(
+            "importer_section"
+          )
 
         val eoriRow = importerNoEoriSection.getElementsByClass("importer_eori_row")
         eoriRow must beEmpty
@@ -327,7 +329,7 @@ class CheckYourAnswersViewSpec extends UnitViewSpec with TestData {
     }
 
     "have 'Submit' button" in {
-      view().getElementById("submit") must includeMessage("check_answers.submit")
+      view().getElementById("nidac-submit") must includeMessage("check_answers.submit")
     }
 
   }

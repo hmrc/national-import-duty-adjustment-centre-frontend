@@ -19,7 +19,7 @@
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.CreatePageNames
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.MessageKey
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.ActionItemBuilder.actionItem
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.Title
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.InformationTitle
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html._
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components._
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.DateFormatter
@@ -29,12 +29,12 @@
         layout: Layout,
         formHelper: FormWithCSRF,
         summaryList: summaryList,
-        continueButton: components.continueButton
+        submitButton: components.submitButton
 )
 
 @(claim: Claim, backLink: NavigatorBack)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = Title(messages("check_answers.title")), backLink) {
+@layout(pageTitle = InformationTitle(messages("check_answers.title")), backLink) {
 
     @components.heading(messages("check_answers.title"))
 
@@ -378,7 +378,7 @@
     @components.paragraph(messages("check_answers.submit.declaration"))
 
     @formHelper(action = makeclaim.routes.CheckYourAnswersController.onSubmit(), 'autoComplete -> "off") {
-        @continueButton("check_answers.submit")
+        @submitButton()
     }
 
 }

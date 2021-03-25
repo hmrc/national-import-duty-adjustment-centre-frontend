@@ -48,9 +48,9 @@ class CheckYourAnswersController @Inject() (
   def onPageLoad(): Action[AnyContent] = identify.async { implicit request =>
     data.getCreateAnswers flatMap { answers =>
       try {
-        val claim = Claim(answers)
-        data.updateCreateAnswers(answers => answers.copy(changePage = None)) map { ans =>
-          Ok(checkYourAnswersView(claim, backLink(ans)))
+        val claim = Claim(request.eoriNumber, answers)
+        data.updateCreateAnswers(answers => answers.copy(changePage = None)) map { updatedAnswers =>
+          Ok(checkYourAnswersView(claim, backLink(updatedAnswers)))
         }
       } catch {
         case _: MissingAnswersException =>
@@ -67,7 +67,7 @@ class CheckYourAnswersController @Inject() (
 
   def onSubmit(): Action[AnyContent] = identify.async { implicit request =>
     data.getCreateAnswers flatMap { answers =>
-      val claim = Claim(answers)
+      val claim = Claim(request.eoriNumber, answers)
       service.submitClaim(claim) flatMap {
         case response if response.error.isDefined => throw new Exception(s"Error - ${response.error}")
         case response =>

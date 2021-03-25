@@ -1,4 +1,4 @@
-/*
+@*
  * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,19 +12,19 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *@
 
-package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.bars
+@import uk.gov.hmrc.govukfrontend.views.html.components._
 
-import play.api.libs.json.{Json, OFormat}
+@this(govukButton: GovukButton)
 
-case class MetadataResponse(bacsOfficeStatus: String, disallowedTransactions: Seq[String] = Seq.empty) {
+@(messageKey: String = "check_answers.submit", disabled: Boolean = false)(implicit messages: Messages)
 
-  val acceptsBacsPayments: Boolean = bacsOfficeStatus != "N" && !disallowedTransactions.contains("CR")
-}
-
-object MetadataResponse {
-  implicit val format: OFormat[MetadataResponse] = Json.format[MetadataResponse]
-
-  val notFound: MetadataResponse = MetadataResponse("Unknown")
-}
+@govukButton(
+ Button(
+  content = Text(messages(messageKey)),
+  attributes = Map("id" -> "nidac-submit"),
+  disabled = disabled,
+  preventDoubleClick = true
+ )
+)

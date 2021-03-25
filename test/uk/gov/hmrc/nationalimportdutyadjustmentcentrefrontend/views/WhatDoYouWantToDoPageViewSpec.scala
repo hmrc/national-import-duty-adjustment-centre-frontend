@@ -52,7 +52,7 @@ class WhatDoYouWantToDoPageViewSpec extends UnitViewSpec {
     }
 
     "have 'Continue' button" in {
-      view().getElementById("submit") must includeMessage("site.continue")
+      view().getElementById("nidac-continue") must includeMessage("site.continue")
     }
 
   }
@@ -66,10 +66,7 @@ class WhatDoYouWantToDoPageViewSpec extends UnitViewSpec {
 
     "display error when no choice is made" in {
       val errorView = view(form.bind(Map("what_do_you_want_to_do" -> "")))
-      errorView.getElementsByClass("govuk-error-summary__body").text() mustBe messages(
-        "what_do_you_want_to_do.error.required"
-      )
-
+      errorView must havePageError("what_do_you_want_to_do.error.required")
     }
 
   }

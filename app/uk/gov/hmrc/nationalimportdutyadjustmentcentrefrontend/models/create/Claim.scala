@@ -19,14 +19,15 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create
 import java.time.LocalDate
 
 import play.api.Logger
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{create, EoriNumber}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.exceptions.MissingAnswersException
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UploadedFile
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{create, _}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages._
 
 import scala.util.Try
 
 case class Claim(
+  claimantEori: EoriNumber,
   contactDetails: ContactDetails,
   claimantAddress: Address,
   representationType: RepresentationType,
@@ -47,10 +48,13 @@ case class Claim(
 
 object Claim {
 
-  def apply(userAnswers: CreateAnswers): Claim = {
+  private val logger: Logger = Logger(this.getClass)
+
+  def apply(claimantEori: EoriNumber, userAnswers: CreateAnswers): Claim = {
     if (userAnswers.uploads.isEmpty) missing(UploadSummaryPage)
     if (userAnswers.reclaimDutyTypes.isEmpty) missing(ReclaimDutyTypePage)
     new Claim(
+      claimantEori = claimantEori,
       contactDetails = userAnswers.contactDetails.getOrElse(missing(ContactDetailsPage)),
       claimantAddress = userAnswers.claimantAddress.getOrElse(missing(AddressPage)),
       representationType = userAnswers.representationType.getOrElse(missing(ReclaimDutyTypePage)),
@@ -87,7 +91,7 @@ object Claim {
 
   private def missing(answer: Any) = {
     val message = s"Missing answer - $answer"
-    Logger(this.getClass).warn(message)
+    logger.warn(message)
     throw new MissingAnswersException(message)
   }
 

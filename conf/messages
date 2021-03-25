@@ -23,6 +23,10 @@ session_expired.guidance = The details you have given have been deleted because 
 
 unauthorised.title = You can’t access this service with this account
 
+service.unavailable.title = Sorry, the service is unavailable
+service.unavailable.paragraph.1 = We are working on updating this service.
+service.unavailable.paragraph.2 = In the meantime you can continue to submit NIDAC claims using the existing method.
+
 representation_type.title = Are you the importer or their representative?
 representation_type.error.required = Select if you are the importer or their representative
 representation_type.Importer = I am the importer
@@ -195,7 +199,7 @@ bankDetails.bars.validation.failed = Unable to validate bank account details
 bankDetails.bars.validation.sortcodeNotFound = Enter a valid sort code
 bankDetails.bars.validation.modCheckFailed = Account number must be valid for the given sort code
 bankDetails.bars.validation.rollRequired = Enter details of a bank account or building society account that does not require a roll number
-bankDetails.bars.validation.bacsNotSupported = Enter a bank account that can receive Bacs payments
+bankDetails.bars.validation.bacsNotSupported = This bank account cannot receive Bacs payments. Enter a bank account that can receive Bacs payments
 bankDetails.bars.validation.accountInvalid = Enter a real bank account
 bankDetails.bars.validation.companyNameInvalid = Enter the name as it appears on the bank account
 

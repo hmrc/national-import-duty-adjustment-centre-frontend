@@ -18,22 +18,22 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views
 
 import play.twirl.api.Html
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.UnitViewSpec
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.SessionExpiredPage
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.ServiceUnavailablePage
 
-class SessionExpiredPageViewSpec extends UnitViewSpec {
+class ServiceUnavailablePageViewSpec extends UnitViewSpec {
 
-  private val page = instanceOf[SessionExpiredPage]
+  private val page = instanceOf[ServiceUnavailablePage]
 
   private val view: Html = page()
 
-  "SessionExpiredPage" should {
+  "ServiceUnavailablePage" should {
 
     "have correct title" in {
-      view.title() must startWith(s"Error: ${messages("session_expired.title")}")
+      view.title() must startWith(messages("service.unavailable.title"))
     }
 
     "have correct heading" in {
-      view.getElementsByTag("h1").text() mustBe messages("session_expired.title")
+      view.getElementsByTag("h1").text() mustBe messages("service.unavailable.title")
     }
 
   }
