@@ -86,7 +86,7 @@ class BankDetailsControllerSpec extends ControllerSpec with TestData with BarsTe
       theResponseForm.value mustBe Some(importerBankDetailsAnswer)
     }
 
-    "display page when cache has answer for representative" in {
+    "display page when cache has answer for representative paying themselves" in {
       withCacheCreateAnswers(
         completeAnswers.copy(
           representationType = Some(RepresentationType.Representative),
@@ -97,6 +97,19 @@ class BankDetailsControllerSpec extends ControllerSpec with TestData with BarsTe
       status(result) mustBe Status.OK
 
       theResponseForm.value mustBe Some(representativeBankDetailsAnswer)
+    }
+
+    "display page when cache has answer for representative paying importer" in {
+      withCacheCreateAnswers(
+        completeAnswers.copy(
+          representationType = Some(RepresentationType.Representative),
+          repayTo = Some(RepayTo.Importer)
+        )
+      )
+      val result = controller.onPageLoad()(fakeGetRequest)
+      status(result) mustBe Status.OK
+
+      theResponseForm.value mustBe Some(importerBankDetailsAnswer)
     }
   }
 
