@@ -306,8 +306,17 @@ check_answers.payment.bankDetails.accessible = Change the bank account details
 check_answers.submit.heading = Submit your declaration
 check_answers.submit.declaration = Before you proceed, ensure that you have fully reviewed the information you have provided above and ensure that it is correct.
 
-check_answers.missing.title = The application is incomplete
-check_answers.missing.error = You have not provided answers to all of the required questions to submit this application.  Please use the button below to continue the application.
+check_answers.missing.icon = Warning
+check_answers.missing.warning = {0}. This must be completed before sending your application.
+check_answers.missing.warning.default = Some information is missing
+check_answers.missing.warning.customsDuty = Some Customs Duty payment details are missing
+check_answers.missing.warning.importVAT = Some VAT payment details are missing
+check_answers.missing.warning.otherDuty = Some other duties payment details are missing
+check_answers.missing.warning.payment = Some payment information is missing
+check_answers.missing.warning.importer = Some details about the importer are missing
+check_answers.missing.subheading = Some information is missing
+check_answers.missing.paragraph = Please review your answers above and complete any missing information. Alternatively, you can use the button below.
+check_answers.missing.resolve.link = Resolve
 check_answers.missing.resolve = Resolve missing answers
 
 

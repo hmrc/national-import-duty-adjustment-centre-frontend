@@ -25,8 +25,10 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{ControllerSp
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.ClaimService
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.CheckYourAnswersView
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.CheckYourAnswersErrorView
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.{
+  CheckYourAnswersView,
+  CheckYourAnswersWithMissingView
+}
 import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
 
 import scala.concurrent.Future
@@ -34,15 +36,15 @@ import scala.util.Random
 
 class CheckYourAnswersControllerSpec extends ControllerSpec with TestData {
 
-  val cyaView: CheckYourAnswersView        = mock[CheckYourAnswersView]
-  val errorView: CheckYourAnswersErrorView = mock[CheckYourAnswersErrorView]
-  val service: ClaimService                = mock[ClaimService]
-  val claimRef                             = Random.nextString(12)
+  val cyaView: CheckYourAnswersView              = mock[CheckYourAnswersView]
+  val errorView: CheckYourAnswersWithMissingView = mock[CheckYourAnswersWithMissingView]
+  val service: ClaimService                      = mock[ClaimService]
+  val claimRef                                   = Random.nextString(12)
 
   override protected def beforeEach(): Unit = {
     super.beforeEach()
     when(cyaView.apply(any(), any())(any(), any())).thenReturn(HtmlFormat.empty)
-    when(errorView.apply(any(), any())(any(), any())).thenReturn(HtmlFormat.empty)
+    when(errorView.apply(any(), any(), any())(any(), any())).thenReturn(HtmlFormat.empty)
     when(service.submitClaim(any())(any(), any())).thenReturn(
       Future.successful(CreateClaimResponse("id", None, Some(CreateClaimResult(claimRef, Seq.empty))))
     )

@@ -18,22 +18,23 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.makeclaim
 
 import org.jsoup.nodes.Document
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, UnitViewSpec}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.CheckYourAnswersErrorView
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.BankDetailsPage
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.CheckYourAnswersWithMissingView
 
-class CheckYourAnswersErrorViewSpec extends UnitViewSpec with TestData {
+class CheckYourAnswersWithMissingViewSpec extends UnitViewSpec with TestData {
 
-  private val page = instanceOf[CheckYourAnswersErrorView]
+  private val page = instanceOf[CheckYourAnswersWithMissingView]
 
-  private def view(): Document = page(completeAnswers, navigatorBack)
+  private def view(): Document = page(completeAnswers, BankDetailsPage, navigatorBack)
 
-  "CheckYourAnswersErrorView" should {
+  "CheckYourAnswersWithMissingView" should {
 
     "have correct title" in {
-      view().title() must startWith(s"Error: ${messages("check_answers.missing.title")}")
+      view().title() must startWith(messages("check_answers.title"))
     }
 
     "have correct heading" in {
-      view().getElementsByTag("h1") must containMessage("check_answers.missing.title")
+      view().getElementsByTag("h1") must containMessage("check_answers.title")
     }
 
     "have back link" in {

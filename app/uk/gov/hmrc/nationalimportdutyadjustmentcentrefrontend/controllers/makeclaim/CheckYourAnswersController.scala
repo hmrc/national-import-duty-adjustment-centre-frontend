@@ -28,8 +28,8 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.{Create
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{CheckYourAnswersPage, Page}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.{CacheDataService, ClaimService}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.{
-  CheckYourAnswersErrorView,
-  CheckYourAnswersView
+  CheckYourAnswersView,
+  CheckYourAnswersWithMissingView
 }
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
@@ -43,7 +43,7 @@ class CheckYourAnswersController @Inject() (
   service: ClaimService,
   val navigator: CreateNavigator,
   checkYourAnswersView: CheckYourAnswersView,
-  errorView: CheckYourAnswersErrorView
+  errorView: CheckYourAnswersWithMissingView
 )(implicit ec: ExecutionContext)
     extends FrontendController(mcc) with I18nSupport with Navigation[CreateAnswers] {
 
@@ -57,7 +57,7 @@ class CheckYourAnswersController @Inject() (
           Ok(checkYourAnswersView(claim, backLink(updatedAnswers)))
         }
       } catch {
-        case _: MissingAnswersException => handleMissingAnswers(answers)
+        case ex: MissingAnswersException => handleMissingAnswers(answers, ex.answerPage)
       }
     }
   }
@@ -86,15 +86,17 @@ class CheckYourAnswersController @Inject() (
             }
         }
       } catch {
-        case _: MissingAnswersException => handleMissingAnswers(answers)
+        case ex: MissingAnswersException => handleMissingAnswers(answers, ex.answerPage)
       }
     }
   }
 
-  private def handleMissingAnswers(answers: CreateAnswers)(implicit request: IdentifierRequest[_]) =
+  private def handleMissingAnswers(answers: CreateAnswers, missingAnswer: Page)(implicit
+    request: IdentifierRequest[_]
+  ) =
     data.updateCreateAnswers(answers => answers.copy(changePage = Some(CreatePageNames.checkYourAnswers))) map {
       updatedAnswers =>
-        BadRequest(errorView(answers, backLink(updatedAnswers)))
+        BadRequest(errorView(answers, missingAnswer, backLink(updatedAnswers)))
     }
 
 }
