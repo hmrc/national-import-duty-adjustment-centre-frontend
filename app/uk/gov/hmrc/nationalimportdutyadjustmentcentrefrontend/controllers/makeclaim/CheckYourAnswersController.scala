@@ -23,7 +23,8 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.Naviga
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.IdentifierAction
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{Claim, CreateAnswers}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.exceptions.MissingAnswersException
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.CreateNavigator
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.requests.IdentifierRequest
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.{CreateNavigator, CreatePageNames}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{CheckYourAnswersPage, Page}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.{CacheDataService, ClaimService}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.{
@@ -32,7 +33,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makecla
 }
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 @Singleton
 class CheckYourAnswersController @Inject() (
@@ -56,8 +57,7 @@ class CheckYourAnswersController @Inject() (
           Ok(checkYourAnswersView(claim, backLink(updatedAnswers)))
         }
       } catch {
-        case _: MissingAnswersException =>
-          Future(BadRequest(errorView(answers, backLink(answers))))
+        case _: MissingAnswersException => handleMissingAnswers(answers)
       }
     }
   }
@@ -86,10 +86,15 @@ class CheckYourAnswersController @Inject() (
             }
         }
       } catch {
-        case _: MissingAnswersException =>
-          Future(BadRequest(errorView(answers, backLink(answers))))
+        case _: MissingAnswersException => handleMissingAnswers(answers)
       }
     }
   }
+
+  private def handleMissingAnswers(answers: CreateAnswers)(implicit request: IdentifierRequest[_]) =
+    data.updateCreateAnswers(answers => answers.copy(changePage = Some(CreatePageNames.checkYourAnswers))) map {
+      updatedAnswers =>
+        BadRequest(errorView(answers, backLink(updatedAnswers)))
+    }
 
 }

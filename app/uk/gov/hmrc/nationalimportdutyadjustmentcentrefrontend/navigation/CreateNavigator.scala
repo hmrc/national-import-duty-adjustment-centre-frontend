@@ -113,6 +113,7 @@ class CreateNavigator @Inject() ()
       case CreatePageNames.importerDetails    => Some(ImporterContactDetailsPage)
       case CreatePageNames.repayTo            => Some(RepayToPage)
       case CreatePageNames.bankDetails        => Some(BankDetailsPage)
+      case CreatePageNames.checkYourAnswers   => Some(CheckYourAnswersPage)
       case _                                  => None
     }
   }
@@ -137,6 +138,7 @@ object CreatePageNames {
   val importerDetails    = "importer-details"
   val repayTo            = "repay-to"
   val bankDetails        = "bank-details"
+  val checkYourAnswers   = "check-answers"
 }
 
 protected trait CreateAnswerConditions {
