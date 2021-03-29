@@ -18,14 +18,13 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.makeclaim
 
 import org.jsoup.nodes.Document
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, UnitViewSpec}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.BankDetailsPage
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.CheckYourAnswersWithMissingView
 
 class CheckYourAnswersWithMissingViewSpec extends UnitViewSpec with TestData {
 
   private val page = instanceOf[CheckYourAnswersWithMissingView]
 
-  private def view(): Document = page(completeAnswers, BankDetailsPage, navigatorBack)
+  private def view(): Document = page(completeAnswers, navigatorBack)
 
   "CheckYourAnswersWithMissingView" should {
 

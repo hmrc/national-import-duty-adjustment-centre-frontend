@@ -22,7 +22,6 @@ import play.api.mvc._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.Navigation
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.IdentifierAction
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{Claim, CreateAnswers}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.exceptions.MissingAnswersException
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.requests.IdentifierRequest
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.{CreateNavigator, CreatePageNames}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{CheckYourAnswersPage, Page}
@@ -34,6 +33,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makecla
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import scala.concurrent.ExecutionContext
+import scala.util.Try
 
 @Singleton
 class CheckYourAnswersController @Inject() (
@@ -51,14 +51,14 @@ class CheckYourAnswersController @Inject() (
 
   def onPageLoad(): Action[AnyContent] = identify.async { implicit request =>
     data.getCreateAnswers flatMap { answers =>
-      try {
-        val claim = Claim(request.eoriNumber, answers)
-        data.updateCreateAnswers(answers => answers.copy(changePage = None)) map { updatedAnswers =>
-          Ok(checkYourAnswersView(claim, backLink(updatedAnswers)))
+      Try(Claim(request.eoriNumber, answers)) fold (
+        error => handleMissingAnswers(answers),
+        claim => {
+          data.updateCreateAnswers(answers => answers.copy(changePage = None)) map { updatedAnswers =>
+            Ok(checkYourAnswersView(answers, backLink(updatedAnswers)))
+          }
         }
-      } catch {
-        case ex: MissingAnswersException => handleMissingAnswers(answers, ex.answerPage)
-      }
+      )
     }
   }
 
@@ -76,27 +76,24 @@ class CheckYourAnswersController @Inject() (
 
   def onSubmit(): Action[AnyContent] = identify.async { implicit request =>
     data.getCreateAnswers flatMap { answers =>
-      try {
-        val claim = Claim(request.eoriNumber, answers)
-        service.submitClaim(claim) flatMap {
-          case response if response.error.isDefined => throw new Exception(s"Error - ${response.error}")
-          case response =>
-            data.storeCreateResponse(response) map {
-              _ => Redirect(nextPage(answers))
-            }
-        }
-      } catch {
-        case ex: MissingAnswersException => handleMissingAnswers(answers, ex.answerPage)
-      }
+      Try(Claim(request.eoriNumber, answers)) fold (
+        error => handleMissingAnswers(answers),
+        claim =>
+          service.submitClaim(claim) flatMap {
+            case response if response.error.isDefined => throw new Exception(s"Error - ${response.error}")
+            case response =>
+              data.storeCreateResponse(response) map {
+                _ => Redirect(nextPage(answers))
+              }
+          }
+      )
     }
   }
 
-  private def handleMissingAnswers(answers: CreateAnswers, missingAnswer: Page)(implicit
-    request: IdentifierRequest[_]
-  ) =
+  private def handleMissingAnswers(answers: CreateAnswers)(implicit request: IdentifierRequest[_]) =
     data.updateCreateAnswers(answers => answers.copy(changePage = Some(CreatePageNames.checkYourAnswers))) map {
       updatedAnswers =>
-        BadRequest(errorView(answers, missingAnswer, backLink(updatedAnswers)))
+        BadRequest(errorView(answers, backLink(updatedAnswers)))
     }
 
 }
