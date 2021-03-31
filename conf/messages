@@ -328,8 +328,7 @@ confirmation.summary.view = View a summary of your claim and reference number (o
 create.claim.summary.title = Your application details
 create.claim.summary.section.heading = Application
 create.claim.summary.reference = Case reference
-create.claim.summary.date = Date
-create.claim.summary.time = Time
+create.claim.summary.datetime = Submitted
 
 amend.case.reference.title = What is your claim reference number?
 amend.case.reference.hint = This is the 22-character reference number issued when you submitted your claim.  For example, NID21134557697RM8WIB13.

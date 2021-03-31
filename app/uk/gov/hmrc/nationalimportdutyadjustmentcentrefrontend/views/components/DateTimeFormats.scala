@@ -17,9 +17,16 @@
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components
 
 import java.time.format.DateTimeFormatter
+import java.time.temporal.TemporalAccessor
 
 object DateTimeFormats {
 
-  val claimSubmissionDate = DateTimeFormatter.ofPattern("d MMMM yyyy")
-  val claimSubmissionTime = DateTimeFormatter.ofPattern("HH:mm:ss")
+  val claimSubmissionDateTime = DateTimeFormatter.ofPattern("d MMMM uuu 'at' h:mma")
+
+  def formatSubmissionDateAtTime(temporal: TemporalAccessor): String =
+    claimSubmissionDateTime
+      .format(temporal)
+      .replace("AM", "am")
+      .replace("PM", "pm")
+
 }

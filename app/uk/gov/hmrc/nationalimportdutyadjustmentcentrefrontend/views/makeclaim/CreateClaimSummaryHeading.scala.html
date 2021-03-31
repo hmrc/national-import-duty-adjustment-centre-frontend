@@ -43,22 +43,12 @@
             actions = None
         )),
         Some(SummaryListRow(
-            classes = "submitted_date",
+            classes = "submitted_datetime",
             key = Key(
-                content = Text(messages("create.claim.summary.date"))
+                content = Text(messages("create.claim.summary.datetime"))
             ),
             value = Value(
-                content = Text(DateTimeFormats.claimSubmissionDate.format(claimReceipt.timestamp))
-            ),
-            actions = None
-        )),
-        Some(SummaryListRow(
-            classes = "submitted_time",
-            key = Key(
-                content = Text(messages("create.claim.summary.time"))
-            ),
-            value = Value(
-                content = Text(DateTimeFormats.claimSubmissionTime.format(claimReceipt.timestamp))
+                content = Text(DateTimeFormats.formatSubmissionDateAtTime(claimReceipt.timestamp))
             ),
             actions = None
         ))
