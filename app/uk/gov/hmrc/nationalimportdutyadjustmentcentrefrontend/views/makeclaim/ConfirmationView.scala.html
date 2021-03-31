@@ -36,7 +36,7 @@
 
 @layout(pageTitle = InformationTitle(messages("confirmation.title")), NavigatorBack(None)) {
 
-  <div class="nidac-print-hidden">
+  <div class="govuk-!-display-none-print">
     @govukPanel(Panel(
         title = Text(messages("confirmation.title")),
         content = HtmlContent(messages("confirmation.reference", receipt.caseReference))
@@ -56,7 +56,7 @@
   </div>
 
 
-  <div class="nidac-print-content">
+  <div class="nidac-!-display-only-print">
       @summaryContent
   </div>
 
