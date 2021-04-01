@@ -1,6 +1,6 @@
 /*
 ====================================
-CSS to support print media.  Hides all links (including sign-out link on the header), removes the footer section
+CSS to support print media.  Hides sign-out link on the header, removes the footer section
 from the view and the page (url/page number, etc.)
 
 .nidac-!-display-only-print - is used to hide content except when printing
@@ -12,7 +12,7 @@ from the view and the page (url/page number, etc.)
 @media print {
   @page { margin: 10px }
   .govuk-section-break { page-break-inside : avoid }
-  .govuk-link { display: none; }
+  .hmrc-sign-out-nav__link { display: none; }
   .nidac-\21-display-only-print{ display: contents}
   footer { display: none; }
   @-moz-document url-prefix() {

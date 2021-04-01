@@ -26,7 +26,7 @@ object ActionItemBuilder {
       href = href,
       content = content,
       visuallyHiddenText = visuallyHiddenText,
-      classes = "govuk-link--no-visited-state"
+      classes = "govuk-link--no-visited-state govuk-!-display-none-print"
     )
 
 }
