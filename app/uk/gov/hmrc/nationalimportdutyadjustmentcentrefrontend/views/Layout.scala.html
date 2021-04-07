@@ -56,14 +56,13 @@
 }
 
 @signOutHref = @{
-    if(logout) {
-        if(request.isInstanceOf[IdentifierRequest[_]])
-            Some(SignOutController.signOut().url)
-        else
-            Some(appConfig.signOutUrl)
+    (logout, request.isInstanceOf[IdentifierRequest[_]]) match {
+        case (true, true) => Some(SignOutController.signOut().url)
+        case (true, false) => Some(appConfig.signOutUrl)
+        case (false,_) => None
     }
-    else None
 }
+
 @headerBlock = {
     @hmrcHeader(
         Header(
