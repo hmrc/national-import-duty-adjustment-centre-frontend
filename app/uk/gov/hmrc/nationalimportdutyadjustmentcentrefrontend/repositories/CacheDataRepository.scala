@@ -18,8 +18,8 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories
 
 import java.time.LocalDateTime
 import java.util.concurrent.TimeUnit
-
 import com.mongodb.client.model.Indexes.ascending
+
 import javax.inject.Inject
 import org.mongodb.scala.model.Filters.equal
 import org.mongodb.scala.model.Updates.set
@@ -28,6 +28,7 @@ import uk.gov.hmrc.mongo.MongoComponent
 import uk.gov.hmrc.mongo.play.json.{Codecs, PlayMongoRepository}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.CacheData
+import uk.gov.hmrc.play.http.logging.Mdc
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -46,16 +47,21 @@ class CacheDataRepository @Inject() (mongoComponent: MongoComponent, config: App
       replaceIndexes = config.mongoReplaceIndexes
     ) {
 
-  def get(id: String): Future[Option[CacheData]] =
+  def get(id: String): Future[Option[CacheData]] = Mdc.preservingMdc {
     collection.findOneAndUpdate(filter(id), set("lastUpdated", LocalDateTime.now())).toFutureOption()
+  }
 
-  def insert(data: CacheData): Future[Unit] =
+  def insert(data: CacheData): Future[Unit] = Mdc.preservingMdc {
     collection.insertOne(data).toFuture().map(_ => Unit)
+  }
 
-  def update(data: CacheData): Future[Option[CacheData]] =
+  def update(data: CacheData): Future[Option[CacheData]] = Mdc.preservingMdc {
     collection.findOneAndReplace(filter(data.id), data.copy(lastUpdated = LocalDateTime.now)).toFutureOption()
+  }
 
-  def delete(id: String): Future[Unit] = collection.deleteOne(filter(id)).toFuture().map(_ => Unit)
+  def delete(id: String): Future[Unit] = Mdc.preservingMdc {
+    collection.deleteOne(filter(id)).toFuture().map(_ => Unit)
+  }
 
   private def filter(id: String) =
     equal("id", Codecs.toBson(id))
