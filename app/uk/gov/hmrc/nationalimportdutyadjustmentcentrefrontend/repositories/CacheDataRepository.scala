@@ -18,8 +18,8 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories
 
 import java.time.Instant
 import java.util.concurrent.TimeUnit
-import com.mongodb.client.model.Indexes.ascending
 
+import com.mongodb.client.model.Indexes.ascending
 import javax.inject.Inject
 import org.mongodb.scala.model.Filters.equal
 import org.mongodb.scala.model.Updates.set
@@ -33,8 +33,9 @@ import uk.gov.hmrc.play.http.logging.Mdc
 import scala.concurrent.{ExecutionContext, Future}
 
 /**
- * Note that mongo calls are wrapped in Mdc.preservingMdc - this is to ensure that logging context (e.g. x-request-id,
- * x-session-id, etc) remains intact in any code that executes after the asynchronous completion of the Mongo queries
+ * Note that mongo calls are wrapped in Mdc.preservingMdc
+ * This is to ensure that logging context (e.g. x-request-id, x-session-id, etc) remains
+ * intact in any code that executes after the asynchronous completion of the Mongo queries
  */
 class CacheDataRepository @Inject() (mongoComponent: MongoComponent, config: AppConfig)(implicit ec: ExecutionContext)
     extends PlayMongoRepository[CacheData](
