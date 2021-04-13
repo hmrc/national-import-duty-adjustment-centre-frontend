@@ -82,6 +82,10 @@ object UploadDetails {
   val format: Format[UploadDetails] = Json.format[UploadDetails]
 }
 
+/**
+ * Note that mongo calls are wrapped in Mdc.preservingMdc - this is to ensure that logging context (e.g. x-request-id,
+ * x-session-id, etc) remains intact in any code that executes after the asynchronous completion of the Mongo queries
+ */
 class UploadRepository @Inject() (mongoComponent: MongoComponent, config: AppConfig)(implicit ec: ExecutionContext)
     extends PlayMongoRepository[UploadDetails](
       collectionName = "upload-data",
