@@ -1,4 +1,4 @@
-/*
+@*
  * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,23 +12,23 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *@
 
-package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html._
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ClaimType
 
-import java.time.format.DateTimeFormatter
-import java.time.{Instant, ZoneId, ZoneOffset}
+@this(govukDetails : GovukDetails)
 
-object DateTimeFormats {
+@(claimType: Option[ClaimType])(implicit messages: Messages)
 
-  val ukZone: ZoneId = ZoneId.of("Europe/London")
+@detailContent ={
+  @components.uploadDocumentTypes(claimType)
 
-  val claimSubmissionDateTime = DateTimeFormatter.ofPattern("d MMMM uuu 'at' h:mma").withZone(ukZone)
-
-  def formatSubmissionDateAtTime(instant: Instant): String =
-    claimSubmissionDateTime
-      .format(instant)
-      .replace("AM", "am")
-      .replace("PM", "pm")
-
+  @components.paragraph(messages("upload_documents.body.files.details.filetypes"))
+  @components.uploadFileTypes()
 }
+
+@govukDetails(Details(
+ summary = Text(messages("upload_documents.body.files.details.heading")),
+ content = HtmlContent(detailContent)
+))

@@ -1,4 +1,4 @@
-/*
+@*
  * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,23 +12,12 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *@
 
-package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components
+@this()
 
-import java.time.format.DateTimeFormatter
-import java.time.{Instant, ZoneId, ZoneOffset}
+@(call: Call, messageKey: String = "site.continue")(implicit messages: Messages)
 
-object DateTimeFormats {
-
-  val ukZone: ZoneId = ZoneId.of("Europe/London")
-
-  val claimSubmissionDateTime = DateTimeFormatter.ofPattern("d MMMM uuu 'at' h:mma").withZone(ukZone)
-
-  def formatSubmissionDateAtTime(instant: Instant): String =
-    claimSubmissionDateTime
-      .format(instant)
-      .replace("AM", "am")
-      .replace("PM", "pm")
-
-}
+<a id="nidac-continue" href="@call.url" role="button" draggable="false" class="govuk-button" data-module="govuk-button">
+ @messages(messageKey)
+</a>

@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories
 
-import java.time.LocalDateTime
+import java.time.Instant
 import java.util.concurrent.TimeUnit
 import com.mongodb.client.model.Indexes.ascending
 
@@ -52,7 +52,7 @@ class CacheDataRepository @Inject() (mongoComponent: MongoComponent, config: App
     ) {
 
   def get(id: String): Future[Option[CacheData]] = Mdc.preservingMdc {
-    collection.findOneAndUpdate(filter(id), set("lastUpdated", LocalDateTime.now())).toFutureOption()
+    collection.findOneAndUpdate(filter(id), set("lastUpdated", Instant.now())).toFutureOption()
   }
 
   def insert(data: CacheData): Future[Unit] = Mdc.preservingMdc {
@@ -60,7 +60,7 @@ class CacheDataRepository @Inject() (mongoComponent: MongoComponent, config: App
   }
 
   def update(data: CacheData): Future[Option[CacheData]] = Mdc.preservingMdc {
-    collection.findOneAndReplace(filter(data.id), data.copy(lastUpdated = LocalDateTime.now)).toFutureOption()
+    collection.findOneAndReplace(filter(data.id), data.copy(lastUpdated = Instant.now())).toFutureOption()
   }
 
   def delete(id: String): Future[Unit] = Mdc.preservingMdc {

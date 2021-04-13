@@ -112,7 +112,7 @@ class UploadFormControllerSpec extends ControllerSpec with TestData {
         val result = controller.onPageLoad()(fakeGetRequest)
         status(result) mustBe OK
 
-        theFormViewBackLink mustBe NavigatorBack(Some(routes.ReturnAmountSummaryController.onPageLoad()))
+        theFormViewBackLink mustBe NavigatorBack(Some(routes.RequiredDocumentsController.onPageLoad()))
       }
 
       "user has uploaded some files" in {
@@ -120,7 +120,7 @@ class UploadFormControllerSpec extends ControllerSpec with TestData {
         val result = controller.onPageLoad()(fakeGetRequest)
         status(result) mustBe OK
 
-        theFormViewBackLink mustBe NavigatorBack(Some(routes.ReturnAmountSummaryController.onPageLoad()))
+        theFormViewBackLink mustBe NavigatorBack(Some(routes.RequiredDocumentsController.onPageLoad()))
       }
     }
 
@@ -176,7 +176,7 @@ class UploadFormControllerSpec extends ControllerSpec with TestData {
         val result = controller.onProgress(uploadId)(fakeGetRequest)
         status(result) mustBe OK
 
-        theProgressViewBackLink mustBe NavigatorBack(Some(routes.ReturnAmountSummaryController.onPageLoad()))
+        theProgressViewBackLink mustBe NavigatorBack(Some(routes.RequiredDocumentsController.onPageLoad()))
       }
 
       "user has uploaded some files" in {
@@ -185,7 +185,7 @@ class UploadFormControllerSpec extends ControllerSpec with TestData {
         val result = controller.onProgress(uploadId)(fakeGetRequest)
         status(result) mustBe OK
 
-        theProgressViewBackLink mustBe NavigatorBack(Some(routes.ReturnAmountSummaryController.onPageLoad()))
+        theProgressViewBackLink mustBe NavigatorBack(Some(routes.RequiredDocumentsController.onPageLoad()))
       }
     }
 
@@ -201,9 +201,16 @@ class UploadFormControllerSpec extends ControllerSpec with TestData {
       verify(mockUploadRepository).add(any())
     }
 
-    "redirect to 'continue' if error is missing file and a file has been uploaded" in {
+    "redirect to 'continue' if error is InvalidArgumemt and a file has been uploaded" in {
       withCacheCreateAnswers(completeAnswers)
       val result = controller.onError("InvalidArgument")(fakeGetRequest)
+      status(result) mustBe SEE_OTHER
+      redirectLocation(result) mustBe Some(routes.UploadFormController.onContinue().url)
+    }
+
+    "redirect to 'continue' if error is FileTooSmall and a file has been uploaded" in {
+      withCacheCreateAnswers(completeAnswers)
+      val result = controller.onError("EntityTooSmall")(fakeGetRequest)
       status(result) mustBe SEE_OTHER
       redirectLocation(result) mustBe Some(routes.UploadFormController.onContinue().url)
     }
