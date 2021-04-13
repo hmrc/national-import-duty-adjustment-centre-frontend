@@ -18,8 +18,8 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories
 
 import java.time.LocalDateTime
 import java.util.concurrent.TimeUnit
-
 import com.mongodb.client.model.Indexes.ascending
+
 import javax.inject.Inject
 import org.mongodb.scala.model.Filters.{and, equal}
 import org.mongodb.scala.model.Updates.set
@@ -33,6 +33,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.Referen
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{JourneyId, UploadId}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.UploadDetails._
+import uk.gov.hmrc.play.http.logging.Mdc
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -49,7 +50,7 @@ object UploadDetails {
   val uploadedSuccessfullyFormat: OFormat[UploadedFile] = Json.format[UploadedFile]
   val uploadedFailedFormat: OFormat[Failed]             = Json.format[Failed]
 
-  implicit private val formatCreated = MongoJavatimeFormats.localDateTimeFormat
+  implicit private val formatCreated: Format[LocalDateTime] = MongoJavatimeFormats.localDateTimeFormat
 
   val read: Reads[UploadStatus] = (json: JsValue) => {
     val jsObject = json.asInstanceOf[JsObject]
@@ -97,18 +98,22 @@ class UploadRepository @Inject() (mongoComponent: MongoComponent, config: AppCon
       replaceIndexes = config.mongoReplaceIndexes
     ) {
 
-  def add(uploadDetails: UploadDetails): Future[Boolean] =
+  def add(uploadDetails: UploadDetails): Future[Boolean] = Mdc.preservingMdc {
     collection.insertOne(uploadDetails).toFutureOption().map(_ => true)
+  }
 
-  def findUploadDetails(uploadId: UploadId, journeyId: JourneyId): Future[Option[UploadDetails]] =
+  def findUploadDetails(uploadId: UploadId, journeyId: JourneyId): Future[Option[UploadDetails]] = Mdc.preservingMdc {
     collection.find(
       and(equal("uploadId", Codecs.toBson(uploadId)), equal("journeyId", Codecs.toBson(journeyId)))
     ).toFuture().map(_.headOption)
+  }
 
   def updateStatus(reference: Reference, journeyId: JourneyId, newStatus: UploadStatus): Future[UploadStatus] =
-    collection.findOneAndUpdate(
-      and(equal("reference", Codecs.toBson(reference)), equal("journeyId", Codecs.toBson(journeyId))),
-      set("status", Codecs.toBson(newStatus))
-    ).toFuture() map (details => details.status)
+    Mdc.preservingMdc {
+      collection.findOneAndUpdate(
+        and(equal("reference", Codecs.toBson(reference)), equal("journeyId", Codecs.toBson(journeyId))),
+        set("status", Codecs.toBson(newStatus))
+      ).toFuture() map (details => details.status)
+    }
 
 }
