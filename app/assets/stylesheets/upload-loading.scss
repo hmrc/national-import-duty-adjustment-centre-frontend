@@ -3,7 +3,7 @@
   display: inline-block;
   width: 16px;
   height: 16px;
-  margin-left: 10px;
+  margin-left: 30%;
   border: 12px solid #DEE0E2;
   border-radius: 50%;
   border-top-color: #005EA5;
@@ -33,4 +33,8 @@
 
 .nidac-display-only-non-javascript {
   display: none;
+}
+
+.nidac-upload-filename {
+  width: 80%;
 }
