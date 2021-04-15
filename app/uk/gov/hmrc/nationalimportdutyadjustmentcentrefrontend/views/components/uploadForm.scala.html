@@ -41,15 +41,6 @@
     )
 ))
 
-<script>
-    function onFileSelect() {
-        document.getElementsByClassName("hidden-spinner-row").item(0).className = "govuk-summary-list__row";
-        document.getElementById("upload-form").className = "govuk-!-display-none";
-        document.getElementById("nidac-continue").disabled = true;
-        document.getElementById("upload-form").submit();
-    }
-</script>
-
 <form id="upload-form" action="@upscanInitiateResponse.postTarget" method="post" enctype="multipart/form-data">
 
     @for(field <- upscanInitiateResponse.formFields) {
