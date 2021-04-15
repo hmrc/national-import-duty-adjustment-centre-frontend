@@ -81,7 +81,7 @@ class AppConfig @Inject() (
   private val allowListEnabled = config.get[Boolean]("eori.allowList.enabled")
   private val allowedEoris     = config.get[Seq[String]]("eori.allowList.eoris")
 
-  val insufficientEnrolmentsUrl: String = config.getOptional[String]("eori.subscriptionJourney")
+  lazy val insufficientEnrolmentsUrl: String = config.getOptional[String]("eori.subscriptionJourney")
     .getOrElse(routes.UnauthorisedController.onPageLoad().url)
 
   def allowEori(eoriNumber: String): Boolean = !allowListEnabled || allowedEoris.contains(eoriNumber)
