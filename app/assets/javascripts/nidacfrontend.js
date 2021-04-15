@@ -14,8 +14,8 @@ if (window.history && window.history.replaceState && typeof window.history.repla
 function onFileSelect() {
   try{
     // NF-403 - hide the form controls, display the spinner and disable the 'Continue' button before submitting
-    document.getElementById("upload-form").className = "govuk-!-display-none";
-    document.getElementsByClassName("hidden-spinner-row").item(0).className = "govuk-summary-list__row";
+    document.getElementById("upload-form").classList.add("govuk-!-display-none");
+    document.querySelector(".hidden-spinner-row").classList.remove("govuk-!-display-none");
     document.getElementById("nidac-continue").disabled = true;
   }
   finally {
