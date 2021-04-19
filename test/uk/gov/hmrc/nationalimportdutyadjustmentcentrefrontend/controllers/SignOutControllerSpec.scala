@@ -41,7 +41,7 @@ class SignOutControllerSpec extends ControllerSpec {
       val result = controller(fakeAuthorisedIdentifierAction).signOut(fakeGetRequest)
 
       status(result) mustBe Status.SEE_OTHER
-      redirectLocation(result) mustBe Some(appConfig.signOutUrl)
+      redirectLocation(result) mustBe Some(appConfig.feedbackUrl)
       verify(dataRepository).delete(any())
     }
 
@@ -49,6 +49,22 @@ class SignOutControllerSpec extends ControllerSpec {
       val result = controller(fakeUnauthorisedIdentifierAction).signOut(fakeGetRequest)
       status(result) mustBe Status.SEE_OTHER
       redirectLocation(result) mustBe Some(routes.UnauthorisedController.onPageLoad().url)
+    }
+  }
+
+  "GET /feed-back" should {
+
+    "redirect when user is authorised" in {
+      val result = controller(fakeAuthorisedIdentifierAction).feedBack(fakeGetRequest)
+
+      status(result) mustBe Status.SEE_OTHER
+      redirectLocation(result) mustBe Some(appConfig.feedbackUrl)
+    }
+
+    "redirect when user is unauthorised" in {
+      val result = controller(fakeUnauthorisedIdentifierAction).feedBack(fakeGetRequest)
+      status(result) mustBe Status.SEE_OTHER
+      redirectLocation(result) mustBe Some(appConfig.feedbackUrl)
     }
   }
 

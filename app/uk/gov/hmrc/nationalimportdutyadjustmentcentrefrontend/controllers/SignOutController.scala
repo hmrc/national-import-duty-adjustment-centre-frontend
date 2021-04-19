@@ -37,8 +37,12 @@ class SignOutController @Inject() (
 
   val signOut: Action[AnyContent] = identify.async { implicit request =>
     cacheData.delete(request.identifier) map { _ =>
-      Redirect(appConfig.signOutUrl)
+      Redirect(appConfig.feedbackUrl).withNewSession
     }
+  }
+
+  val feedBack: Action[AnyContent] = Action { implicit request =>
+    Redirect(appConfig.feedbackUrl).withNewSession
   }
 
 }

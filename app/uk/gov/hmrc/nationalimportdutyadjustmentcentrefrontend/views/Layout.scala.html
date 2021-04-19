@@ -55,7 +55,7 @@
 @signOutHref = @{
     (logout, request.isInstanceOf[IdentifierRequest[_]]) match {
         case (true, true) => Some(SignOutController.signOut().url)
-        case (true, false) => Some(appConfig.signOutUrl)
+        case (true, false) => Some(SignOutController.feedBack().url)
         case (false,_) => None
     }
 }

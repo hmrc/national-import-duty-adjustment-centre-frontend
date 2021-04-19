@@ -40,7 +40,7 @@ class ServiceUnavailablePageViewSpec extends UnitViewSpec {
     }
 
     "have sign out link" in {
-      view.getElementsByClass("hmrc-sign-out-nav__link").attr("href") mustBe appConfig.signOutUrl
+      view.getElementsByClass("hmrc-sign-out-nav__link").attr("href") mustBe routes.SignOutController.feedBack().url
     }
 
   }
