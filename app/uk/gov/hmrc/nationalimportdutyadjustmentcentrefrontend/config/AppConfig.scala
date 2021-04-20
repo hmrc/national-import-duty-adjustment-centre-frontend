@@ -19,6 +19,7 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config
 import javax.inject.{Inject, Singleton}
 import play.api.Configuration
 import play.api.i18n.Lang
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.play.bootstrap.frontend.filters.SessionTimeoutFilterConfig
 
@@ -63,6 +64,16 @@ class AppConfig @Inject() (
   val upscanInitiateV2Url: String = servicesConfig.baseUrl("upscan-initiate") + "/upscan/v2/initiate"
 
   private val barsBaseUrl: String = servicesConfig.baseUrl("bank-account-reputation")
+
+  private val addressLookupBaseUrl: String = servicesConfig.baseUrl("address-lookup")
+  val addressLookupInitUrl: String         = s"$addressLookupBaseUrl${servicesConfig("address-lookup.init")}"
+  val addressLookupConfirmedUrl: String    = s"$addressLookupBaseUrl${servicesConfig("address-lookup.confirmed")}"
+
+  val yourAddressLookupCallbackUrl: String =
+    loginContinueUrl + "/create" + controllers.makeclaim.routes.AddressController.onUpdate("").url
+
+  val importerAddressLookupCallbackUrl: String =
+    loginContinueUrl + "/create" + controllers.makeclaim.routes.ImporterDetailsController.onUpdate("").url
 
   val barsBusinessAssessUrl: String =
     s"$barsBaseUrl${servicesConfig("bank-account-reputation.businessAssess")}"

@@ -30,7 +30,7 @@ class ImporterDetailsFormProviderSpec extends StringFieldBehaviours {
     val fieldName   = "addressLine1"
     val requiredKey = "address.line1.error.required"
     val lengthKey   = "address.line1.error.length"
-    val maxLength   = 100
+    val maxLength   = 256
 
     behave like fieldThatBindsValidData(form, fieldName, safeInputsWithMaxLength(maxLength))
 
@@ -48,7 +48,25 @@ class ImporterDetailsFormProviderSpec extends StringFieldBehaviours {
 
     val fieldName = "addressLine2"
     val lengthKey = "address.line2.error.length"
-    val maxLength = 50
+    val maxLength = 256
+
+    behave like fieldThatBindsValidData(form, fieldName, safeInputsWithMaxLength(maxLength))
+
+    behave like fieldWithMaxLength(
+      form,
+      fieldName,
+      maxLength = maxLength,
+      lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
+    )
+
+    behave like optionalField(form, fieldName)
+  }
+
+  ".AddressLine3" must {
+
+    val fieldName = "addressLine3"
+    val lengthKey = "address.line3.error.length"
+    val maxLength = 256
 
     behave like fieldThatBindsValidData(form, fieldName, safeInputsWithMaxLength(maxLength))
 
@@ -67,7 +85,7 @@ class ImporterDetailsFormProviderSpec extends StringFieldBehaviours {
     val fieldName   = "city"
     val requiredKey = "address.city.error.required"
     val lengthKey   = "address.city.error.length"
-    val maxLength   = 50
+    val maxLength   = 256
 
     behave like fieldThatBindsValidData(form, fieldName, safeInputsWithMaxLength(maxLength))
 
@@ -84,7 +102,6 @@ class ImporterDetailsFormProviderSpec extends StringFieldBehaviours {
   ".Postcode" must {
 
     val fieldName   = "postcode"
-    val requiredKey = "address.postcode.error.required"
     val lengthKey   = "address.postcode.error.length"
     val invalidKey  = "address.postcode.error.invalid"
 
@@ -98,17 +115,11 @@ class ImporterDetailsFormProviderSpec extends StringFieldBehaviours {
 
     behave like fieldThatBindsValidData(form, fieldName, validPostCodeGen)
 
-    behave like mandatoryField(form, fieldName, requiredError = FormError(fieldName, requiredKey))
+    behave like optionalField(form, fieldName)
 
     "not bind strings with invalid characters" in {
       val result        = form.bind(Map(fieldName -> "P!24KF")).apply(fieldName)
       val expectedError = FormError(fieldName, invalidKey, Seq(Validation.postcodePattern))
-      result.errors mustEqual Seq(expectedError)
-    }
-
-    "not bind empty string" in {
-      val result        = form.bind(Map(fieldName -> "       ")).apply(fieldName)
-      val expectedError = FormError(fieldName, lengthKey)
       result.errors mustEqual Seq(expectedError)
     }
 

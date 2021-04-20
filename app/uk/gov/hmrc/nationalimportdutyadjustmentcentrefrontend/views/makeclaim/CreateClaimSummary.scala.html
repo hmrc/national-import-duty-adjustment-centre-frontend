@@ -263,8 +263,9 @@
                 content = HtmlContent(answers.claimantAddress.map(claimantAddress => Seq(
                     Some(claimantAddress.addressLine1),
                     claimantAddress.addressLine2,
+                    claimantAddress.addressLine3,
                     Some(claimantAddress.city),
-                    Some(claimantAddress.postCode)
+                    claimantAddress.postCode
                 ).flatten.map(HtmlFormat.escape(_)).mkString("<br>")).getOrElse(""))
             ),
             actions = if(!withActions) None else  Some(Actions(
@@ -408,8 +409,9 @@
                         content = HtmlContent(answers.importerContactDetails.map( contactDetails => Seq(
                             Some(contactDetails.addressLine1),
                             contactDetails.addressLine2,
+                            contactDetails.addressLine3,
                             Some(contactDetails.city),
-                            Some(contactDetails.postCode)
+                            contactDetails.postCode
                         ).flatten.map(HtmlFormat.escape(_)).mkString("<br>")).getOrElse(""))
                     ),
                     actions = if(!withActions) None else  Some(Actions(

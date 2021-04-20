@@ -54,6 +54,10 @@ class ImporterDetailsViewSpec extends UnitViewSpec with TestData {
       view().getElementsByAttributeValue("for", "addressLine2").text() must include(messages("address.line2.hidden"))
     }
 
+    "have label for addresss line 3" in {
+      view().getElementsByAttributeValue("for", "addressLine3").text() must include(messages("address.line3.hidden"))
+    }
+
     "have label for town or city" in {
       view().getElementsByAttributeValue("for", "city") must containMessage("address.city.heading")
     }
@@ -75,8 +79,9 @@ class ImporterDetailsViewSpec extends UnitViewSpec with TestData {
 
       filledView.getElementById("addressLine1") must haveValue(importerContactDetailsAnswer.addressLine1)
       filledView.getElementById("addressLine2") must haveValue(importerContactDetailsAnswer.addressLine2.getOrElse(""))
+      filledView.getElementById("addressLine3") must haveValue(importerContactDetailsAnswer.addressLine3.getOrElse(""))
       filledView.getElementById("city") must haveValue(importerContactDetailsAnswer.city)
-      filledView.getElementById("postcode") must haveValue(importerContactDetailsAnswer.postCode)
+      filledView.getElementById("postcode") must haveValue(importerContactDetailsAnswer.postCode.getOrElse(""))
     }
 
     "display error" when {
@@ -90,12 +95,6 @@ class ImporterDetailsViewSpec extends UnitViewSpec with TestData {
       "city missing" in {
         missingView must haveFieldError("city", "address.city.error.required")
       }
-
-      "postcode" in {
-        missingView must haveFieldError("postcode", "address.postcode.error.required")
-      }
-
     }
-
   }
 }

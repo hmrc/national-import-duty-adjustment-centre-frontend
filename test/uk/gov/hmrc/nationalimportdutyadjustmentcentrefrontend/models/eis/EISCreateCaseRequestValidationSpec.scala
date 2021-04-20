@@ -48,7 +48,7 @@ class EISCreateCaseRequestValidationSpec extends UnitSpec with JsonSchemaValidat
 
     "validate full post code with space" in {
       validationErrors(
-        eisRequest(completeAnswers.copy(claimantAddress = Some(addressAnswer.copy(postCode = "BA12 3HS"))))
+        eisRequest(completeAnswers.copy(claimantAddress = Some(addressAnswer.copy(postCode = Some("BA12 3HS")))))
       ) mustBe None
     }
 
