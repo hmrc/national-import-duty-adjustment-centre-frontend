@@ -109,7 +109,16 @@ class AuthenticatedIdentifierActionSpec extends UnitSpec with MockitoSugar with 
     }
 
     "user does not have enrolment with EORI" must {
-      "redirect to unauthorised page" in {
+      "redirect to enrolment url when subscriptionJourney configured" in {
+        when(mockConfig.getOptional[String]("eori.subscriptionJourney")).thenReturn(Some("/enrolment-url"))
+        val result: Future[Result] = handleAuthWithEnrolments(enrolmentsWithoutEORI)
+
+        status(result) mustBe SEE_OTHER
+        redirectLocation(result) mustBe Some("/enrolment-url")
+      }
+
+      "redirect to unauthorised page when subscriptionJourney not configured" in {
+        when(mockConfig.getOptional[String]("eori.subscriptionJourney")).thenReturn(None)
         val result: Future[Result] = handleAuthWithEnrolments(enrolmentsWithoutEORI)
 
         status(result) mustBe SEE_OTHER
