@@ -54,7 +54,7 @@ class AppConfig @Inject() (
     .getOptional[String]("platform.frontend.host")
     .getOrElse("http://localhost:8490")
 
-  private val serviceIdentifier = "national-import-duty-adjustment-centre"
+  private val serviceIdentifier = config.get[String]("contact-frontend.serviceId")
 
   private val authenticatedFeedbackUrl: String = config.get[String]("urls.feedback.authenticatedLink")
 

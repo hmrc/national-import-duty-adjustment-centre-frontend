@@ -62,6 +62,7 @@ class WhatDoYouWantToDoPageViewSpec extends UnitViewSpec {
 
       feedbackLink must containMessage("phase.banner.link")
       feedbackLink.attr("href") must include("contact/beta-feedback")
+      feedbackLink.attr("href") must include("service=national-import-duty-adjustment-centre")
     }
 
   }
