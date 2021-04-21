@@ -55,6 +55,25 @@ class WhatDoYouWantToDoPageViewSpec extends UnitViewSpec {
       view().getElementById("nidac-continue") must includeMessage("site.continue")
     }
 
+    "have beta phase banner" in {
+      val banner = view().getElementsByClass("govuk-phase-banner")
+      banner.text() must include("beta")
+      val feedbackLink = banner.first().getElementsByClass("govuk-link")
+
+      feedbackLink must containMessage("phase.banner.link")
+      feedbackLink.attr("href") must include("contact/beta-feedback")
+      feedbackLink.attr("href") must include("service=national-import-duty-adjustment-centre")
+    }
+
+    "have `page not working` link" in {
+      val technicalIssue = view().getElementsByClass("nidac-report-technical-issue")
+      technicalIssue.text() must include("page not working")
+      val link = technicalIssue.first().getElementsByClass("govuk-link")
+
+      link.attr("href") must include("contact/problem_reports_nonjs")
+      link.attr("href") must include("service=national-import-duty-adjustment-centre")
+    }
+
   }
 
   "WhatDoYouWantToDoPage on filled form" should {
