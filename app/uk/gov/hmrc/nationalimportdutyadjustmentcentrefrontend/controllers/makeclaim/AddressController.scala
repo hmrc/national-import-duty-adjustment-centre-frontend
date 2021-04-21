@@ -82,7 +82,7 @@ class AddressController @Inject() (
     data.getCreateAnswers flatMap { answers =>
       addressLookupService.retrieveAddress(id) flatMap { confirmedAddress =>
         val el             = confirmedAddress.extractAddressLines()
-        val updatedAddress = Address(el._1, el._2, el._3,el._4, confirmedAddress.address.postcode)
+        val updatedAddress = Address(el._1, el._2, el._3, el._4, confirmedAddress.address.postcode)
         data.updateCreateAnswers(answers => answers.copy(claimantAddress = Some(updatedAddress))) map {
           _ => Redirect(nextPage(answers))
         }

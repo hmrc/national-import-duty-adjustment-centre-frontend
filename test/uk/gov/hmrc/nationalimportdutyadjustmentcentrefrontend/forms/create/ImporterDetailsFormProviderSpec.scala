@@ -101,9 +101,9 @@ class ImporterDetailsFormProviderSpec extends StringFieldBehaviours {
 
   ".Postcode" must {
 
-    val fieldName   = "postcode"
-    val lengthKey   = "address.postcode.error.length"
-    val invalidKey  = "address.postcode.error.invalid"
+    val fieldName  = "postcode"
+    val lengthKey  = "address.postcode.error.length"
+    val invalidKey = "address.postcode.error.invalid"
 
     val validPostCodeGen = for {
       leading       <- Gen.listOfN(10, " ").map(_.mkString)

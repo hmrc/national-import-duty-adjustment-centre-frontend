@@ -36,7 +36,10 @@ case class AddressLookupRequest(
 object AddressLookupRequest {
   implicit val format: OFormat[AddressLookupRequest] = Json.format[AddressLookupRequest]
 
-  def apply(continueUrl: String, lookupPageHeadingKey: String)(implicit messagesApi: MessagesApi, config: AppConfig): AddressLookupRequest = {
+  def apply(continueUrl: String, lookupPageHeadingKey: String)(implicit
+    messagesApi: MessagesApi,
+    config: AppConfig
+  ): AddressLookupRequest = {
     val eng: Messages = MessagesImpl(Lang("en"), messagesApi)
     val cy: Messages  = MessagesImpl(Lang("cy"), messagesApi)
     new AddressLookupRequest(

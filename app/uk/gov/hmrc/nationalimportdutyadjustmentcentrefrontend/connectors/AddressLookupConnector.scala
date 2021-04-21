@@ -22,33 +22,42 @@ import play.api.http.Status
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads, HttpResponse}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.InitialiseAddressLookupHttpParser.InitialiseAddressLookupReads
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.addresslookup.{AddressLookupConfirmation, AddressLookupOnRamp, AddressLookupRequest}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.addresslookup.{
+  AddressLookupConfirmation,
+  AddressLookupOnRamp,
+  AddressLookupRequest
+}
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class AddressLookupConnector @Inject()(val http: HttpClient,
-                                       implicit val config: AppConfig) {
-  private val logger: Logger                = Logger(this.getClass)
+class AddressLookupConnector @Inject() (val http: HttpClient, implicit val config: AppConfig) {
+  private val logger: Logger = Logger(this.getClass)
 
-  def initialiseJourney(addressLookupRequest: AddressLookupRequest)
-                       (implicit hc: HeaderCarrier,ec: ExecutionContext): Future[AddressLookupOnRamp] =
-    http.POST[AddressLookupRequest, AddressLookupOnRamp](
-      config.addressLookupInitUrl,
-      addressLookupRequest
-    )(implicitly, InitialiseAddressLookupReads, hc, ec)
+  def initialiseJourney(
+    addressLookupRequest: AddressLookupRequest
+  )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AddressLookupOnRamp] =
+    http.POST[AddressLookupRequest, AddressLookupOnRamp](config.addressLookupInitUrl, addressLookupRequest)(
+      implicitly,
+      InitialiseAddressLookupReads,
+      hc,
+      ec
+    )
 
   private[connectors] def getAddressUrl(id: String) = s"${config.addressLookupConfirmedUrl}?id=$id"
 
   def getAddress(id: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AddressLookupConfirmation] = {
     logger.debug(s"Going to get address: ${config.addressLookupConfirmedUrl}?id=$id")
-    http.GET[AddressLookupConfirmation](getAddressUrl(id))(implicitly,hc,ec)
+    http.GET[AddressLookupConfirmation](getAddressUrl(id))(implicitly, hc, ec)
   }
+
 }
 
 object InitialiseAddressLookupHttpParser {
+
   implicit object InitialiseAddressLookupReads extends HttpReads[AddressLookupOnRamp] {
+
     override def read(method: String, url: String, response: HttpResponse): AddressLookupOnRamp =
       response.status match {
         case Status.ACCEPTED =>
@@ -58,4 +67,5 @@ object InitialiseAddressLookupHttpParser {
       }
 
   }
+
 }

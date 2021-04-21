@@ -99,8 +99,6 @@ trait TestData {
     )
   )
 
-
-
   val entryDetailsAnswer: EntryDetails = EntryDetails("010", "123456Q", fixedDate)
 
   val itemNumbersAnswer: ItemNumbers = ItemNumbers("1,2,3,4")

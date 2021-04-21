@@ -30,15 +30,18 @@ import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class AddressLookupService @Inject() (
-                                       addressLookupConnector: AddressLookupConnector,
-                                       implicit val messagesApi: MessagesApi,
-                                       implicit val appConfig: AppConfig
-                                     ) {
+  addressLookupConnector: AddressLookupConnector,
+  implicit val messagesApi: MessagesApi,
+  implicit val appConfig: AppConfig
+) {
 
   def retrieveAddress(id: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AddressLookupConfirmation] =
     addressLookupConnector.getAddress(id)
 
-  def initialiseJourney(callBackUrl: String, lookupPageHeadingKey: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AddressLookupOnRamp] =
+  def initialiseJourney(callBackUrl: String, lookupPageHeadingKey: String)(implicit
+    hc: HeaderCarrier,
+    ec: ExecutionContext
+  ): Future[AddressLookupOnRamp] =
     addressLookupConnector.initialiseJourney(AddressLookupRequest(callBackUrl, lookupPageHeadingKey))
 
 }
