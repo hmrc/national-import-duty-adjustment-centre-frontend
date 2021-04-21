@@ -69,22 +69,22 @@
 								"AddressLine1": {
 									"type": "string",
 									"minLength": 1,
-									"maxLength": 256
+									"maxLength": 100
 								},
 								"AddressLine2": {
 									"type": "string",
 									"minLength": 0,
-									"maxLength": 256
+									"maxLength": 50
 								},
 								"Region": {
 									"type": "string",
 									"minLength": 0,
-									"maxLength": 256
+									"maxLength": 50
 								},
 								"City": {
 									"type": "string",
 									"minLength": 1,
-									"maxLength": 256
+									"maxLength": 50
 								},
 								"CountryCode": {
 									"type": "string",
@@ -112,7 +112,8 @@
 							"required": [
 								"AddressLine1",
 								"City",
-								"CountryCode"
+								"CountryCode",
+								"PostalCode"
 							]
 						}
 					},
@@ -141,22 +142,22 @@
 								"AddressLine1": {
 									"type": "string",
 									"minLength": 1,
-									"maxLength": 256
+									"maxLength": 100
 								},
 								"AddressLine2": {
 									"type": "string",
 									"minLength": 0,
-									"maxLength": 256
+									"maxLength": 50
 								},
 								"Region": {
 									"type": "string",
 									"minLength": 0,
-									"maxLength": 256
+									"maxLength": 50
 								},
 								"City": {
 									"type": "string",
 									"minLength": 1,
-									"maxLength": 256
+									"maxLength": 50
 								},
 								"CountryCode": {
 									"type": "string",
@@ -184,7 +185,8 @@
 							"required": [
 								"AddressLine1",
 								"City",
-								"CountryCode"
+								"CountryCode",
+								"PostalCode"
 							]
 						}
 					},

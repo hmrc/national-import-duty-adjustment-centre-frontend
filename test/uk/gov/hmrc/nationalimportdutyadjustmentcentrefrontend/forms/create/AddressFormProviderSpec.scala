@@ -30,7 +30,7 @@ class AddressFormProviderSpec extends StringFieldBehaviours {
     val fieldName   = "addressLine1"
     val requiredKey = "address.line1.error.required"
     val lengthKey   = "address.line1.error.length"
-    val maxLength   = 256
+    val maxLength   = 100
 
     behave like fieldThatBindsValidData(form, fieldName, safeInputsWithMaxLength(maxLength))
 
@@ -48,7 +48,7 @@ class AddressFormProviderSpec extends StringFieldBehaviours {
 
     val fieldName = "addressLine2"
     val lengthKey = "address.line2.error.length"
-    val maxLength = 256
+    val maxLength = 50
 
     behave like fieldThatBindsValidData(form, fieldName, safeInputsWithMaxLength(maxLength))
 
@@ -85,7 +85,7 @@ class AddressFormProviderSpec extends StringFieldBehaviours {
     val fieldName   = "city"
     val requiredKey = "address.city.error.required"
     val lengthKey   = "address.city.error.length"
-    val maxLength   = 256
+    val maxLength   = 50
 
     behave like fieldThatBindsValidData(form, fieldName, safeInputsWithMaxLength(maxLength))
 
@@ -101,9 +101,10 @@ class AddressFormProviderSpec extends StringFieldBehaviours {
 
   ".Postcode" must {
 
-    val fieldName  = "postcode"
-    val lengthKey  = "address.postcode.error.length"
-    val invalidKey = "address.postcode.error.invalid"
+    val fieldName   = "postcode"
+    val requiredKey = "address.postcode.error.required"
+    val lengthKey   = "address.postcode.error.length"
+    val invalidKey  = "address.postcode.error.invalid"
 
     val validPostCodeGen = for {
       leading       <- Gen.listOfN(10, " ").map(_.mkString)
@@ -115,11 +116,17 @@ class AddressFormProviderSpec extends StringFieldBehaviours {
 
     behave like fieldThatBindsValidData(form, fieldName, validPostCodeGen)
 
-    behave like optionalField(form, fieldName)
+    behave like mandatoryField(form, fieldName, requiredError = FormError(fieldName, requiredKey))
 
     "not bind strings with invalid characters" in {
       val result        = form.bind(Map(fieldName -> "P!24KF")).apply(fieldName)
       val expectedError = FormError(fieldName, invalidKey, Seq(Validation.postcodePattern))
+      result.errors mustEqual Seq(expectedError)
+    }
+
+    "not bind empty string" in {
+      val result        = form.bind(Map(fieldName -> "       ")).apply(fieldName)
+      val expectedError = FormError(fieldName, lengthKey)
       result.errors mustEqual Seq(expectedError)
     }
 

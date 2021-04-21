@@ -81,7 +81,7 @@ class AddressViewSpec extends UnitViewSpec with TestData {
       filledView.getElementById("addressLine2") must haveValue(addressAnswer.addressLine2.getOrElse(""))
       filledView.getElementById("addressLine3") must haveValue(addressAnswer.addressLine3.getOrElse(""))
       filledView.getElementById("city") must haveValue(addressAnswer.city)
-      filledView.getElementById("postcode") must haveValue(addressAnswer.postCode.getOrElse(""))
+      filledView.getElementById("postcode") must haveValue(addressAnswer.postCode)
     }
 
     "display error when " when {

@@ -70,10 +70,10 @@ class AppConfig @Inject() (
   val addressLookupConfirmedUrl: String    = s"$addressLookupBaseUrl${servicesConfig("address-lookup.confirmed")}"
 
   val yourAddressLookupCallbackUrl: String =
-    loginContinueUrl + "/create" + controllers.makeclaim.routes.AddressController.onUpdate("").url
+    s"$loginContinueUrl/create${controllers.makeclaim.routes.AddressController.onUpdate("").url}"
 
   val importerAddressLookupCallbackUrl: String =
-    loginContinueUrl + "/create" + controllers.makeclaim.routes.ImporterDetailsController.onUpdate("").url
+    s"$loginContinueUrl/create${controllers.makeclaim.routes.ImporterDetailsController.onUpdate("").url}"
 
   val barsBusinessAssessUrl: String =
     s"$barsBaseUrl${servicesConfig("bank-account-reputation.businessAssess")}"

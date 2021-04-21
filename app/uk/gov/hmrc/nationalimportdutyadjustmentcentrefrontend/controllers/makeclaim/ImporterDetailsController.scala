@@ -81,8 +81,9 @@ class ImporterDetailsController @Inject() (
   def onUpdate(id: String): Action[AnyContent] = identify.async { implicit request =>
     data.getCreateAnswers flatMap { answers =>
       addressLookupService.retrieveAddress(id) flatMap { confirmedAddress =>
-        val el             = confirmedAddress.extractAddressLines()
-        val updatedAddress = ImporterContactDetails(el._1, el._2, el._3, el._4, confirmedAddress.address.postcode)
+        val el = confirmedAddress.extractAddressLines()
+        val updatedAddress =
+          ImporterContactDetails(el._1, el._2, el._3, el._4, confirmedAddress.address.postcode.getOrElse(""))
         data.updateCreateAnswers(answers => answers.copy(importerContactDetails = Some(updatedAddress))) map {
           _ => Redirect(nextPage(answers))
         }

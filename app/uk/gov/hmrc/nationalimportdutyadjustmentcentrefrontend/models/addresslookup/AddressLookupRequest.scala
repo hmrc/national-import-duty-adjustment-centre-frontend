@@ -44,7 +44,7 @@ object AddressLookupRequest {
     val cy: Messages  = MessagesImpl(Lang("cy"), messagesApi)
     new AddressLookupRequest(
       2,
-      Options(continueUrl, false, true),
+      Options(continueUrl, showPhaseBanner = false, ukMode = true),
       Labels(
         en =
           AddressLookupRequest.Labels.Language(
@@ -56,7 +56,7 @@ object AddressLookupRequest {
           ),
         cy =
           AddressLookupRequest.Labels.Language(
-            AppLevelLabels(Some(cy("service.name"))),
+            AppLevelLabels(navTitle = Some(cy("service.name"))),
             SelectPageLabels(),
             LookupPageLabels(heading = Some(eng(lookupPageHeadingKey))),
             ConfirmPageLabels(),

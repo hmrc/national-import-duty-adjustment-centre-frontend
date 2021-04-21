@@ -265,7 +265,7 @@
                     claimantAddress.addressLine2,
                     claimantAddress.addressLine3,
                     Some(claimantAddress.city),
-                    claimantAddress.postCode
+                    Some(claimantAddress.postCode)
                 ).flatten.map(HtmlFormat.escape(_)).mkString("<br>")).getOrElse(""))
             ),
             actions = if(!withActions) None else  Some(Actions(
@@ -411,7 +411,7 @@
                             contactDetails.addressLine2,
                             contactDetails.addressLine3,
                             Some(contactDetails.city),
-                            contactDetails.postCode
+                            Some(contactDetails.postCode)
                         ).flatten.map(HtmlFormat.escape(_)).mkString("<br>")).getOrElse(""))
                     ),
                     actions = if(!withActions) None else  Some(Actions(

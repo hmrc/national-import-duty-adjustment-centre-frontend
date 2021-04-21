@@ -80,7 +80,7 @@ trait TestData {
 
   val businessNameAnswer: BusinessName = BusinessName("Mind API Inc");
 
-  val addressAnswer: Address = Address("Line 1", Some("Line 2"), Some("Line 3"), "City", Some("WO0 1KE"))
+  val addressAnswer: Address = Address("Line 1", Some("Line 2"), Some("Line 3"), "City", "WO0 1KE")
 
   val addressLookupRetrieveId = "id123456"
 
@@ -94,7 +94,7 @@ trait TestData {
         addressAnswer.addressLine3.getOrElse(""),
         addressAnswer.city
       ),
-      addressAnswer.postCode,
+      Some(addressAnswer.postCode),
       AddressLookupCountry("UK", "United Kingdom")
     )
   )
@@ -113,7 +113,7 @@ trait TestData {
       Some("Importer Line 2"),
       Some("Address Line 3"),
       "Importer City",
-      Some("BR0 0KL")
+      "BR0 0KL"
     )
 
   val importerAddressLookupConfirmation =
@@ -127,7 +127,7 @@ trait TestData {
           importerContactDetailsAnswer.addressLine3.getOrElse(""),
           importerContactDetailsAnswer.city
         ),
-        importerContactDetailsAnswer.postCode,
+        Some(importerContactDetailsAnswer.postCode),
         AddressLookupCountry("UK", "United Kingdom")
       )
     )

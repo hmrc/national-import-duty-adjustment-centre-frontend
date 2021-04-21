@@ -116,7 +116,7 @@ class AddressControllerSpec extends ControllerSpec with TestData {
       "addressLine2" -> addressAnswer.addressLine2.getOrElse(""),
       "addressLine3" -> addressAnswer.addressLine3.getOrElse(""),
       "city"         -> addressAnswer.city,
-      "postcode"     -> addressAnswer.postCode.getOrElse("")
+      "postcode"     -> addressAnswer.postCode
     )
 
     "update cache and redirect when valid answer is submitted" in {

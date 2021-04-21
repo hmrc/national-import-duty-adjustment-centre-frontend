@@ -24,7 +24,7 @@ case class ImporterContactDetails(
   addressLine2: Option[String],
   addressLine3: Option[String],
   city: String,
-  postCode: Option[String]
+  postCode: String
 )
 
 object ImporterContactDetails {
@@ -35,14 +35,14 @@ object ImporterContactDetails {
     addressLine2: Option[String],
     addressLine3: Option[String],
     city: String,
-    postCode: Option[String]
+    postCode: String
   ): ImporterContactDetails =
     new ImporterContactDetails(
       addressLine1,
       addressLine2,
       addressLine3,
       city,
-      postCode.map(pc => pc.stripExternalAndReduceInternalSpaces())
+      postCode.stripExternalAndReduceInternalSpaces()
     )
 
 }

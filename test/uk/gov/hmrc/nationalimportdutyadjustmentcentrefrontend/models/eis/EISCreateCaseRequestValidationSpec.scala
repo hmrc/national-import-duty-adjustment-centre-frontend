@@ -24,7 +24,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create._
 
 class EISCreateCaseRequestValidationSpec extends UnitSpec with JsonSchemaValidation with TestData {
 
-  private val jsonSchema = loadSchema("/pega-create-case-spec/RequestJSONSchemaV0.4.MODIFIED.JSON")
+  private val jsonSchema = loadSchema("/pega-create-case-spec/RequestJSONSchemaV0.4.JSON")
 
   "EISCreateCaseRequest" should {
 
@@ -48,7 +48,7 @@ class EISCreateCaseRequestValidationSpec extends UnitSpec with JsonSchemaValidat
 
     "validate full post code with space" in {
       validationErrors(
-        eisRequest(completeAnswers.copy(claimantAddress = Some(addressAnswer.copy(postCode = Some("BA12 3HS")))))
+        eisRequest(completeAnswers.copy(claimantAddress = Some(addressAnswer.copy(postCode = "BA12 3HS"))))
       ) mustBe None
     }
 

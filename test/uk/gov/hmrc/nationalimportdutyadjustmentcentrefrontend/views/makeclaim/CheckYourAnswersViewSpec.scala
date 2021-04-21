@@ -237,7 +237,7 @@ class CheckYourAnswersViewSpec extends UnitViewSpec with TestData {
 
         addressDetailsRow must haveSummaryKey(messages("check_answers.yourDetails.yourAddress"))
         addressDetailsRow must haveSummaryValue(
-          s"${addressAnswer.addressLine1} ${addressAnswer.addressLine2.get} ${addressAnswer.addressLine3.get} ${addressAnswer.city} ${addressAnswer.postCode.get}"
+          s"${addressAnswer.addressLine1} ${addressAnswer.addressLine2.get} ${addressAnswer.addressLine3.get} ${addressAnswer.city} ${addressAnswer.postCode}"
         )
 
         addressDetailsRow must haveSummaryChangeLinkText(
@@ -305,7 +305,7 @@ class CheckYourAnswersViewSpec extends UnitViewSpec with TestData {
             importerContactDetailsAnswer.addressLine2.getOrElse(""),
             importerContactDetailsAnswer.addressLine3.getOrElse(""),
             importerContactDetailsAnswer.city,
-            importerContactDetailsAnswer.postCode.getOrElse("")
+            importerContactDetailsAnswer.postCode
           ).mkString(" ")
         )
         importerDetailsRow must haveSummaryChangeLinkText(

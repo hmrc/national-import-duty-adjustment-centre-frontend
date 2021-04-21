@@ -58,7 +58,7 @@ object ImporterDetails {
         AddressLine1 = address.addressLine1,
         AddressLine2 = address.addressLine2,
         City = address.city,
-        PostalCode = address.postCode.getOrElse(""),
+        PostalCode = address.postCode,
         CountryCode = "GB",
         EmailAddress = Some(contactDetails.emailAddress),
         TelephoneNumber = contactDetails.telephoneNumber
@@ -73,7 +73,7 @@ object ImporterDetails {
         AddressLine1 = importer.contactDetails.addressLine1,
         AddressLine2 = importer.contactDetails.addressLine2,
         City = importer.contactDetails.city,
-        PostalCode = importer.contactDetails.postCode.getOrElse(""),
+        PostalCode = importer.contactDetails.postCode,
         CountryCode = "GB",
         EmailAddress = None,
         TelephoneNumber = None

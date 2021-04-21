@@ -35,7 +35,7 @@ object AgentDetails {
             AddressLine1 = claim.claimantAddress.addressLine1,
             AddressLine2 = claim.claimantAddress.addressLine2,
             City = claim.claimantAddress.city,
-            PostalCode = claim.claimantAddress.postCode.getOrElse(""),
+            PostalCode = claim.claimantAddress.postCode,
             CountryCode = "GB",
             EmailAddress = claim.contactDetails.emailAddress,
             TelephoneNumber = claim.contactDetails.telephoneNumber

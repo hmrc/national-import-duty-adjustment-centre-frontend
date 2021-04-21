@@ -58,7 +58,7 @@ class EISCreateCaseRequestSpec extends UnitSpec with TestData {
     contactDetails = ContactDetails("Adam", "Smith", "adam@smith.com", Some("01234567890")),
     businessName = BusinessName("Import Network Inc"),
     claimantAddress =
-      UkAddress("Address Line 1", Some("Address Line 2"), Some("Address Line 3"), "City", Some("PO12CD")),
+      UkAddress("Address Line 1", Some("Address Line 2"), Some("Address Line 3"), "City", "PO12CD"),
     representationType = RepresentationType.Representative,
     claimType = AntiDumping,
     claimReason = ClaimReason("A reason for the claim"),
@@ -76,7 +76,7 @@ class EISCreateCaseRequestSpec extends UnitSpec with TestData {
             Some("Importer Address Line 2"),
             Some("Importer Address Line 3"),
             "Importer City",
-            Some("IM12CD")
+            "IM12CD"
           )
       )
     ),
@@ -136,7 +136,7 @@ class EISCreateCaseRequestSpec extends UnitSpec with TestData {
     contactDetails = ContactDetails("Adam", "Smith", "adam@smith.com", Some("01234567890")),
     businessName = BusinessName("Acme Import Co Ltd"),
     claimantAddress =
-      UkAddress("Address Line 1", Some("Address Line 2"), Some("Address Line 3"), "City", Some("PO12CD")),
+      UkAddress("Address Line 1", Some("Address Line 2"), Some("Address Line 3"), "City", "PO12CD"),
     representationType = RepresentationType.Importer,
     claimType = AntiDumping,
     claimReason = ClaimReason("A reason for the claim"),

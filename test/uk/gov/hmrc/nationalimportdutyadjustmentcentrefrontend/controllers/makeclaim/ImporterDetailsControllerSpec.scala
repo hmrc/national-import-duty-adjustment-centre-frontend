@@ -16,9 +16,9 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim
 
-import org.mockito.{ArgumentCaptor, ArgumentMatchers}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{reset, verify, when}
+import org.mockito.{ArgumentCaptor, ArgumentMatchers}
 import play.api.data.Form
 import play.api.http.Status
 import play.api.test.Helpers._
@@ -28,7 +28,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create.ImporterDetailsFormProvider
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.addresslookup.AddressLookupOnRamp
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{CreateAnswers, ImporterContactDetails}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{AddressPage, ImporterContactDetailsPage}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.ImporterContactDetailsPage
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.AddressLookupService
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ImporterDetailsView
 import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
@@ -116,7 +116,7 @@ class ImporterDetailsControllerSpec extends ControllerSpec with TestData {
       "addressLine2" -> importerContactDetailsAnswer.addressLine2.getOrElse(""),
       "addressLine3" -> importerContactDetailsAnswer.addressLine3.getOrElse(""),
       "city"         -> importerContactDetailsAnswer.city,
-      "postcode"     -> importerContactDetailsAnswer.postCode.getOrElse("")
+      "postcode"     -> importerContactDetailsAnswer.postCode
     )
 
     "update cache and redirect when valid answer is submitted" in {

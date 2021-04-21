@@ -81,7 +81,7 @@ class ImporterDetailsViewSpec extends UnitViewSpec with TestData {
       filledView.getElementById("addressLine2") must haveValue(importerContactDetailsAnswer.addressLine2.getOrElse(""))
       filledView.getElementById("addressLine3") must haveValue(importerContactDetailsAnswer.addressLine3.getOrElse(""))
       filledView.getElementById("city") must haveValue(importerContactDetailsAnswer.city)
-      filledView.getElementById("postcode") must haveValue(importerContactDetailsAnswer.postCode.getOrElse(""))
+      filledView.getElementById("postcode") must haveValue(importerContactDetailsAnswer.postCode)
     }
 
     "display error" when {
@@ -95,6 +95,12 @@ class ImporterDetailsViewSpec extends UnitViewSpec with TestData {
       "city missing" in {
         missingView must haveFieldError("city", "address.city.error.required")
       }
+
+      "postcode" in {
+        missingView must haveFieldError("postcode", "address.postcode.error.required")
+      }
+
     }
+
   }
 }
