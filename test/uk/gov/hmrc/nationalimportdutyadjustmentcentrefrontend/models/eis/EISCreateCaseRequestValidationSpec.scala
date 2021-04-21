@@ -24,7 +24,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create._
 
 class EISCreateCaseRequestValidationSpec extends UnitSpec with JsonSchemaValidation with TestData {
 
-  private val jsonSchema = loadSchema("/pega-create-case-spec/RequestJSONSchemaV0.4.JSON")
+  private val jsonSchema = loadSchema("/pega-create-case-spec/RequestJSONSchemaV0.4.MODIFIED.JSON")
 
   "EISCreateCaseRequest" should {
 
