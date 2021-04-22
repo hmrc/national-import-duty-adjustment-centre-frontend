@@ -22,8 +22,4 @@ case class AddressLookupCountry(code: String, name: String)
 
 object AddressLookupCountry {
   implicit val format: OFormat[AddressLookupCountry] = Json.format[AddressLookupCountry]
-
-  def apply(code: String, name: String): AddressLookupCountry =
-    new AddressLookupCountry(code, name)
-
 }

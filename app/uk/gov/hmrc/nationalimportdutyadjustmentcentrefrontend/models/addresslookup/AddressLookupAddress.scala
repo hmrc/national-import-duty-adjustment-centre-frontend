@@ -22,8 +22,4 @@ case class AddressLookupAddress(lines: List[String], postcode: Option[String], c
 
 object AddressLookupAddress {
   implicit val format: OFormat[AddressLookupAddress] = Json.format[AddressLookupAddress]
-
-  def apply(lines: List[String], postcode: Option[String], country: AddressLookupCountry): AddressLookupAddress =
-    new AddressLookupAddress(lines, postcode, country)
-
 }

@@ -33,8 +33,4 @@ case class AddressLookupConfirmation(auditRef: String, id: Option[String], addre
 
 object AddressLookupConfirmation {
   implicit val format: OFormat[AddressLookupConfirmation] = Json.format[AddressLookupConfirmation]
-
-  def apply(auditRef: String, id: Option[String], address: AddressLookupAddress): AddressLookupConfirmation =
-    new AddressLookupConfirmation(auditRef, id, address)
-
 }

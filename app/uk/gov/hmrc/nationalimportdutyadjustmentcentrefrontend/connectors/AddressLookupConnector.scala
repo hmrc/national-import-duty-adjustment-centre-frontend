@@ -47,10 +47,8 @@ class AddressLookupConnector @Inject() (val http: HttpClient, implicit val confi
 
   private[connectors] def getAddressUrl(id: String) = s"${config.addressLookupConfirmedUrl}?id=$id"
 
-  def getAddress(id: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AddressLookupConfirmation] = {
-    logger.debug(s"Going to get address: ${config.addressLookupConfirmedUrl}?id=$id")
+  def getAddress(id: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AddressLookupConfirmation] =
     http.GET[AddressLookupConfirmation](getAddressUrl(id))(implicitly, hc, ec)
-  }
 
 }
 

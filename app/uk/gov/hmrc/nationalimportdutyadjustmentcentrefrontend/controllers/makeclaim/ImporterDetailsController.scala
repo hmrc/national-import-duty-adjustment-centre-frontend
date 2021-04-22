@@ -52,7 +52,7 @@ class ImporterDetailsController @Inject() (
   def onPageLoad(): Action[AnyContent] = identify.async { implicit request =>
     data.getCreateAnswers map { answers =>
       answers.importerContactDetails match {
-        case address if address.nonEmpty =>
+        case Some(address) =>
           val preparedForm = answers.importerContactDetails.fold(form)(form.fill)
           Ok(detailsView(preparedForm, backLink(answers)))
         case _ =>

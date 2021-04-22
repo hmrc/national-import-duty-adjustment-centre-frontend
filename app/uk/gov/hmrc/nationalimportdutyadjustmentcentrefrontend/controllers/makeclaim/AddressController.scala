@@ -52,7 +52,7 @@ class AddressController @Inject() (
   def onPageLoad(): Action[AnyContent] = identify.async { implicit request =>
     data.getCreateAnswers map { answers =>
       answers.claimantAddress match {
-        case address if address.nonEmpty =>
+        case Some(address) =>
           val preparedForm = answers.claimantAddress.fold(form)(form.fill)
           Ok(addressView(preparedForm, backLink(answers)))
         case _ =>
