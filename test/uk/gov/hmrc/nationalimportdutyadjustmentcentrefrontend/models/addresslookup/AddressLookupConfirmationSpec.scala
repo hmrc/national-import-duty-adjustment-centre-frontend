@@ -20,11 +20,39 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.UnitSpec
 
 class AddressLookupConfirmationSpec extends UnitSpec {
 
+  val addCountry: AddressLookupCountry = AddressLookupCountry(code = "UK", name = "United Kingdom")
+
   "AddressLookupConfirmation" should {
+
+    "extract all lines of an address" in {
+      val confirmation = AddressLookupConfirmation(
+        auditRef = "auditRef",
+        Some("id"),
+        AddressLookupAddress(List("Line1", "Line2", "Line3", "Line4 Town"), postcode = Some("AA000AA"), addCountry)
+      )
+      val el = confirmation.extractAddressLines()
+
+      el._1 mustBe "Line1"
+      el._2 mustBe Some("Line2")
+      el._3 mustBe Some("Line3")
+      el._4 mustBe "Line4 Town"
+    }
+
+    "extract town as the last line from a two line address" in {
+      val confirmation = AddressLookupConfirmation(
+        auditRef = "auditRef",
+        Some("id"),
+        AddressLookupAddress(List("Line1", "Line4 Town"), postcode = Some("AA000AA"), addCountry)
+      )
+      val el = confirmation.extractAddressLines()
+
+      el._1 mustBe "Line1"
+      el._2 mustBe None
+      el._3 mustBe None
+      el._4 mustBe "Line4 Town"
+    }
+
     "extract lines should work with an empty address" in {
-
-      val addCountry = AddressLookupCountry(code = "UK", name = "United Kingdom")
-
       val confirmation = AddressLookupConfirmation(
         auditRef = "auditRef",
         Some("id"),
