@@ -81,9 +81,9 @@ class AppConfig @Inject() (
 
   private val barsBaseUrl: String = servicesConfig.baseUrl("bank-account-reputation")
 
-  private val addressLookupBaseUrl: String = servicesConfig.baseUrl("address-lookup")
-  val addressLookupInitUrl: String         = s"$addressLookupBaseUrl${servicesConfig("address-lookup.init")}"
-  val addressLookupConfirmedUrl: String    = s"$addressLookupBaseUrl${servicesConfig("address-lookup.confirmed")}"
+  private val addressLookupBaseUrl: String = servicesConfig.baseUrl("address-lookup-frontend")
+  val addressLookupInitUrl: String         = s"$addressLookupBaseUrl${servicesConfig("address-lookup-frontend.init")}"
+  val addressLookupConfirmedUrl: String    = s"$addressLookupBaseUrl${servicesConfig("address-lookup-frontend.confirmed")}"
 
   val yourAddressLookupCallbackUrl: String =
     s"$loginContinueUrl/create${controllers.makeclaim.routes.AddressController.onUpdate("").url}"
