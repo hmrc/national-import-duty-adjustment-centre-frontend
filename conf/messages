@@ -192,7 +192,7 @@ importer.businessName.title = What is the name of the importers business?
 importer.businessName.name.error.required = Enter the importers business name
 importer.businessName.name.error.length = Importers business name must be 40 characters or fewer
 
-importer-details.title = What are the importer’s UK correspondence address?
+importer-details.title = What is the importer’s UK correspondence address?
 importer-details.hint = We may use these details to contact the importer about this claim.
 importer-details.change = Search for a new address
 

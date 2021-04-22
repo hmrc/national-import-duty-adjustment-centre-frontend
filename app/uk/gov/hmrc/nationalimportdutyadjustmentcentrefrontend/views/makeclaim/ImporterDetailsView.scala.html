@@ -48,9 +48,9 @@
             @addressFields(form)
         }
 
-        @internalLink(messages("importer-details.change"), ImporterDetailsController.onChange())
-
-        @paragraph("")
+        @paragraphHtml {
+            @internalLink(messages("importer-details.change"), ImporterDetailsController.onChange())
+        }
 
         @continueButton()
     }

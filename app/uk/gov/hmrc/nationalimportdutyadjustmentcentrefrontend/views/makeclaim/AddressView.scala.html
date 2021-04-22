@@ -46,9 +46,9 @@
           @addressFields(form)
         }
 
-        @internalLink(messages("address.change"), AddressController.onChange())
-
-        @paragraph("")
+        @paragraphHtml {
+            @internalLink(messages("address.change"), AddressController.onChange())
+        }
 
         @continueButton()
     }
