@@ -42,7 +42,7 @@ object ImporterDetails {
         claim.importerBeingRepresentedDetails.getOrElse(throw new MissingAnswersException(ImporterContactDetailsPage))
       )
     case Importer =>
-      forImporterApplicant(claim.claimantEori, claim.contactDetails, claim.businessName, claim.claimantAddress)
+      forImporterApplicant(claim.claimantEori, claim.contactDetails, claim.businessName, claim.claimantAddress.address)
   }
 
   private def forImporterApplicant(

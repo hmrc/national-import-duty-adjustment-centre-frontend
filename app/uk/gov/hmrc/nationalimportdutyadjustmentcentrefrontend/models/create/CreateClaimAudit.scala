@@ -24,7 +24,7 @@ case class CreateClaimAudit(
   success: Boolean,
   caseReferenceNumber: Option[String],
   contactDetails: ContactDetails,
-  claimantAddress: Address,
+  claimantAddress: AuditableAddress,
   representationType: RepresentationType,
   claimType: ClaimType,
   claimReason: ClaimReason,

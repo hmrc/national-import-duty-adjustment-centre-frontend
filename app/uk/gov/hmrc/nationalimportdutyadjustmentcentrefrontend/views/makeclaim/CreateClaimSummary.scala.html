@@ -261,11 +261,11 @@
             ),
             value = Value(
                 content = HtmlContent(answers.claimantAddress.map(claimantAddress => Seq(
-                    Some(claimantAddress.addressLine1),
-                    claimantAddress.addressLine2,
-                    claimantAddress.addressLine3,
-                    Some(claimantAddress.city),
-                    Some(claimantAddress.postCode)
+                    Some(claimantAddress.address.addressLine1),
+                    claimantAddress.address.addressLine2,
+                    claimantAddress.address.addressLine3,
+                    Some(claimantAddress.address.city),
+                    Some(claimantAddress.address.postCode)
                 ).flatten.map(HtmlFormat.escape(_)).mkString("<br>")).getOrElse(""))
             ),
             actions = if(!withActions) None else  Some(Actions(

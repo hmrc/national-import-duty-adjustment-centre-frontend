@@ -31,7 +31,7 @@ case class Claim(
   claimantEori: EoriNumber,
   contactDetails: ContactDetails,
   businessName: BusinessName,
-  claimantAddress: Address,
+  claimantAddress: AuditableAddress,
   representationType: RepresentationType,
   claimType: ClaimType,
   claimReason: ClaimReason,
@@ -53,7 +53,7 @@ object Claim {
   private val logger: Logger = Logger(this.getClass)
 
   def apply(claimantEori: EoriNumber, userAnswers: CreateAnswers): Claim = {
-    if (userAnswers.uploads.isEmpty) missing(UploadPage)
+//    if (userAnswers.uploads.isEmpty) missing(UploadPage)
     if (userAnswers.reclaimDutyTypes.isEmpty) missing(ReclaimDutyTypePage)
     new Claim(
       claimantEori = claimantEori,

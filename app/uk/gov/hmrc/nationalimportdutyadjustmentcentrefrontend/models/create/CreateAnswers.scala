@@ -28,7 +28,7 @@ final case class CreateAnswers(
   changePage: Option[String] = None,
   contactDetails: Option[ContactDetails] = None,
   businessName: Option[BusinessName] = None,
-  claimantAddress: Option[Address] = None,
+  claimantAddress: Option[AuditableAddress] = None,
   representationType: Option[RepresentationType] = None,
   claimType: Option[ClaimType] = None,
   claimReason: Option[ClaimReason] = None,
