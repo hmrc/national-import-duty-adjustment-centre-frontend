@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         NIDAC Create Claim AutoComplete
 // @namespace    http://tampermonkey.net/
-// @version      0.20
+// @version      0.21
 
 // @description  NIDAC Create Claim AutoComplete
 // @author       NIDAC Team
@@ -141,15 +141,22 @@ function completePage() {
     if (currentPageIs("/create/your-address")) {
         document.getElementById("addressLine1").value = "Unit 42";
         document.getElementById("addressLine2").value = "West Industrial Estate";
-        document.getElementById("city").value = "Middlewich";
-        document.getElementById("postcode").value = "MD123KD";
+        document.getElementById("city").value = "Walsall";
+        document.getElementById("postcode").value = "WS1 2AB";
         submit();
     }
-    if (currentPageIs(".*/lookup")) {
-        document.getElementById("postcode").value = "AA000AA";
+    if (currentPageIs(".*/lookup-address/.*/lookup")) {
+        document.getElementById("postcode").value = "WS1 2AB";
         submit();
     }
-    if (currentPageIs(".*/confirm")) {
+    if (currentPageIs(".*/lookup-address/.*/edit")) {
+        document.getElementById("line1").value = "Unit 42";
+        document.getElementById("line2").value = "West Industrial Estate";
+        document.getElementById("town").value = "Walsall";
+        document.getElementById("postcode").value = "WS1 2AB";
+        submit();
+    }
+    if (currentPageIs(".*/lookup-address/.*/confirm")) {
         submit();
     }
     if (currentPageIs("/create/eori-number")) {
