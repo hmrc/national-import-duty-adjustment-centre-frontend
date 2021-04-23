@@ -270,7 +270,7 @@ error.file-upload.unknown=The selected file could not be uploaded
 error.file-upload.duplicate=This file has already been uploaded
 error.file-upload.try-again=The selected file could not be uploaded - try again
 
-check_answers.title = Check your answers before sending your application
+check_answers.title = Check your answers before sending your claim
 check_answers.change = Change
 check_answers.submit = Accept and send
 check_answers.information.title = Important information
@@ -329,8 +329,8 @@ check_answers.payment.accountName = Name on the account
 check_answers.payment.sortCode = Sort code
 check_answers.payment.accountNumber = Account number
 check_answers.payment.bankDetails.accessible = Change the bank account details
-check_answers.submit.heading = Submit your claim
-check_answers.submit.declaration = Before you proceed, ensure that you have fully reviewed the information you have provided above and ensure that it is correct.
+check_answers.submit.heading = Send your claim
+check_answers.submit.declaration = Before you send your claim, ensure that you have fully reviewed the information you have provided and that it is correct.
 check_answers.submit.about.summary = You can print a summary of your application on the next page.
 
 check_answers.missing.icon = Warning
@@ -375,8 +375,8 @@ amend.check_answers.information.uploadedDocuments = Additional documents
 amend.check_answers.information.uploadedDocuments.accessible = Change or remove an uploaded document
 amend.check_answers.information.further_information = Further information
 amend.check_answers.information.further_information.accessible = Change your further information
-amend.check_answers.submit.heading = Submit your additional information
-amend.check_answers.submit.declaration = Before you proceed, ensure that you have fully reviewed the information you have provided above and ensure that it is correct.
+amend.check_answers.submit.heading = Send your amended claim
+amend.check_answers.submit.declaration = Before you send your amended claim, ensure that you have fully reviewed the information you have provided and that it is correct.
 
 amend.confirmation.title = Information sent
 amend.confirmation.reference = Your reference number<br><strong>{0}</strong>
