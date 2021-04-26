@@ -21,7 +21,6 @@ import play.api.libs.json.{Json, OFormat}
 case class AddressLookupConfirmation(auditRef: String, id: Option[String], address: AddressLookupAddress) {
 
   // modified from the address-lookup-frontend, when it wants to split the address for manual edit
-  // now extract auditRef and potentially id
   def extractAddressLines(): (String, Option[String], Option[String], String) = {
     val l1: String         = this.address.lines.headOption.getOrElse("")
     val l2: Option[String] = if (this.address.lines.length > 2) this.address.lines.lift(1) else None
