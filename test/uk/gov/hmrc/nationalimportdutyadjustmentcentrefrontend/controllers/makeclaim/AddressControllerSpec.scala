@@ -28,6 +28,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create.AddressFormProvider
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.addresslookup.AddressLookupOnRamp
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{Address, CreateAnswers}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.exceptions.MissingAddressException
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.AddressPage
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.AddressLookupService
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.AddressView
@@ -96,12 +97,12 @@ class AddressControllerSpec extends ControllerSpec with TestData {
       )
       val result = controller.onUpdate(addressLookupRetrieveId)(fakeGetRequest)
       status(result) mustBe Status.SEE_OTHER
-      theUpdatedCreateAnswers.claimantAddress mustBe Some(addressAnswer)
+      theUpdatedCreateAnswers.claimantAddress mustBe Some(auditableAddress)
       redirectLocation(result) mustBe Some(navigator.nextPage(AddressPage, emptyAnswers).url)
     }
 
     "display page when cache has answer" in {
-      withCacheCreateAnswers(CreateAnswers(claimantAddress = Some(addressAnswer)))
+      withCacheCreateAnswers(CreateAnswers(claimantAddress = Some(auditableAddress)))
       val result = controller.onPageLoad()(fakeGetRequest)
       status(result) mustBe Status.OK
 
@@ -121,12 +122,21 @@ class AddressControllerSpec extends ControllerSpec with TestData {
 
     "update cache and redirect when valid answer is submitted" in {
 
-      withCacheCreateAnswers(emptyAnswers)
+      withCacheCreateAnswers(emptyAnswers.copy(claimantAddress = Some(auditableAddress)))
 
       val result = controller.onSubmit()(validRequest)
       status(result) mustEqual SEE_OTHER
-      theUpdatedCreateAnswers.claimantAddress mustBe Some(addressAnswer)
+      theUpdatedCreateAnswers.claimantAddress mustBe Some(auditableAddress)
       redirectLocation(result) mustBe Some(navigator.nextPage(AddressPage, emptyAnswers).url)
+    }
+
+    "exception thrown if no auditRef exists" in {
+
+      withCacheCreateAnswers(emptyAnswers)
+
+      a[MissingAddressException] must be thrownBy {
+        status(controller.onSubmit()(validRequest))
+      }
     }
 
     "return 400 (BAD REQUEST) when invalid data posted" in {

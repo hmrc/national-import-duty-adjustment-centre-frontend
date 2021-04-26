@@ -37,7 +37,7 @@ final case class CreateAnswers(
   importerBankDetails: Option[BankDetails] = None,
   representativeBankDetails: Option[BankDetails] = None,
   importerBusinessName: Option[ImporterBusinessName] = None,
-  importerContactDetails: Option[ImporterContactDetails] = None,
+  importerContactDetails: Option[AuditableImporterContactDetails] = None,
   repayTo: Option[RepayTo] = None,
   entryDetails: Option[EntryDetails] = None,
   itemNumbers: Option[ItemNumbers] = None,

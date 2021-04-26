@@ -66,7 +66,7 @@ class CreateNavigator @Inject() ()
       returnSummaryAnswered
     ),
     P(RequiredDocumentsPage, makeclaim.routes.RequiredDocumentsController.onPageLoad, always, always),
-//    P(UploadPage, makeclaim.routes.UploadFormController.onPageLoad, always, uploadPageAnswered),
+    P(UploadPage, makeclaim.routes.UploadFormController.onPageLoad, always, uploadPageAnswered),
     P(ContactDetailsPage, makeclaim.routes.ContactDetailsController.onPageLoad, always, contactDetailsAnswered),
     P(BusinessNamePage, makeclaim.routes.BusinessNameController.onPageLoad, always, businessNameAnswered),
     P(AddressPage, makeclaim.routes.AddressController.onPageLoad, always, claimantAnswered),

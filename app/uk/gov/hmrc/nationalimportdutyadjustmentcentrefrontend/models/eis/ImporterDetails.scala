@@ -70,10 +70,10 @@ object ImporterDetails {
       EORI = importer.eoriNumber.map(_.number),
       Name = importer.businessName.name,
       Address = ImporterAddress(
-        AddressLine1 = importer.contactDetails.addressLine1,
-        AddressLine2 = importer.contactDetails.addressLine2,
-        City = importer.contactDetails.city,
-        PostalCode = importer.contactDetails.postCode,
+        AddressLine1 = importer.contactDetails.importerContactdetails.addressLine1,
+        AddressLine2 = importer.contactDetails.importerContactdetails.addressLine2,
+        City = importer.contactDetails.importerContactdetails.city,
+        PostalCode = importer.contactDetails.importerContactdetails.postCode,
         CountryCode = "GB",
         EmailAddress = None,
         TelephoneNumber = None

@@ -67,13 +67,13 @@ class AddressController @Inject() (
       formWithErrors =>
         data.getCreateAnswers map { answers => BadRequest(addressView(formWithErrors, backLink(answers))) },
       value =>
-        data.updateCreateAnswers(answers => {
+        data.updateCreateAnswers { answers =>
           val requiredExistingAuditableAddress: Option[AuditableAddress] = answers.claimantAddress
           requiredExistingAuditableAddress match {
-            case Some(existing) => answers.copy(claimantAddress = Some(AuditableAddress(value, existing.auditRef )))
-            case None => throw new MissingAddressException
+            case Some(existing) => answers.copy(claimantAddress = Some(AuditableAddress(value, existing.auditRef)))
+            case None           => throw new MissingAddressException
           }
-        }) map {
+        } map {
           updatedAnswers => Redirect(nextPage(updatedAnswers))
         }
     )
@@ -88,8 +88,8 @@ class AddressController @Inject() (
   def onUpdate(id: String): Action[AnyContent] = identify.async { implicit request =>
     data.getCreateAnswers flatMap { answers =>
       addressLookupService.retrieveAddress(id) flatMap { confirmedAddress =>
-        val el             = confirmedAddress.extractAddressLines()
-        val updatedAddress = Address(el._1, el._2, el._3, el._4, confirmedAddress.address.postcode.getOrElse(""))
+        val el               = confirmedAddress.extractAddressLines()
+        val updatedAddress   = Address(el._1, el._2, el._3, el._4, confirmedAddress.address.postcode.getOrElse(""))
         val auditableAddress = AuditableAddress(updatedAddress, confirmedAddress.auditRef)
         data.updateCreateAnswers(answers => answers.copy(claimantAddress = Some(auditableAddress))) map {
           _ => Redirect(nextPage(answers))

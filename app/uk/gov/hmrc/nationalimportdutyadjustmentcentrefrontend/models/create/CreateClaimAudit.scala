@@ -30,7 +30,7 @@ case class CreateClaimAudit(
   claimReason: ClaimReason,
   reclaimDutyPayments: Map[String, DutyPaid],
   bankDetails: BankDetails,
-  importerContactDetails: Option[ImporterContactDetails],
+  importerContactDetails: Option[AuditableImporterContactDetails],
   repayTo: Option[RepayTo],
   entryDetails: EntryDetails,
   itemNumbers: ItemNumbers,

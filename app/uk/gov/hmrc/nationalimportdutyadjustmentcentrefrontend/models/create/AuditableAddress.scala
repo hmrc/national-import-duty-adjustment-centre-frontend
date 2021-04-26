@@ -18,20 +18,12 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create
 
 import play.api.libs.json.{Json, OFormat}
 
-case class AuditableAddress(
-  address: Address,
-  auditRef: String
-)
+case class AuditableAddress(address: Address, auditRef: String)
 
 object AuditableAddress {
   implicit val format: OFormat[AuditableAddress] = Json.format[AuditableAddress]
 
-  def apply(
-             address: Address,
-             auditRef: String
-           ): AuditableAddress =
+  def apply(address: Address, auditRef: String): AuditableAddress =
     new AuditableAddress(address, auditRef)
 
 }
-
-
