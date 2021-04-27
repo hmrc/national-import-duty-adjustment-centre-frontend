@@ -72,9 +72,7 @@ class ImporterDetailsController @Inject() (
         data.getCreateAnswers map { answers => BadRequest(detailsView(formWithErrors, backLink(answers))) },
       value =>
         data.updateCreateAnswers { answers =>
-          val requiredExistingAuditableContactDetails: Option[AuditableImporterContactDetails] =
-            answers.importerContactDetails
-          requiredExistingAuditableContactDetails match {
+          answers.importerContactDetails match {
             case Some(existing) =>
               answers.copy(importerContactDetails = Some(AuditableImporterContactDetails(value, existing.auditRef)))
             case None => throw new MissingAddressException

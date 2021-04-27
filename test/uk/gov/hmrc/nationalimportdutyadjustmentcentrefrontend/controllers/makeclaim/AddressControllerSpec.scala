@@ -27,7 +27,13 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{ControllerSp
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create.AddressFormProvider
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.addresslookup.AddressLookupOnRamp
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{Address, CreateAnswers}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{
+  Address,
+  AuditableAddress,
+  AuditableImporterContactDetails,
+  CreateAnswers,
+  ImporterContactDetails
+}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.exceptions.MissingAddressException
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.AddressPage
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.AddressLookupService
@@ -122,11 +128,17 @@ class AddressControllerSpec extends ControllerSpec with TestData {
 
     "update cache and redirect when valid answer is submitted" in {
 
-      withCacheCreateAnswers(emptyAnswers.copy(claimantAddress = Some(auditableAddress)))
+      val previouslyLookedUpAddress = AuditableAddress(
+        Address("The Old Firestation", Some("Brick Lane"), None, "Trumpton", "TR1 1FS"),
+        "for-audit-purposes"
+      )
+
+      withCacheCreateAnswers(emptyAnswers.copy(claimantAddress = Some(previouslyLookedUpAddress)))
 
       val result = controller.onSubmit()(validRequest)
       status(result) mustEqual SEE_OTHER
-      theUpdatedCreateAnswers.claimantAddress mustBe Some(auditableAddress)
+      theUpdatedCreateAnswers.claimantAddress.map(ca => ca.address) mustBe Some(addressAnswer)
+      theUpdatedCreateAnswers.claimantAddress.map(ca => ca.auditRef) mustBe Some("for-audit-purposes")
       redirectLocation(result) mustBe Some(navigator.nextPage(AddressPage, emptyAnswers).url)
     }
 

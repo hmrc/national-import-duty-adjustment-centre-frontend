@@ -27,7 +27,11 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{ControllerSp
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create.ImporterDetailsFormProvider
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.addresslookup.AddressLookupOnRamp
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{CreateAnswers, ImporterContactDetails}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{
+  AuditableImporterContactDetails,
+  CreateAnswers,
+  ImporterContactDetails
+}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.exceptions.MissingAddressException
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.ImporterContactDetailsPage
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.AddressLookupService
@@ -122,11 +126,19 @@ class ImporterDetailsControllerSpec extends ControllerSpec with TestData {
 
     "update cache and redirect when valid answer is submitted" in {
 
-      withCacheCreateAnswers(emptyAnswers.copy(importerContactDetails = Some(auditableImporterContactDetails)))
+      val previouslyLookedUpAddress = AuditableImporterContactDetails(
+        ImporterContactDetails("The Old Windmill", None, None, "Trumpton", "TR1 1WM"),
+        "for-audit-purposes"
+      )
+
+      withCacheCreateAnswers(emptyAnswers.copy(importerContactDetails = Some(previouslyLookedUpAddress)))
 
       val result = controller.onSubmit()(validRequest)
       status(result) mustEqual SEE_OTHER
-      theUpdatedCreateAnswers.importerContactDetails mustBe Some(auditableImporterContactDetails)
+      theUpdatedCreateAnswers.importerContactDetails.map(cd => cd.importerContactdetails) mustBe Some(
+        importerContactDetailsAnswer
+      )
+      theUpdatedCreateAnswers.importerContactDetails.map(cd => cd.auditRef) mustBe Some("for-audit-purposes")
       redirectLocation(result) mustBe Some(navigator.nextPage(ImporterContactDetailsPage, theUpdatedCreateAnswers).url)
     }
 

@@ -68,8 +68,7 @@ class AddressController @Inject() (
         data.getCreateAnswers map { answers => BadRequest(addressView(formWithErrors, backLink(answers))) },
       value =>
         data.updateCreateAnswers { answers =>
-          val requiredExistingAuditableAddress: Option[AuditableAddress] = answers.claimantAddress
-          requiredExistingAuditableAddress match {
+          answers.claimantAddress match {
             case Some(existing) => answers.copy(claimantAddress = Some(AuditableAddress(value, existing.auditRef)))
             case None           => throw new MissingAddressException
           }
