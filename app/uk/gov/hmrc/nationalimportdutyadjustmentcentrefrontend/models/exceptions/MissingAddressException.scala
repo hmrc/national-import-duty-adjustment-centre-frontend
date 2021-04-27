@@ -14,18 +14,11 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.exceptions
 
-import play.api.libs.json.{Json, OFormat}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.EoriNumber
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.Page
 
-case class ImporterBeingRepresentedDetails(
-  repayTo: RepayTo,
-  eoriNumber: Option[EoriNumber],
-  businessName: ImporterBusinessName,
-  contactDetails: AuditableImporterContactDetails
-)
-
-object ImporterBeingRepresentedDetails {
-  implicit val format: OFormat[ImporterBeingRepresentedDetails] = Json.format[ImporterBeingRepresentedDetails]
-}
+case class MissingAddressException()
+    extends RuntimeException(
+      "This should never happen. You are not allowed onto the manual address form unless you visited ALF first"
+    )

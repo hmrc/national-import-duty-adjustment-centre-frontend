@@ -83,6 +83,8 @@ trait TestData {
 
   val addressAnswer: Address = Address("Line 1", Some("Line 2"), Some("Line 3"), "City", "WO0 1KE")
 
+  val auditableAddress = AuditableAddress(addressAnswer, "auditRef")
+
   val addressLookupRetrieveId = "id123456"
 
   val addressLookupConfirmation = AddressLookupConfirmation(
@@ -123,6 +125,9 @@ trait TestData {
       "BR0 0KL"
     )
 
+  val auditableImporterContactDetails =
+    AuditableImporterContactDetails(importerContactDetailsAnswer, "auditRef")
+
   val importerAddressLookupConfirmation =
     AddressLookupConfirmation(
       "auditRef",
@@ -145,7 +150,7 @@ trait TestData {
     claimReason = Some(claimReasonAnswer),
     contactDetails = Some(contactDetailsAnswer),
     businessName = Some(businessNameAnswer),
-    claimantAddress = Some(addressAnswer),
+    claimantAddress = Some(auditableAddress),
     uploads = Seq(uploadAnswer),
     uploadAnotherFile = Some(uploadAnotherFileAnswer),
     reclaimDutyTypes = reclaimDutyTypesAnswer,
@@ -157,7 +162,7 @@ trait TestData {
     itemNumbers = Some(itemNumbersAnswer),
     importerEori = Some(importerEoriNumberAnswer),
     importerBusinessName = Some(importerBusinessNameAnswer),
-    importerContactDetails = Some(importerContactDetailsAnswer)
+    importerContactDetails = Some(auditableImporterContactDetails)
   )
 
   val importerAnswers: CreateAnswers = CreateAnswers(
@@ -166,7 +171,7 @@ trait TestData {
     claimReason = Some(claimReasonAnswer),
     contactDetails = Some(contactDetailsAnswer),
     businessName = Some(businessNameAnswer),
-    claimantAddress = Some(addressAnswer),
+    claimantAddress = Some(auditableAddress),
     uploads = Seq(uploadAnswer),
     uploadAnotherFile = Some(uploadAnotherFileAnswer),
     reclaimDutyTypes = reclaimDutyTypesAnswer,
@@ -247,13 +252,13 @@ trait TestData {
     success = true,
     Some("NID21134557697RM8WIB14"),
     contactDetailsAnswer,
-    addressAnswer,
+    auditableAddress,
     representationTypeAnswer,
     claimTypeAnswer,
     claimReasonAnswer,
     Map("Customs" -> DutyPaid("100", "9.99"), "Vat" -> DutyPaid("100", "9.99"), "Other" -> DutyPaid("100", "9.99")),
     importerBankDetailsAnswer,
-    Some(importerContactDetailsAnswer),
+    Some(auditableImporterContactDetails),
     Some(repayToAnswer),
     entryDetailsAnswer,
     itemNumbersAnswer,

@@ -31,7 +31,7 @@ case class Claim(
   claimantEori: EoriNumber,
   contactDetails: ContactDetails,
   businessName: BusinessName,
-  claimantAddress: Address,
+  claimantAddress: AuditableAddress,
   representationType: RepresentationType,
   claimType: ClaimType,
   claimReason: ClaimReason,

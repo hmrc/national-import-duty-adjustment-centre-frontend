@@ -17,15 +17,13 @@
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create
 
 import play.api.libs.json.{Json, OFormat}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.EoriNumber
 
-case class ImporterBeingRepresentedDetails(
-  repayTo: RepayTo,
-  eoriNumber: Option[EoriNumber],
-  businessName: ImporterBusinessName,
-  contactDetails: AuditableImporterContactDetails
-)
+case class AuditableImporterContactDetails(importerContactdetails: ImporterContactDetails, auditRef: String)
 
-object ImporterBeingRepresentedDetails {
-  implicit val format: OFormat[ImporterBeingRepresentedDetails] = Json.format[ImporterBeingRepresentedDetails]
+object AuditableImporterContactDetails {
+  implicit val format: OFormat[AuditableImporterContactDetails] = Json.format[AuditableImporterContactDetails]
+
+  def apply(importerContactdetails: ImporterContactDetails, auditRef: String): AuditableImporterContactDetails =
+    new AuditableImporterContactDetails(importerContactdetails, auditRef)
+
 }
