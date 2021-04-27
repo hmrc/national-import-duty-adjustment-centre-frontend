@@ -50,7 +50,8 @@ class ImporterDetailsFormProvider @Inject() extends Mappings {
               _.stripExternalAndReduceInternalSpaces()
             )
           )
-        )
+        ),
+      "auditRef" -> optional(text())
     )(ImporterContactDetails.apply)(ImporterContactDetails.unapply)
   )
 

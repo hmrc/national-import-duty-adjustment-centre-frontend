@@ -83,7 +83,7 @@ trait TestData {
 
   val addressAnswer: Address = Address("Line 1", Some("Line 2"), Some("Line 3"), "City", "WO0 1KE")
 
-  val auditableAddress = AuditableAddress(addressAnswer, "auditRef")
+  val auditableAddress = addressAnswer.copy(auditRef = Some("auditRef"))
 
   val addressLookupRetrieveId = "id123456"
 
@@ -125,8 +125,7 @@ trait TestData {
       "BR0 0KL"
     )
 
-  val auditableImporterContactDetails =
-    AuditableImporterContactDetails(importerContactDetailsAnswer, "auditRef")
+  val auditableImporterContactDetails = importerContactDetailsAnswer.copy(auditRef = Some("auditRef"))
 
   val importerAddressLookupConfirmation =
     AddressLookupConfirmation(

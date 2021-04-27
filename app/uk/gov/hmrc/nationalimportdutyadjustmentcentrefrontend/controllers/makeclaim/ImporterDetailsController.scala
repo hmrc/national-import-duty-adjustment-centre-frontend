@@ -24,12 +24,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.Navigation
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.IdentifierAction
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create.ImporterDetailsFormProvider
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{
-  AuditableImporterContactDetails,
-  CreateAnswers,
-  ImporterContactDetails
-}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.exceptions.MissingAddressException
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{CreateAnswers, ImporterContactDetails}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.CreateNavigator
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{ImporterContactDetailsPage, Page}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.{AddressLookupService, CacheDataService}
@@ -58,7 +53,7 @@ class ImporterDetailsController @Inject() (
     data.getCreateAnswers map { answers =>
       answers.importerContactDetails match {
         case Some(address) =>
-          val preparedForm = answers.importerContactDetails.map(cd => cd.importerContactdetails).fold(form)(form.fill)
+          val preparedForm = answers.importerContactDetails.fold(form)(form.fill)
           Ok(detailsView(preparedForm, backLink(answers)))
         case _ =>
           Redirect(controllers.makeclaim.routes.ImporterDetailsController.onChange())
@@ -71,13 +66,7 @@ class ImporterDetailsController @Inject() (
       formWithErrors =>
         data.getCreateAnswers map { answers => BadRequest(detailsView(formWithErrors, backLink(answers))) },
       value =>
-        data.updateCreateAnswers { answers =>
-          answers.importerContactDetails match {
-            case Some(existing) =>
-              answers.copy(importerContactDetails = Some(AuditableImporterContactDetails(value, existing.auditRef)))
-            case None => throw new MissingAddressException
-          }
-        } map {
+        data.updateCreateAnswers(answers => answers.copy(importerContactDetails = Some(value))) map {
           updatedAnswers => Redirect(nextPage(updatedAnswers))
         }
     )
@@ -93,21 +82,23 @@ class ImporterDetailsController @Inject() (
     data.getCreateAnswers flatMap { answers =>
       addressLookupService.retrieveAddress(id) flatMap { confirmedAddress =>
         val el = confirmedAddress.extractAddressLines()
-        val updatedAddress =
-          ImporterContactDetails(el._1, el._2, el._3, el._4, confirmedAddress.address.postcode.getOrElse(""))
+        val updatedContactDetails =
+          ImporterContactDetails(
+            el._1,
+            el._2,
+            el._3,
+            el._4,
+            confirmedAddress.address.postcode.getOrElse(""),
+            Some(confirmedAddress.auditRef)
+          )
         // Address Lookup Service may return an address that is incompatible with NIDAC, so validate it again
-        val formWithAddress = form.fillAndValidate(updatedAddress)
+        val formWithAddress = form.fillAndValidate(updatedContactDetails)
         if (formWithAddress.hasErrors)
           Future.successful(BadRequest(detailsView(formWithAddress, backLink(answers))))
-        else {
-          val auditableImporterContactDetails =
-            AuditableImporterContactDetails(updatedAddress, confirmedAddress.auditRef)
-          data.updateCreateAnswers(
-            answers => answers.copy(importerContactDetails = Some(auditableImporterContactDetails))
-          ) map {
+        else
+          data.updateCreateAnswers(answers => answers.copy(importerContactDetails = Some(updatedContactDetails))) map {
             _ => Redirect(nextPage(answers))
           }
-        }
       }
     }
   }

@@ -24,7 +24,8 @@ case class Address(
   addressLine2: Option[String],
   addressLine3: Option[String],
   city: String,
-  postCode: String
+  postCode: String,
+  auditRef: Option[String] = None
 )
 
 object Address {
