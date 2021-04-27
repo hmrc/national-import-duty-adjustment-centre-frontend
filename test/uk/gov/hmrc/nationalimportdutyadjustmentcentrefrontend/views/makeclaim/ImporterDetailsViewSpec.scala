@@ -51,11 +51,15 @@ class ImporterDetailsViewSpec extends UnitViewSpec with TestData {
     }
 
     "have label for addresss line 2" in {
-      view().getElementsByAttributeValue("for", "addressLine2").text() must include(messages("address.line2.hidden"))
+      view().getElementsByAttributeValue("for", "addressLine2").text() must include(
+        s"${messages("address.line2.heading")} ${messages("address.line2.hidden")}"
+      )
     }
 
     "have label for addresss line 3" in {
-      view().getElementsByAttributeValue("for", "addressLine3").text() must include(messages("address.line3.hidden"))
+      view().getElementsByAttributeValue("for", "addressLine3").text() must include(
+        s"${messages("address.line3.heading")} ${messages("address.line3.hidden")}"
+      )
     }
 
     "have label for town or city" in {
