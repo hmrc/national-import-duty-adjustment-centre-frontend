@@ -66,8 +66,13 @@ class AddressController @Inject() (
       formWithErrors =>
         data.getCreateAnswers map { answers => BadRequest(addressView(formWithErrors, backLink(answers))) },
       value =>
-        data.updateCreateAnswers(answers => answers.copy(claimantAddress = Some(value))) map {
-          updatedAnswers => Redirect(nextPage(updatedAnswers))
+        data.getCreateAnswers flatMap { existingAnswers =>
+          val updatedAddress =
+            if (existingAnswers.claimantAddress.contains(value)) value
+            else value.copy(auditRef = None)
+          data.updateCreateAnswers(answers => answers.copy(claimantAddress = Some(updatedAddress))) map {
+            updatedAnswers => Redirect(nextPage(updatedAnswers))
+          }
         }
     )
   }

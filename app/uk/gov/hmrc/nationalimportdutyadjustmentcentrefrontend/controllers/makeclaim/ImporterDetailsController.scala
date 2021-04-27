@@ -66,8 +66,13 @@ class ImporterDetailsController @Inject() (
       formWithErrors =>
         data.getCreateAnswers map { answers => BadRequest(detailsView(formWithErrors, backLink(answers))) },
       value =>
-        data.updateCreateAnswers(answers => answers.copy(importerContactDetails = Some(value))) map {
-          updatedAnswers => Redirect(nextPage(updatedAnswers))
+        data.getCreateAnswers flatMap { existingAnswers =>
+          val updatedDetails =
+            if (existingAnswers.importerContactDetails.contains(value)) value
+            else value.copy(auditRef = None)
+          data.updateCreateAnswers(answers => answers.copy(importerContactDetails = Some(updatedDetails))) map {
+            updatedAnswers => Redirect(nextPage(updatedAnswers))
+          }
         }
     )
   }

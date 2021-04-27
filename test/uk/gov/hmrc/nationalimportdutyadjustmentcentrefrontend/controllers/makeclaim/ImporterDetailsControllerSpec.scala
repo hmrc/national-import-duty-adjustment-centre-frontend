@@ -28,8 +28,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create.ImporterDetailsFormProvider
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.addresslookup.AddressLookupOnRamp
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{CreateAnswers, ImporterContactDetails}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.exceptions.MissingAddressException
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.ImporterContactDetailsPage
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{AddressPage, ImporterContactDetailsPage}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.AddressLookupService
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ImporterDetailsView
 import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
@@ -122,17 +121,25 @@ class ImporterDetailsControllerSpec extends ControllerSpec with TestData {
   "POST" should {
 
     val validRequest = postRequest(
-      "addressLine1" -> importerContactDetailsAnswer.addressLine1,
-      "addressLine2" -> importerContactDetailsAnswer.addressLine2.getOrElse(""),
-      "addressLine3" -> importerContactDetailsAnswer.addressLine3.getOrElse(""),
-      "city"         -> importerContactDetailsAnswer.city,
-      "postcode"     -> importerContactDetailsAnswer.postCode
+      "addressLine1" -> auditableImporterContactDetails.addressLine1,
+      "addressLine2" -> auditableImporterContactDetails.addressLine2.getOrElse(""),
+      "addressLine3" -> auditableImporterContactDetails.addressLine3.getOrElse(""),
+      "city"         -> auditableImporterContactDetails.city,
+      "postcode"     -> auditableImporterContactDetails.postCode,
+      "auditRef"     -> auditableImporterContactDetails.auditRef.get
     )
 
-    "update cache and redirect when valid answer is submitted" in {
+    "update cache, clear audit ref and redirect when valid answer is submitted" in {
 
       val previouslyLookedUpAddress =
-        ImporterContactDetails("The Old Windmill", None, None, "Trumpton", "TR1 1WM", Some("for-audit-purposes"))
+        ImporterContactDetails(
+          "The Old Windmill",
+          None,
+          None,
+          "Trumpton",
+          "TR1 1WM",
+          auditableImporterContactDetails.auditRef
+        )
 
       withCacheCreateAnswers(emptyAnswers.copy(importerContactDetails = Some(previouslyLookedUpAddress)))
 
@@ -140,6 +147,21 @@ class ImporterDetailsControllerSpec extends ControllerSpec with TestData {
       status(result) mustEqual SEE_OTHER
       theUpdatedCreateAnswers.importerContactDetails mustBe Some(importerContactDetailsAnswer)
       theUpdatedCreateAnswers.importerContactDetails.flatMap(cd => cd.auditRef) mustBe None
+      redirectLocation(result) mustBe Some(navigator.nextPage(ImporterContactDetailsPage, theUpdatedCreateAnswers).url)
+    }
+
+    "preserve audit ref and redirect when same answer is submitted" in {
+
+      val previouslyLookedUpAddress = auditableImporterContactDetails
+
+      withCacheCreateAnswers(emptyAnswers.copy(importerContactDetails = Some(previouslyLookedUpAddress)))
+
+      val result = controller.onSubmit()(validRequest)
+      status(result) mustEqual SEE_OTHER
+      theUpdatedCreateAnswers.importerContactDetails mustBe Some(auditableImporterContactDetails)
+      theUpdatedCreateAnswers.importerContactDetails.flatMap(
+        ca => ca.auditRef
+      ) mustBe auditableImporterContactDetails.auditRef
       redirectLocation(result) mustBe Some(navigator.nextPage(ImporterContactDetailsPage, theUpdatedCreateAnswers).url)
     }
 

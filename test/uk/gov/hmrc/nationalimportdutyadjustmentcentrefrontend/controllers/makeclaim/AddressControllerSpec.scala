@@ -28,7 +28,6 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create.AddressFormProvider
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.addresslookup.AddressLookupOnRamp
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{Address, CreateAnswers}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.exceptions.MissingAddressException
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.AddressPage
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.AddressLookupService
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.AddressView
@@ -122,24 +121,38 @@ class AddressControllerSpec extends ControllerSpec with TestData {
   "POST" should {
 
     val validRequest = postRequest(
-      "addressLine1" -> addressAnswer.addressLine1,
-      "addressLine2" -> addressAnswer.addressLine2.getOrElse(""),
-      "addressLine3" -> addressAnswer.addressLine3.getOrElse(""),
-      "city"         -> addressAnswer.city,
-      "postcode"     -> addressAnswer.postCode
+      "addressLine1" -> auditableAddress.addressLine1,
+      "addressLine2" -> auditableAddress.addressLine2.getOrElse(""),
+      "addressLine3" -> auditableAddress.addressLine3.getOrElse(""),
+      "city"         -> auditableAddress.city,
+      "postcode"     -> auditableAddress.postCode,
+      "auditRef"     -> auditableAddress.auditRef.get
     )
 
-    "update cache and redirect when valid answer is submitted" in {
+    "update cache, clear audit ref and redirect when valid answer is submitted" in {
 
       val previouslyLookedUpAddress =
-        Address("The Old Firestation", Some("Brick Lane"), None, "Trumpton", "TR1 1FS", Some("for-audit-purposes"))
+        Address("The Old Firestation", Some("Brick Lane"), None, "Trumpton", "TR1 1FS", auditableAddress.auditRef)
 
       withCacheCreateAnswers(emptyAnswers.copy(claimantAddress = Some(previouslyLookedUpAddress)))
 
       val result = controller.onSubmit()(validRequest)
       status(result) mustEqual SEE_OTHER
-      theUpdatedCreateAnswers.claimantAddress mustBe Some(addressAnswer)
+      theUpdatedCreateAnswers.claimantAddress mustBe Some(auditableAddress.copy(auditRef = None))
       theUpdatedCreateAnswers.claimantAddress.flatMap(ca => ca.auditRef) mustBe None
+      redirectLocation(result) mustBe Some(navigator.nextPage(AddressPage, emptyAnswers).url)
+    }
+
+    "preserve audit ref and redirect when same answer is submitted" in {
+
+      val previouslyLookedUpAddress = auditableAddress
+
+      withCacheCreateAnswers(emptyAnswers.copy(claimantAddress = Some(previouslyLookedUpAddress)))
+
+      val result = controller.onSubmit()(validRequest)
+      status(result) mustEqual SEE_OTHER
+      theUpdatedCreateAnswers.claimantAddress mustBe Some(auditableAddress)
+      theUpdatedCreateAnswers.claimantAddress.flatMap(ca => ca.auditRef) mustBe auditableAddress.auditRef
       redirectLocation(result) mustBe Some(navigator.nextPage(AddressPage, emptyAnswers).url)
     }
 

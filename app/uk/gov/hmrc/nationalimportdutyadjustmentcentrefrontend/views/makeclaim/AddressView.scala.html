@@ -44,6 +44,8 @@
             hint = Some(Html(messages("address.hint")))
         ) {
           @addressFields(form)
+
+          @components.hiddenInput("auditRef", form.value.flatMap(add => add.auditRef).getOrElse(""))
         }
 
         @paragraphHtml {

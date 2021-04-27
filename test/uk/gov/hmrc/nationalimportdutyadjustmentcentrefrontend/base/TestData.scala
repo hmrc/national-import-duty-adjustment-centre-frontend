@@ -125,11 +125,11 @@ trait TestData {
       "BR0 0KL"
     )
 
-  val auditableImporterContactDetails = importerContactDetailsAnswer.copy(auditRef = Some("auditRef"))
+  val auditableImporterContactDetails = importerContactDetailsAnswer.copy(auditRef = Some("auditRefImporter"))
 
   val importerAddressLookupConfirmation =
     AddressLookupConfirmation(
-      "auditRef",
+      "auditRefImporter",
       Some("id123456"),
       AddressLookupAddress(
         List(
