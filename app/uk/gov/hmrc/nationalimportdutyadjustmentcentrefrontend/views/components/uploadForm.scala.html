@@ -52,6 +52,7 @@
         id = "upload-file",
         attributes = Map(
             "accept" -> appConfig.upscan.approvedFileExtensions,
+            "autocomplete" -> "off",
             "onchange" -> "javascript:onFileSelect()"
         ),
         label = Label(
