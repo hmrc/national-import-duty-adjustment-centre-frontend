@@ -21,6 +21,8 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, Un
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ClaimType.AntiDumping
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ReclaimDutyType.{Customs, Other, Vat}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{
+  AuditableAddress,
+  AuditableImporterContactDetails,
   BankDetails,
   BusinessName,
   Claim,
@@ -58,7 +60,10 @@ class EISCreateCaseRequestSpec extends UnitSpec with TestData {
     contactDetails = ContactDetails("Adam", "Smith", "adam@smith.com", Some("01234567890")),
     businessName = BusinessName("Import Network Inc"),
     claimantAddress =
-      UkAddress("Address Line 1", Some("Address Line 2"), Some("Address Line 3"), "City", "PO12CD"),
+      AuditableAddress(
+        UkAddress("Address Line 1", Some("Address Line 2"), Some("Address Line 3"), "City", "PO12CD"),
+        "for-audit-purposes"
+      ),
     representationType = RepresentationType.Representative,
     claimType = AntiDumping,
     claimReason = ClaimReason("A reason for the claim"),
@@ -71,12 +76,15 @@ class EISCreateCaseRequestSpec extends UnitSpec with TestData {
         eoriNumber = Some(EoriNumber("GB098765432123")),
         businessName = ImporterBusinessName("Acme Import Co Ltd"),
         contactDetails =
-          ImporterContactDetails(
-            "Importer Address Line 1",
-            Some("Importer Address Line 2"),
-            Some("Importer Address Line 3"),
-            "Importer City",
-            "IM12CD"
+          AuditableImporterContactDetails(
+            ImporterContactDetails(
+              "Importer Address Line 1",
+              Some("Importer Address Line 2"),
+              Some("Importer Address Line 3"),
+              "Importer City",
+              "IM12CD"
+            ),
+            "a1adf9b4-60d8-4311-ba9d-9855ed33b71e"
           )
       )
     ),
@@ -136,7 +144,10 @@ class EISCreateCaseRequestSpec extends UnitSpec with TestData {
     contactDetails = ContactDetails("Adam", "Smith", "adam@smith.com", Some("01234567890")),
     businessName = BusinessName("Acme Import Co Ltd"),
     claimantAddress =
-      UkAddress("Address Line 1", Some("Address Line 2"), Some("Address Line 3"), "City", "PO12CD"),
+      AuditableAddress(
+        UkAddress("Address Line 1", Some("Address Line 2"), Some("Address Line 3"), "City", "PO12CD"),
+        "for-audit-purposes"
+      ),
     representationType = RepresentationType.Importer,
     claimType = AntiDumping,
     claimReason = ClaimReason("A reason for the claim"),
