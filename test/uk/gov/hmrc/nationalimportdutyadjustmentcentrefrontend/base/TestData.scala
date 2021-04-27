@@ -17,6 +17,7 @@
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base
 
 import java.time.{Instant, LocalDate}
+
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.Reference
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.addresslookup.{
   AddressLookupAddress,
@@ -97,6 +98,12 @@ trait TestData {
       Some(addressAnswer.postCode),
       AddressLookupCountry("UK", "United Kingdom")
     )
+  )
+
+  val addressLookupConfirmationInvalid = AddressLookupConfirmation(
+    "auditRef",
+    Some("id123456"),
+    AddressLookupAddress(List("Line 1" * 100, "", "", "city" * 50), None, AddressLookupCountry("UK", "United Kingdom"))
   )
 
   val entryDetailsAnswer: EntryDetails = EntryDetails("010", "123456Q", fixedDate)

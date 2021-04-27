@@ -31,7 +31,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.{AddressL
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ImporterDetailsView
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class ImporterDetailsController @Inject() (
@@ -84,9 +84,14 @@ class ImporterDetailsController @Inject() (
         val el = confirmedAddress.extractAddressLines()
         val updatedAddress =
           ImporterContactDetails(el._1, el._2, el._3, el._4, confirmedAddress.address.postcode.getOrElse(""))
-        data.updateCreateAnswers(answers => answers.copy(importerContactDetails = Some(updatedAddress))) map {
-          _ => Redirect(nextPage(answers))
-        }
+        // Address Lookup Service may return an address that is incompatible with NIDAC, so validate it again
+        val formWithAddress = form.fillAndValidate(updatedAddress)
+        if (formWithAddress.hasErrors)
+          Future.successful(BadRequest(detailsView(formWithAddress, backLink(answers))))
+        else
+          data.updateCreateAnswers(answers => answers.copy(importerContactDetails = Some(updatedAddress))) map {
+            _ => Redirect(nextPage(answers))
+          }
       }
     }
   }

@@ -126,7 +126,7 @@ class AddressFormProviderSpec extends StringFieldBehaviours {
 
     "not bind empty string" in {
       val result        = form.bind(Map(fieldName -> "       ")).apply(fieldName)
-      val expectedError = FormError(fieldName, lengthKey)
+      val expectedError = FormError(fieldName, requiredKey)
       result.errors mustEqual Seq(expectedError)
     }
 

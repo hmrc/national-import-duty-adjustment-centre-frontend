@@ -100,6 +100,15 @@ class AddressControllerSpec extends ControllerSpec with TestData {
       redirectLocation(result) mustBe Some(navigator.nextPage(AddressPage, emptyAnswers).url)
     }
 
+    "return 400 (BAD REQUEST) when address lookup returns an invalid address" in {
+      withCacheCreateAnswers(emptyAnswers)
+      when(addressLookupService.retrieveAddress(ArgumentMatchers.eq(addressLookupRetrieveId))(any(), any())).thenReturn(
+        Future.successful(addressLookupConfirmationInvalid)
+      )
+      val result = controller.onUpdate(addressLookupRetrieveId)(fakeGetRequest)
+      status(result) mustEqual BAD_REQUEST
+    }
+
     "display page when cache has answer" in {
       withCacheCreateAnswers(CreateAnswers(claimantAddress = Some(addressAnswer)))
       val result = controller.onPageLoad()(fakeGetRequest)
