@@ -16,9 +16,9 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim
 
-import org.mockito.{ArgumentCaptor, ArgumentMatchers}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{reset, verify, when}
+import org.mockito.{ArgumentCaptor, ArgumentMatchers}
 import play.api.data.Form
 import play.api.http.Status
 import play.api.test.Helpers._
@@ -27,14 +27,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{ControllerSp
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create.AddressFormProvider
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.addresslookup.AddressLookupOnRamp
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{
-  Address,
-  AuditableAddress,
-  AuditableImporterContactDetails,
-  CreateAnswers,
-  ImporterContactDetails
-}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.exceptions.MissingAddressException
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{Address, CreateAnswers}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.AddressPage
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.AddressLookupService
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.AddressView
@@ -107,48 +100,60 @@ class AddressControllerSpec extends ControllerSpec with TestData {
       redirectLocation(result) mustBe Some(navigator.nextPage(AddressPage, emptyAnswers).url)
     }
 
+    "return 400 (BAD REQUEST) when address lookup returns an invalid address" in {
+      withCacheCreateAnswers(emptyAnswers)
+      when(addressLookupService.retrieveAddress(ArgumentMatchers.eq(addressLookupRetrieveId))(any(), any())).thenReturn(
+        Future.successful(addressLookupConfirmationInvalid)
+      )
+      val result = controller.onUpdate(addressLookupRetrieveId)(fakeGetRequest)
+      status(result) mustEqual BAD_REQUEST
+    }
+
     "display page when cache has answer" in {
       withCacheCreateAnswers(CreateAnswers(claimantAddress = Some(auditableAddress)))
       val result = controller.onPageLoad()(fakeGetRequest)
       status(result) mustBe Status.OK
 
-      theResponseForm.value mustBe Some(addressAnswer)
+      theResponseForm.value mustBe Some(auditableAddress)
     }
   }
 
   "POST" should {
 
     val validRequest = postRequest(
-      "addressLine1" -> addressAnswer.addressLine1,
-      "addressLine2" -> addressAnswer.addressLine2.getOrElse(""),
-      "addressLine3" -> addressAnswer.addressLine3.getOrElse(""),
-      "city"         -> addressAnswer.city,
-      "postcode"     -> addressAnswer.postCode
+      "addressLine1" -> auditableAddress.addressLine1,
+      "addressLine2" -> auditableAddress.addressLine2.getOrElse(""),
+      "addressLine3" -> auditableAddress.addressLine3.getOrElse(""),
+      "city"         -> auditableAddress.city,
+      "postcode"     -> auditableAddress.postCode,
+      "auditRef"     -> auditableAddress.auditRef.get
     )
 
-    "update cache and redirect when valid answer is submitted" in {
+    "update cache, clear audit ref and redirect when valid answer is submitted" in {
 
-      val previouslyLookedUpAddress = AuditableAddress(
-        Address("The Old Firestation", Some("Brick Lane"), None, "Trumpton", "TR1 1FS"),
-        "for-audit-purposes"
-      )
+      val previouslyLookedUpAddress =
+        Address("The Old Firestation", Some("Brick Lane"), None, "Trumpton", "TR1 1FS", auditableAddress.auditRef)
 
       withCacheCreateAnswers(emptyAnswers.copy(claimantAddress = Some(previouslyLookedUpAddress)))
 
       val result = controller.onSubmit()(validRequest)
       status(result) mustEqual SEE_OTHER
-      theUpdatedCreateAnswers.claimantAddress.map(ca => ca.address) mustBe Some(addressAnswer)
-      theUpdatedCreateAnswers.claimantAddress.map(ca => ca.auditRef) mustBe Some("for-audit-purposes")
+      theUpdatedCreateAnswers.claimantAddress mustBe Some(auditableAddress.copy(auditRef = None))
+      theUpdatedCreateAnswers.claimantAddress.flatMap(ca => ca.auditRef) mustBe None
       redirectLocation(result) mustBe Some(navigator.nextPage(AddressPage, emptyAnswers).url)
     }
 
-    "exception thrown if no auditRef exists" in {
+    "preserve audit ref and redirect when same answer is submitted" in {
 
-      withCacheCreateAnswers(emptyAnswers)
+      val previouslyLookedUpAddress = auditableAddress
 
-      a[MissingAddressException] must be thrownBy {
-        status(controller.onSubmit()(validRequest))
-      }
+      withCacheCreateAnswers(emptyAnswers.copy(claimantAddress = Some(previouslyLookedUpAddress)))
+
+      val result = controller.onSubmit()(validRequest)
+      status(result) mustEqual SEE_OTHER
+      theUpdatedCreateAnswers.claimantAddress mustBe Some(auditableAddress)
+      theUpdatedCreateAnswers.claimantAddress.flatMap(ca => ca.auditRef) mustBe auditableAddress.auditRef
+      redirectLocation(result) mustBe Some(navigator.nextPage(AddressPage, emptyAnswers).url)
     }
 
     "return 400 (BAD REQUEST) when invalid data posted" in {

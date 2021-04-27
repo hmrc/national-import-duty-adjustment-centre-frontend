@@ -261,11 +261,11 @@
             ),
             value = Value(
                 content = HtmlContent(answers.claimantAddress.map(claimantAddress => Seq(
-                    Some(claimantAddress.address.addressLine1),
-                    claimantAddress.address.addressLine2,
-                    claimantAddress.address.addressLine3,
-                    Some(claimantAddress.address.city),
-                    Some(claimantAddress.address.postCode)
+                    Some(claimantAddress.addressLine1),
+                    claimantAddress.addressLine2,
+                    claimantAddress.addressLine3,
+                    Some(claimantAddress.city),
+                    Some(claimantAddress.postCode)
                 ).flatten.map(HtmlFormat.escape(_)).mkString("<br>")).getOrElse(""))
             ),
             actions = if(!withActions) None else  Some(Actions(
@@ -407,11 +407,11 @@
                     ),
                     value = Value(
                         content = HtmlContent(answers.importerContactDetails.map( contactDetails => Seq(
-                            Some(contactDetails.importerContactdetails.addressLine1),
-                            contactDetails.importerContactdetails.addressLine2,
-                            contactDetails.importerContactdetails.addressLine3,
-                            Some(contactDetails.importerContactdetails.city),
-                            Some(contactDetails.importerContactdetails.postCode)
+                            Some(contactDetails.addressLine1),
+                            contactDetails.addressLine2,
+                            contactDetails.addressLine3,
+                            Some(contactDetails.city),
+                            Some(contactDetails.postCode)
                         ).flatten.map(HtmlFormat.escape(_)).mkString("<br>")).getOrElse(""))
                     ),
                     actions = if(!withActions) None else  Some(Actions(

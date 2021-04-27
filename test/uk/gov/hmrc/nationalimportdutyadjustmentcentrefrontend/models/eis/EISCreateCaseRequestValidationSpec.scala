@@ -50,7 +50,7 @@ class EISCreateCaseRequestValidationSpec extends UnitSpec with JsonSchemaValidat
       validationErrors(
         eisRequest(
           completeAnswers.copy(claimantAddress =
-            Some(AuditableAddress(addressAnswer.copy(postCode = "BA12 3HS"), "for-audit-purposes"))
+            Some(addressAnswer.copy(postCode = "BA12 3HS", auditRef = Some("for-audit-purposes")))
           )
         )
       ) mustBe None

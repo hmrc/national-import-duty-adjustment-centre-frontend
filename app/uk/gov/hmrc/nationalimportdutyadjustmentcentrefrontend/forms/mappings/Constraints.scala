@@ -33,8 +33,10 @@ trait Constraints {
           .getOrElse(Valid)
     }
 
-  protected def postcodeLength(errorKey: String): Constraint[String] =
+  protected def postcodeLength(missingKey: String, errorKey: String): Constraint[String] =
     Constraint {
+      case str if str.stripExternalAndReduceInternalSpaces().length == 0 =>
+        Invalid(missingKey)
       case str if str.stripExternalAndReduceInternalSpaces().length > 8 =>
         Invalid(errorKey)
       case str if str.stripExternalAndReduceInternalSpaces().length < 5 =>

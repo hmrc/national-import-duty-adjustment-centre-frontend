@@ -23,7 +23,7 @@ case class ImporterBeingRepresentedDetails(
   repayTo: RepayTo,
   eoriNumber: Option[EoriNumber],
   businessName: ImporterBusinessName,
-  contactDetails: AuditableImporterContactDetails
+  contactDetails: ImporterContactDetails
 )
 
 object ImporterBeingRepresentedDetails {

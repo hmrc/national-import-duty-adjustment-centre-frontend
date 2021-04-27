@@ -46,6 +46,8 @@
         ) {
 
             @addressFields(form)
+
+            @components.hiddenInput("auditRef", form.value.flatMap(add => add.auditRef).getOrElse(""))
         }
 
         @paragraphHtml {

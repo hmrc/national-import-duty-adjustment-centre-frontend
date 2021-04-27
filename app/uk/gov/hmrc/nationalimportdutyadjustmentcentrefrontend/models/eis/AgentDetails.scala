@@ -32,10 +32,10 @@ object AgentDetails {
           EORI = Some(claim.claimantEori.number),
           Name = claim.businessName.name,
           Address = AgentAddress(
-            AddressLine1 = claim.claimantAddress.address.addressLine1,
-            AddressLine2 = claim.claimantAddress.address.addressLine2,
-            City = claim.claimantAddress.address.city,
-            PostalCode = claim.claimantAddress.address.postCode,
+            AddressLine1 = claim.claimantAddress.addressLine1,
+            AddressLine2 = claim.claimantAddress.addressLine2,
+            City = claim.claimantAddress.city,
+            PostalCode = claim.claimantAddress.postCode,
             CountryCode = "GB",
             EmailAddress = claim.contactDetails.emailAddress,
             TelephoneNumber = claim.contactDetails.telephoneNumber
