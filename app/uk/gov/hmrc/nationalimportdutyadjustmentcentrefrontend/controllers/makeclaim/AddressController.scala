@@ -79,7 +79,7 @@ class AddressController @Inject() (
   }
 
   def onChange(): Action[AnyContent] = identify.async { implicit request =>
-    addressLookupService.initialiseJourney(appConfig.yourAddressLookupCallbackUrl, "address.title") map {
+    addressLookupService.initialiseJourney(appConfig.yourAddressLookupCallbackUrl, appConfig.loginContinueUrl, "address.title") map {
       response => Redirect(response.redirectUrl)
     }
   }

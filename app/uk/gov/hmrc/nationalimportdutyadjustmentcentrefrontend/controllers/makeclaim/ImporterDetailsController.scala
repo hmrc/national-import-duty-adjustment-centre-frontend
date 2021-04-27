@@ -84,7 +84,7 @@ class ImporterDetailsController @Inject() (
   }
 
   def onChange(): Action[AnyContent] = identify.async { implicit request =>
-    addressLookupService.initialiseJourney(appConfig.importerAddressLookupCallbackUrl, "importer-details.title") map {
+    addressLookupService.initialiseJourney(appConfig.importerAddressLookupCallbackUrl, appConfig.loginContinueUrl, "importer-details.title") map {
       response => Redirect(response.redirectUrl)
     }
   }

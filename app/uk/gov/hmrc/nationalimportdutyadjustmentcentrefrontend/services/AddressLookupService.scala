@@ -38,10 +38,10 @@ class AddressLookupService @Inject() (
   def retrieveAddress(id: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AddressLookupConfirmation] =
     addressLookupConnector.getAddress(id)
 
-  def initialiseJourney(callBackUrl: String, lookupPageHeadingKey: String)(implicit
+  def initialiseJourney(callBackUrl: String, homeUrl: String, lookupPageHeadingKey: String)(implicit
     hc: HeaderCarrier,
     ec: ExecutionContext
   ): Future[AddressLookupOnRamp] =
-    addressLookupConnector.initialiseJourney(AddressLookupRequest(callBackUrl, lookupPageHeadingKey))
+    addressLookupConnector.initialiseJourney(AddressLookupRequest(callBackUrl, homeUrl, lookupPageHeadingKey))
 
 }
