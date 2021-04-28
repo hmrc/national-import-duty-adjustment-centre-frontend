@@ -52,30 +52,16 @@ class ReturnAmountSummaryViewSpec extends UnitViewSpec with TestData {
 
         val customsDutyPaidRow = customsDutySection.getElementsByClass("01_paid_summary_row")
 
-        customsDutyPaidRow must haveSummaryKey(messages("returnAmountSummary.was.paid.01"))
+        customsDutyPaidRow must haveSummaryKey(messages("returnAmountSummary.was.paid"))
         customsDutyPaidRow must haveSummaryValue(s"£${customsDutyRepaymentAnswer.actuallyPaid}")
-
-        customsDutyPaidRow must haveSummaryChangeLinkText(
-          s"${messages("site.change")} ${messages("returnAmountSummary.was.paid.01.accessible")}"
-        )
-        customsDutyPaidRow must haveSummaryActionsHref(
-          routes.CheckYourAnswersController.onChange(CreatePageNames.dutyCustoms)
-        )
       }
 
       "contains customs duty should have paid" in {
 
         val customsDutyExpectedRow = customsDutySection.getElementsByClass("01_expected_summary_row")
 
-        customsDutyExpectedRow must haveSummaryKey(messages("returnAmountSummary.should.have.paid.01"))
+        customsDutyExpectedRow must haveSummaryKey(messages("returnAmountSummary.should.have.paid"))
         customsDutyExpectedRow must haveSummaryValue(s"£${customsDutyRepaymentAnswer.shouldHavePaid}")
-
-        customsDutyExpectedRow must haveSummaryChangeLinkText(
-          s"${messages("site.change")} ${messages("returnAmountSummary.should.have.paid.01.accessible")}"
-        )
-        customsDutyExpectedRow must haveSummaryActionsHref(
-          routes.CheckYourAnswersController.onChange(CreatePageNames.dutyCustoms)
-        )
       }
 
       "contains customs total" in {
@@ -85,6 +71,13 @@ class ReturnAmountSummaryViewSpec extends UnitViewSpec with TestData {
         customsDutyTotalRow must haveSummaryKey(messages("returnAmountSummary.duty.total.01"))
         customsDutyTotalRow must haveSummaryValue(s"£${customsDutyRepaymentAnswer.dueAmount}")
 
+        customsDutyTotalRow must haveSummaryChangeLinkText(
+          s"${messages("site.change")} ${messages("returnAmountSummary.change.01.accessible")}"
+        )
+
+        customsDutyTotalRow must haveSummaryActionsHref(
+          routes.CheckYourAnswersController.onChange(CreatePageNames.dutyCustoms)
+        )
       }
 
     }
@@ -97,26 +90,16 @@ class ReturnAmountSummaryViewSpec extends UnitViewSpec with TestData {
 
         val vatPaidRow = vatSection.getElementsByClass("02_paid_summary_row")
 
-        vatPaidRow must haveSummaryKey(messages("returnAmountSummary.was.paid.02"))
+        vatPaidRow must haveSummaryKey(messages("returnAmountSummary.was.paid"))
         vatPaidRow must haveSummaryValue(s"£${importVatRepaymentAnswer.actuallyPaid}")
-
-        vatPaidRow must haveSummaryChangeLinkText(
-          s"${messages("site.change")} ${messages("returnAmountSummary.was.paid.02.accessible")}"
-        )
-        vatPaidRow must haveSummaryActionsHref(routes.CheckYourAnswersController.onChange(CreatePageNames.dutyVAT))
       }
 
       "contains vat should have paid" in {
 
         val vatExpectedRow = vatSection.getElementsByClass("02_expected_summary_row")
 
-        vatExpectedRow must haveSummaryKey(messages("returnAmountSummary.should.have.paid.02"))
+        vatExpectedRow must haveSummaryKey(messages("returnAmountSummary.should.have.paid"))
         vatExpectedRow must haveSummaryValue(s"£${importVatRepaymentAnswer.shouldHavePaid}")
-
-        vatExpectedRow must haveSummaryChangeLinkText(
-          s"${messages("site.change")} ${messages("returnAmountSummary.should.have.paid.02.accessible")}"
-        )
-        vatExpectedRow must haveSummaryActionsHref(routes.CheckYourAnswersController.onChange(CreatePageNames.dutyVAT))
       }
 
       "contains vat total" in {
@@ -126,6 +109,10 @@ class ReturnAmountSummaryViewSpec extends UnitViewSpec with TestData {
         vatTotalRow must haveSummaryKey(messages("returnAmountSummary.duty.total.02"))
         vatTotalRow must haveSummaryValue(s"£${importVatRepaymentAnswer.dueAmount}")
 
+        vatTotalRow must haveSummaryChangeLinkText(
+          s"${messages("site.change")} ${messages("returnAmountSummary.change.02.accessible")}"
+        )
+        vatTotalRow must haveSummaryActionsHref(routes.CheckYourAnswersController.onChange(CreatePageNames.dutyVAT))
       }
 
     }
@@ -138,28 +125,16 @@ class ReturnAmountSummaryViewSpec extends UnitViewSpec with TestData {
 
         val otherPaidRow = otherDutySection.getElementsByClass("03_paid_summary_row")
 
-        otherPaidRow must haveSummaryKey(messages("returnAmountSummary.was.paid.03"))
+        otherPaidRow must haveSummaryKey(messages("returnAmountSummary.was.paid"))
         otherPaidRow must haveSummaryValue(s"£${otherDutyRepaymentAnswer.actuallyPaid}")
-
-        otherPaidRow must haveSummaryChangeLinkText(
-          s"${messages("site.change")} ${messages("returnAmountSummary.was.paid.03.accessible")}"
-        )
-        otherPaidRow must haveSummaryActionsHref(routes.CheckYourAnswersController.onChange(CreatePageNames.dutyOther))
       }
 
       "contains other duty should have paid" in {
 
         val otherDutyExpectedRow = otherDutySection.getElementsByClass("03_expected_summary_row")
 
-        otherDutyExpectedRow must haveSummaryKey(messages("returnAmountSummary.should.have.paid.03"))
+        otherDutyExpectedRow must haveSummaryKey(messages("returnAmountSummary.should.have.paid"))
         otherDutyExpectedRow must haveSummaryValue(s"£${otherDutyRepaymentAnswer.shouldHavePaid}")
-
-        otherDutyExpectedRow must haveSummaryChangeLinkText(
-          s"${messages("site.change")} ${messages("returnAmountSummary.should.have.paid.03.accessible")}"
-        )
-        otherDutyExpectedRow must haveSummaryActionsHref(
-          routes.CheckYourAnswersController.onChange(CreatePageNames.dutyOther)
-        )
       }
 
       "contains other duty total" in {
@@ -169,6 +144,10 @@ class ReturnAmountSummaryViewSpec extends UnitViewSpec with TestData {
         otherTotalRow must haveSummaryKey(messages("returnAmountSummary.duty.total.03"))
         otherTotalRow must haveSummaryValue(s"£${otherDutyRepaymentAnswer.dueAmount}")
 
+        otherTotalRow must haveSummaryChangeLinkText(
+          s"${messages("site.change")} ${messages("returnAmountSummary.change.03.accessible")}"
+        )
+        otherTotalRow must haveSummaryActionsHref(routes.CheckYourAnswersController.onChange(CreatePageNames.dutyOther))
       }
 
     }
