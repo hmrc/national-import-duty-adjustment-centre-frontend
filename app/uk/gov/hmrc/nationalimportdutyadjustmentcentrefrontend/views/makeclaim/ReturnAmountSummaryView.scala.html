@@ -44,50 +44,47 @@
         heading = Some(messages(s"returnAmountSummary.section.title.$dutyType")),
         summaryListRows = Seq(
             Some(SummaryListRow(
-                classes = s"${dutyType}_paid_summary_row",
+                classes = s"${dutyType}_paid_summary_row govuk-summary-list__row--no-border",
                 key = Key(
-                    content = Text(messages(s"returnAmountSummary.was.paid.${dutyType}"))
+                    content = Text(messages("returnAmountSummary.was.paid")),
+                    classes = "govuk-!-width-three-quarters govuk-!-padding-bottom-0"
                 ),
                 value = Value(
-                    content = Text(createAnswers.reclaimDutyPayments.get(dutyType).fold("")(duty => s"£${duty.actuallyPaid}"))
+                    content = Text(createAnswers.reclaimDutyPayments.get(dutyType).fold("")(duty => s"£${duty.actuallyPaid}")),
+                    classes = "govuk-!-padding-bottom-0"
                 ),
-                actions = Some(Actions(
-                    items = Seq(
-                        actionItem(
-                            href = makeclaim.routes.CheckYourAnswersController.onChange(pageName).url,
-                            content = HtmlContent(linkContent(changeText(createAnswers.reclaimDutyPayments.get(dutyType)))),
-                            visuallyHiddenText = Some(messages(s"returnAmountSummary.was.paid.${dutyType}.accessible"))
-                        )
-                    )
-                ))
+                actions = None
             )),
             Some(SummaryListRow(
-                classes = s"${dutyType}_expected_summary_row",
+                classes = s"${dutyType}_expected_summary_row govuk-!-padding-top-0",
                 key = Key(
-                    content = Text(messages(s"returnAmountSummary.should.have.paid.${dutyType}"))
+                    content = Text(messages("returnAmountSummary.should.have.paid")),
+                    classes = "govuk-!-width-three-quarters govuk-!-padding-top-0"
                 ),
                 value = Value(
-                    content = Text(createAnswers.reclaimDutyPayments.get(dutyType).fold("")(duty => s"£${duty.shouldHavePaid}"))
+                    content = Text(createAnswers.reclaimDutyPayments.get(dutyType).fold("")(duty => s"£${duty.shouldHavePaid}")),
+                    classes = "govuk-!-padding-top-0"
                 ),
-                actions = Some(Actions(
-                    items = Seq(
-                        actionItem(
-                            href = makeclaim.routes.CheckYourAnswersController.onChange(pageName).url,
-                            content = HtmlContent(linkContent(changeText(createAnswers.reclaimDutyPayments.get(dutyType)))),
-                            visuallyHiddenText = Some(messages(s"returnAmountSummary.should.have.paid.${dutyType}.accessible"))
-                        )
-                    )
-                ))
+                actions = None
             )),
             Some(SummaryListRow(
                 classes = s"${dutyType}_duty_total_row",
                 key = Key(
-                    content = Text(messages(s"returnAmountSummary.duty.total.${dutyType}"))
+                    content = Text(messages(s"returnAmountSummary.duty.total.${dutyType}")),
+                    classes = "govuk-!-width-three-quarters"
                 ),
                 value = Value(
                     content = HtmlContent(createAnswers.reclaimDutyPayments.get(dutyType).fold("")(duty => s"<span class='govuk-!-font-weight-bold'>£${duty.dueAmount}</span>"))
                 ),
-                actions = None
+                actions = Some(Actions(
+                    items = Seq(
+                        actionItem(
+                            href = makeclaim.routes.CheckYourAnswersController.onChange(pageName).url,
+                            content = HtmlContent(linkContent(changeText(createAnswers.reclaimDutyPayments.get(dutyType)))),
+                            visuallyHiddenText = Some(messages(s"returnAmountSummary.change.${dutyType}.accessible"))
+                        )
+                    )
+                ))
             ))
         )
     )
