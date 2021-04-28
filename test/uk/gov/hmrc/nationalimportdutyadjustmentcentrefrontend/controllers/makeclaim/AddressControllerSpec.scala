@@ -87,7 +87,7 @@ class AddressControllerSpec extends ControllerSpec with TestData {
     }
 
     "redirect to address lookup page from change, when cache is empty" in {
-      when(addressLookupService.initialiseJourney(any(), any())(any(), any())).thenReturn(
+      when(addressLookupService.initialiseJourney(any(), any(), any(), any(), any())(any(), any())).thenReturn(
         Future.successful(AddressLookupOnRamp("http://localhost/AddressLookupReturnedRedirect"))
       )
       val result = controller.onChange()(fakeGetRequest)
