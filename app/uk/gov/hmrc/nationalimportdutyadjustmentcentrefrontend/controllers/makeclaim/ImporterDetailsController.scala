@@ -82,6 +82,7 @@ class ImporterDetailsController @Inject() (
       appConfig.importerAddressLookupCallbackUrl,
       appConfig.loginContinueUrl,
       appConfig.signOutUrl,
+      appConfig.keepAliveUrl,
       "importer-details.title",
       "importer-details.hint"
     ) map {

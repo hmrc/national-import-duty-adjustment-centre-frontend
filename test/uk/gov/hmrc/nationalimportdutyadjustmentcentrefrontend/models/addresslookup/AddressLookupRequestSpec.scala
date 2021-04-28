@@ -27,6 +27,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.addresslook
   LookupPageLabels,
   SelectPageLabels
 }
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.addresslookup.AddressLookupRequest.Options.TimeoutConfig
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.addresslookup.AddressLookupRequest.{
   Labels,
   Options
@@ -45,6 +46,7 @@ class AddressLookupRequestSpec extends UnitSpec with MockitoSugar with Injector 
         continueUrl = "http://continue",
         homeUrl = "http://start",
         signOutUrl = "http://leave",
+        keepAliveUrl = "http://keepalive",
         lookupPageHeadingKey = "address.title",
         hintKey = "address.hint"
       )(realMessagesApi, appConfig)
@@ -61,7 +63,12 @@ class AddressLookupRequestSpec extends UnitSpec with MockitoSugar with Injector 
       signOutHref = "http://leave",
       showPhaseBanner = true,
       ukMode = true,
-      includeHMRCBranding = false
+      includeHMRCBranding = false,
+      timeoutConfig = TimeoutConfig(
+        timeoutAmount = Some(appConfig.timeoutDialogTimeout),
+        timeoutUrl = Some("http://leave"),
+        timeoutKeepAliveUrl = Some("http://keepalive")
+      )
     ),
     Labels(
       en =

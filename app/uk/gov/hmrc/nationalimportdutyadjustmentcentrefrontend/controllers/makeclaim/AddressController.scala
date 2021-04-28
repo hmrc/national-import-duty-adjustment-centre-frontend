@@ -23,6 +23,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.Navigation
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.IdentifierAction
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.routes.KeepAliveController
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create.AddressFormProvider
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{Address, CreateAnswers}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.CreateNavigator
@@ -82,6 +83,7 @@ class AddressController @Inject() (
       appConfig.yourAddressLookupCallbackUrl,
       appConfig.loginContinueUrl,
       appConfig.signOutUrl,
+      appConfig.keepAliveUrl,
       "address.title",
       "address.hint"
     ) map {
