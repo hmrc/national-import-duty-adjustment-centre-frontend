@@ -36,7 +36,8 @@ case class AddressLookupRequest(
 object AddressLookupRequest {
   implicit val format: OFormat[AddressLookupRequest] = Json.format[AddressLookupRequest]
 
-  def apply(continueUrl: String, lookupPageHeadingKey: String)(implicit
+  def apply(continueUrl: String, homeUrl: String, signOutUrl: String, lookupPageHeadingKey: String, hintKey: String)(
+    implicit
     messagesApi: MessagesApi,
     config: AppConfig
   ): AddressLookupRequest = {
@@ -44,15 +45,36 @@ object AddressLookupRequest {
     val cy: Messages  = MessagesImpl(Lang("cy"), messagesApi)
     new AddressLookupRequest(
       2,
-      Options(continueUrl, showPhaseBanner = false, ukMode = true),
+      Options(
+        continueUrl = continueUrl,
+        serviceHref = homeUrl,
+        signOutHref = signOutUrl,
+        showPhaseBanner = config.addressLookupShowPhaseBanner,
+        ukMode = true,
+        includeHMRCBranding = false
+      ),
       Labels(
         en =
           AddressLookupRequest.Labels.Language(
             AppLevelLabels(navTitle = Some(eng("service.name"))),
-            SelectPageLabels(),
-            LookupPageLabels(heading = Some(eng(lookupPageHeadingKey))),
-            ConfirmPageLabels(),
-            EditPageLabels()
+            SelectPageLabels(
+              title = Some(eng("alf.label.select.title")),
+              heading = Some(eng("alf.label.select.title"))
+            ),
+            LookupPageLabels(
+              title = Some(eng(lookupPageHeadingKey)),
+              heading = Some(eng(lookupPageHeadingKey)),
+              afterHeadingText = Some(eng(hintKey))
+            ),
+            ConfirmPageLabels(
+              title = Some(eng("alf.label.confirm.title")),
+              heading = Some(eng("alf.label.confirm.title"))
+            ),
+            EditPageLabels(
+              postcodeLabel = Some(eng("alf.label.edit.postcode")),
+              title = Some(eng(lookupPageHeadingKey)),
+              heading = Some(eng(lookupPageHeadingKey))
+            )
           ),
         cy =
           AddressLookupRequest.Labels.Language(
@@ -66,7 +88,14 @@ object AddressLookupRequest {
     )
   }
 
-  case class Options(continueUrl: String, showPhaseBanner: Boolean, ukMode: Boolean)
+  case class Options(
+    continueUrl: String,
+    serviceHref: String,
+    signOutHref: String,
+    showPhaseBanner: Boolean,
+    ukMode: Boolean,
+    includeHMRCBranding: Boolean
+  )
 
   object Options {
     implicit val format: OFormat[Options] = Json.format[Options]
@@ -108,6 +137,7 @@ object AddressLookupRequest {
       case class LookupPageLabels(
         title: Option[String] = None,
         heading: Option[String] = None,
+        afterHeadingText: Option[String] = None,
         filterLabel: Option[String] = None,
         postcodeLabel: Option[String] = None,
         submitLabel: Option[String] = None
@@ -127,7 +157,12 @@ object AddressLookupRequest {
         implicit val format: OFormat[ConfirmPageLabels] = Json.format[ConfirmPageLabels]
       }
 
-      case class EditPageLabels(submitLabel: Option[String] = None)
+      case class EditPageLabels(
+        title: Option[String] = None,
+        heading: Option[String] = None,
+        submitLabel: Option[String] = None,
+        postcodeLabel: Option[String] = None
+      )
 
       object EditPageLabels {
         implicit val format: OFormat[EditPageLabels] = Json.format[EditPageLabels]

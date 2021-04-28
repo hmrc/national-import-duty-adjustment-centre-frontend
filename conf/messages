@@ -386,3 +386,7 @@ what_do_you_want_to_do.New_Claim = Start a new claim
 what_do_you_want_to_do.hint.New_Claim = Claim for a return of overpaid clearance duty charges, such as import duty or import VAT.
 what_do_you_want_to_do.Amend_Claim = Amend an existing claim
 what_do_you_want_to_do.hint.Amend_Claim = Use a reference number to add more information or upload additional documents to your claim.
+
+alf.label.select.title = Select an address
+alf.label.confirm.title = Confirm your address
+alf.label.edit.postcode = UK postcode

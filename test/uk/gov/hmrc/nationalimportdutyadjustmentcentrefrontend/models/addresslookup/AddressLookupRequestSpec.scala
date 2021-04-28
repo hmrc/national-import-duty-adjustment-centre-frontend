@@ -41,10 +41,13 @@ class AddressLookupRequestSpec extends UnitSpec with MockitoSugar with Injector 
   "AddressLookupRequest" should {
     "create properly for Address Lookup initialisation " in {
 
-      val request = AddressLookupRequest(continueUrl = "http://continue", lookupPageHeadingKey = "address.title")(
-        realMessagesApi,
-        appConfig
-      )
+      val request = AddressLookupRequest(
+        continueUrl = "http://continue",
+        homeUrl = "http://start",
+        signOutUrl = "http://leave",
+        lookupPageHeadingKey = "address.title",
+        hintKey = "address.hint"
+      )(realMessagesApi, appConfig)
 
       request mustBe expectedRequest
     }
@@ -52,15 +55,30 @@ class AddressLookupRequestSpec extends UnitSpec with MockitoSugar with Injector 
 
   val expectedRequest = new AddressLookupRequest(
     2,
-    Options("http://continue", showPhaseBanner = false, ukMode = true),
+    Options(
+      continueUrl = "http://continue",
+      serviceHref = "http://start",
+      signOutHref = "http://leave",
+      showPhaseBanner = true,
+      ukMode = true,
+      includeHMRCBranding = false
+    ),
     Labels(
       en =
         AddressLookupRequest.Labels.Language(
           AppLevelLabels(navTitle = Some("Apply for return of import duty secured by deposit or guarantee")),
-          SelectPageLabels(),
-          LookupPageLabels(heading = Some("What is your UK correspondence address?")),
-          ConfirmPageLabels(),
-          EditPageLabels()
+          SelectPageLabels(title = Some("Select an address"), heading = Some("Select an address")),
+          LookupPageLabels(
+            title = Some("What is your UK correspondence address?"),
+            heading = Some("What is your UK correspondence address?"),
+            afterHeadingText = Some("We will use this to send letters about this claim.")
+          ),
+          ConfirmPageLabels(title = Some("Confirm your address"), heading = Some("Confirm your address")),
+          EditPageLabels(
+            title = Some("What is your UK correspondence address?"),
+            heading = Some("What is your UK correspondence address?"),
+            postcodeLabel = Some("UK postcode")
+          )
         ),
       cy =
         AddressLookupRequest.Labels.Language(
