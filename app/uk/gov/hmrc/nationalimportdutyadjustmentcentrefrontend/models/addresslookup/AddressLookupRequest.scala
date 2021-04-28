@@ -49,7 +49,7 @@ object AddressLookupRequest {
         continueUrl = continueUrl,
         serviceHref = homeUrl,
         signOutHref = signOutUrl,
-        showPhaseBanner = config.addressLookupShowPhaseBanner,
+        showPhaseBanner = config.showPhaseBanner,
         ukMode = true,
         includeHMRCBranding = false
       ),

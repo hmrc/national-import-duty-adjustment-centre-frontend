@@ -91,7 +91,7 @@ class AppConfig @Inject() (
   val importerAddressLookupCallbackUrl: String =
     s"$loginContinueUrl/create${controllers.makeclaim.routes.ImporterDetailsController.onUpdate("").url}"
 
-  val addressLookupShowPhaseBanner = true
+  val showPhaseBanner = config.get[Boolean]("phaseBanner.display")
 
   val barsBusinessAssessUrl: String =
     s"$barsBaseUrl${servicesConfig("bank-account-reputation.businessAssess")}"

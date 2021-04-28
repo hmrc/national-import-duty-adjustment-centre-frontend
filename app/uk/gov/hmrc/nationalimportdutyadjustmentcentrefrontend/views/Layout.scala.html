@@ -70,7 +70,12 @@
         serviceUrl = Some(StartController.start().url),
         signOutUrl = signOutHref,
         userResearchBanner = None,
-        phaseBanner = Some(standardBetaBanner(url = appConfig.betaFeedBackUrl(isAuthenticated)).copy(classes = "govuk-!-display-none-print")),
+        phaseBanner = {
+            appConfig.showPhaseBanner match {
+                case true => Some(standardBetaBanner(url = appConfig.betaFeedBackUrl(isAuthenticated)).copy(classes = "govuk-!-display-none-print"))
+                case _ => None
+            }
+        },
         displayHmrcBanner = false
     )
 }
