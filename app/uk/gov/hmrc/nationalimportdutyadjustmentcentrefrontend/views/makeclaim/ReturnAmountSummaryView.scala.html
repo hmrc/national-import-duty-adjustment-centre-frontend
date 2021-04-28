@@ -124,7 +124,8 @@
                 Some(SummaryListRow(
                     classes = "return_total_summary_row",
                     key = Key(
-                        content = Text(messages("returnAmountSummary.total.label"))
+                        content = Text(messages("returnAmountSummary.total.label")),
+                        classes = "govuk-!-width-three-quarters"
                     ),
                     value = Value(
                         content = HtmlContent(if(createAnswers.reclaimDutyComplete) s"<span class='govuk-!-font-weight-bold'>£${
