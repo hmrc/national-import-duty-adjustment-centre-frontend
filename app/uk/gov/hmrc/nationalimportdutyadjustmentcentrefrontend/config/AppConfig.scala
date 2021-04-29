@@ -32,13 +32,7 @@ class AppConfig @Inject() (
   sessionTimeoutConfig: SessionTimeoutFilterConfig
 ) {
 
-  case class Upscan(
-    callbackBase: String,
-    redirectBase: String,
-    maxFileSizeMb: Int,
-    approvedFileTypes: String,
-    approvedFileExtensions: String
-  )
+  case class Upscan(callbackBase: String, maxFileSizeMb: Int, approvedFileTypes: String, approvedFileExtensions: String)
 
   val welshLanguageSupportEnabled: Boolean = config
     .getOptional[Boolean]("features.welsh-language-support")
@@ -48,9 +42,8 @@ class AppConfig @Inject() (
   val cy: String            = "cy"
   val defaultLanguage: Lang = Lang(en)
 
-  val loginUrl: String         = loadConfig("urls.login")
-  val loginContinueUrl: String = loadConfig("urls.loginContinue")
-  val signOutUrl: String       = loadConfig("urls.signout")
+  val loginUrl: String   = loadConfig("urls.login")
+  val signOutUrl: String = loadConfig("urls.signout")
 
   private val selfBaseUrl: String = config
     .getOptional[String]("platform.frontend.host")
@@ -94,7 +87,6 @@ class AppConfig @Inject() (
 
   val upscan: Upscan = Upscan(
     callbackBase = loadConfig("upscan.callback-base"),
-    redirectBase = loadConfig("upscan.redirect-base"),
     maxFileSizeMb = config.get[Int]("upscan.max-file-size-mb"),
     approvedFileExtensions = loadConfig("upscan.approved-file-extensions"),
     approvedFileTypes = loadConfig("upscan.approved-file-types")
