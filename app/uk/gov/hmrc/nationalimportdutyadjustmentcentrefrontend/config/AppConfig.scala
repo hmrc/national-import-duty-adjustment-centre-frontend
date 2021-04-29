@@ -85,6 +85,8 @@ class AppConfig @Inject() (
   val addressLookupInitUrl: String         = s"$addressLookupBaseUrl${servicesConfig("address-lookup-frontend.init")}"
   val addressLookupConfirmedUrl: String    = s"$addressLookupBaseUrl${servicesConfig("address-lookup-frontend.confirmed")}"
 
+  val keepAliveUrl: String = s"$loginContinueUrl/${controllers.routes.KeepAliveController.keepAlive().url}"
+
   val yourAddressLookupCallbackUrl: String =
     s"$loginContinueUrl/create${controllers.makeclaim.routes.AddressController.onUpdate("").url}"
 

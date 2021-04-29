@@ -42,11 +42,12 @@ class AddressLookupService @Inject() (
     callBackUrl: String,
     homeUrl: String,
     signOutUrl: String,
+    keepAliveUrl: String,
     lookupPageHeadingKey: String,
     hintKey: String
   )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AddressLookupOnRamp] =
     addressLookupConnector.initialiseJourney(
-      AddressLookupRequest(callBackUrl, homeUrl, signOutUrl, lookupPageHeadingKey, hintKey)
+      AddressLookupRequest(callBackUrl, homeUrl, signOutUrl, keepAliveUrl, lookupPageHeadingKey, hintKey)
     )
 
 }

@@ -36,11 +36,14 @@ case class AddressLookupRequest(
 object AddressLookupRequest {
   implicit val format: OFormat[AddressLookupRequest] = Json.format[AddressLookupRequest]
 
-  def apply(continueUrl: String, homeUrl: String, signOutUrl: String, lookupPageHeadingKey: String, hintKey: String)(
-    implicit
-    messagesApi: MessagesApi,
-    config: AppConfig
-  ): AddressLookupRequest = {
+  def apply(
+    continueUrl: String,
+    homeUrl: String,
+    signOutUrl: String,
+    keepAliveUrl: String,
+    lookupPageHeadingKey: String,
+    hintKey: String
+  )(implicit messagesApi: MessagesApi, config: AppConfig): AddressLookupRequest = {
     val eng: Messages = MessagesImpl(Lang("en"), messagesApi)
     val cy: Messages  = MessagesImpl(Lang("cy"), messagesApi)
     new AddressLookupRequest(
@@ -51,7 +54,12 @@ object AddressLookupRequest {
         signOutHref = signOutUrl,
         showPhaseBanner = config.showPhaseBanner,
         ukMode = true,
-        includeHMRCBranding = false
+        includeHMRCBranding = false,
+        AddressLookupRequest.Options.TimeoutConfig(
+          timeoutAmount = Some(config.timeoutDialogTimeout),
+          timeoutUrl = Some(signOutUrl),
+          timeoutKeepAliveUrl = Some(keepAliveUrl)
+        )
       ),
       Labels(
         en =
@@ -94,11 +102,23 @@ object AddressLookupRequest {
     signOutHref: String,
     showPhaseBanner: Boolean,
     ukMode: Boolean,
-    includeHMRCBranding: Boolean
+    includeHMRCBranding: Boolean,
+    timeoutConfig: AddressLookupRequest.Options.TimeoutConfig
   )
 
   object Options {
     implicit val format: OFormat[Options] = Json.format[Options]
+
+    case class TimeoutConfig(
+      timeoutAmount: Option[Int] = None,
+      timeoutUrl: Option[String] = None,
+      timeoutKeepAliveUrl: Option[String] = None
+    )
+
+    object TimeoutConfig {
+      implicit val format: OFormat[TimeoutConfig] = Json.format[TimeoutConfig]
+    }
+
   }
 
   case class Labels(en: AddressLookupRequest.Labels.Language, cy: AddressLookupRequest.Labels.Language)

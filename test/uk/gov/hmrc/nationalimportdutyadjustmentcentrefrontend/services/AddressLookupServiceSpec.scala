@@ -68,7 +68,7 @@ class AddressLookupServiceSpec
     }
 
     "initialises the journey when" in {
-      service.initialiseJourney("callBackUrl", "callBackUrl", "callBackUrl", "page.key", "hint.key")
+      service.initialiseJourney("callBackUrl", "homeUrl", "signOutUrl", "keepAliveUrl", "page.key", "hint.key")
       verify(connector).initialiseJourney(any())(any(), any())
     }
 
