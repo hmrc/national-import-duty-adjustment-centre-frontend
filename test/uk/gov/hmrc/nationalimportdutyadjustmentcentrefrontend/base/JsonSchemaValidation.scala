@@ -19,6 +19,7 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base
 import java.io.InputStream
 
 import com.eclipsesource.schema._
+import com.eclipsesource.schema.drafts.Version4.schemaTypeReads
 import play.api.libs.json._
 
 import scala.io.Source
