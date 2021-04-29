@@ -36,8 +36,7 @@ lazy val microservice = Project(appName, file("."))
   .settings(publishingSettings: _*)
   .configs(IntegrationTest)
   .settings(integrationTestSettings(): _*)
-  .settings(resolvers += Resolver.jcenterRepo)
-  .settings(resolvers += "emueller-bintray" at "https://dl.bintray.com/emueller/maven")
+  .settings(resolvers += "third-party-maven-releases" at "https://artefacts.tax.service.gov.uk/artifactory/third-party-maven-releases/")
   .settings(scoverageSettings)
   .settings(
     resourceDirectory in Test := baseDirectory.value / "test" / "resources",
