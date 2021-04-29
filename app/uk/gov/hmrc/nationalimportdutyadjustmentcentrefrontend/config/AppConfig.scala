@@ -56,6 +56,8 @@ class AppConfig @Inject() (
     .getOptional[String]("platform.frontend.host")
     .getOrElse("http://localhost:8490")
 
+  def selfUrl(url: String) = s"$selfBaseUrl$url"
+
   private val serviceIdentifier = config.get[String]("contact-frontend.serviceId")
 
   private val authenticatedFeedbackUrl: String = config.get[String]("urls.feedback.authenticatedLink")
@@ -64,7 +66,7 @@ class AppConfig @Inject() (
 
   def betaFeedBackUrl(isAuthenticated: Boolean)(implicit request: Request[_]) =
     s"${if (isAuthenticated) authenticatedFeedbackUrl
-    else unauthenticatedFeedbackUrl}?service=$serviceIdentifier&backUrl=${urlEncode(s"$selfBaseUrl${request.uri}")} "
+    else unauthenticatedFeedbackUrl}?service=$serviceIdentifier&backUrl=${urlEncode(s"${selfUrl(request.uri)}")} "
 
   val getEoriUrl: String = loadConfig("urls.external.getEori")
 
@@ -84,14 +86,6 @@ class AppConfig @Inject() (
   private val addressLookupBaseUrl: String = servicesConfig.baseUrl("address-lookup-frontend")
   val addressLookupInitUrl: String         = s"$addressLookupBaseUrl${servicesConfig("address-lookup-frontend.init")}"
   val addressLookupConfirmedUrl: String    = s"$addressLookupBaseUrl${servicesConfig("address-lookup-frontend.confirmed")}"
-
-  val keepAliveUrl: String = s"$loginContinueUrl${controllers.routes.KeepAliveController.keepAlive().url}"
-
-  val yourAddressLookupCallbackUrl: String =
-    s"$loginContinueUrl/create${controllers.makeclaim.routes.AddressController.onUpdate("").url}"
-
-  val importerAddressLookupCallbackUrl: String =
-    s"$loginContinueUrl/create${controllers.makeclaim.routes.ImporterDetailsController.onUpdate("").url}"
 
   val showPhaseBanner = config.get[Boolean]("phaseBanner.display")
 
