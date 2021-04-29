@@ -79,10 +79,10 @@ class ImporterDetailsController @Inject() (
 
   def onChange(): Action[AnyContent] = identify.async { implicit request =>
     addressLookupService.initialiseJourney(
-      appConfig.importerAddressLookupCallbackUrl,
-      appConfig.loginContinueUrl,
-      appConfig.signOutUrl,
-      appConfig.keepAliveUrl,
+      controllers.makeclaim.routes.ImporterDetailsController.onUpdate("").url,
+      controllers.routes.StartController.start().url,
+      controllers.routes.SignOutController.signOut().url,
+      controllers.routes.KeepAliveController.keepAlive().url,
       "importer-details.title",
       "importer-details.hint"
     ) map {

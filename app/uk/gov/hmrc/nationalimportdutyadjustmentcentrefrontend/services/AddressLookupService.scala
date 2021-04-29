@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services
 
+import javax.inject.Inject
 import play.api.i18n.MessagesApi
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
@@ -26,7 +27,6 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.addresslook
   AddressLookupRequest
 }
 
-import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class AddressLookupService @Inject() (
@@ -47,7 +47,14 @@ class AddressLookupService @Inject() (
     hintKey: String
   )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AddressLookupOnRamp] =
     addressLookupConnector.initialiseJourney(
-      AddressLookupRequest(callBackUrl, homeUrl, signOutUrl, keepAliveUrl, lookupPageHeadingKey, hintKey)
+      AddressLookupRequest(
+        appConfig.selfUrl(callBackUrl),
+        appConfig.selfUrl(homeUrl),
+        appConfig.selfUrl(signOutUrl),
+        appConfig.selfUrl(keepAliveUrl),
+        lookupPageHeadingKey,
+        hintKey
+      )
     )
 
 }

@@ -32,13 +32,7 @@ class AppConfig @Inject() (
   sessionTimeoutConfig: SessionTimeoutFilterConfig
 ) {
 
-  case class Upscan(
-    callbackBase: String,
-    redirectBase: String,
-    maxFileSizeMb: Int,
-    approvedFileTypes: String,
-    approvedFileExtensions: String
-  )
+  case class Upscan(callbackBase: String, maxFileSizeMb: Int, approvedFileTypes: String, approvedFileExtensions: String)
 
   val welshLanguageSupportEnabled: Boolean = config
     .getOptional[Boolean]("features.welsh-language-support")
@@ -48,13 +42,14 @@ class AppConfig @Inject() (
   val cy: String            = "cy"
   val defaultLanguage: Lang = Lang(en)
 
-  val loginUrl: String         = loadConfig("urls.login")
-  val loginContinueUrl: String = loadConfig("urls.loginContinue")
-  val signOutUrl: String       = loadConfig("urls.signout")
+  val loginUrl: String   = loadConfig("urls.login")
+  val signOutUrl: String = loadConfig("urls.signout")
 
   private val selfBaseUrl: String = config
     .getOptional[String]("platform.frontend.host")
     .getOrElse("http://localhost:8490")
+
+  def selfUrl(url: String) = s"$selfBaseUrl$url"
 
   private val serviceIdentifier = config.get[String]("contact-frontend.serviceId")
 
@@ -64,7 +59,7 @@ class AppConfig @Inject() (
 
   def betaFeedBackUrl(isAuthenticated: Boolean)(implicit request: Request[_]) =
     s"${if (isAuthenticated) authenticatedFeedbackUrl
-    else unauthenticatedFeedbackUrl}?service=$serviceIdentifier&backUrl=${urlEncode(s"$selfBaseUrl${request.uri}")} "
+    else unauthenticatedFeedbackUrl}?service=$serviceIdentifier&backUrl=${urlEncode(s"${selfUrl(request.uri)}")} "
 
   val getEoriUrl: String = loadConfig("urls.external.getEori")
 
@@ -85,14 +80,6 @@ class AppConfig @Inject() (
   val addressLookupInitUrl: String         = s"$addressLookupBaseUrl${servicesConfig("address-lookup-frontend.init")}"
   val addressLookupConfirmedUrl: String    = s"$addressLookupBaseUrl${servicesConfig("address-lookup-frontend.confirmed")}"
 
-  val keepAliveUrl: String = s"$loginContinueUrl${controllers.routes.KeepAliveController.keepAlive().url}"
-
-  val yourAddressLookupCallbackUrl: String =
-    s"$loginContinueUrl/create${controllers.makeclaim.routes.AddressController.onUpdate("").url}"
-
-  val importerAddressLookupCallbackUrl: String =
-    s"$loginContinueUrl/create${controllers.makeclaim.routes.ImporterDetailsController.onUpdate("").url}"
-
   val showPhaseBanner = config.get[Boolean]("phaseBanner.display")
 
   val barsBusinessAssessUrl: String =
@@ -100,7 +87,6 @@ class AppConfig @Inject() (
 
   val upscan: Upscan = Upscan(
     callbackBase = loadConfig("upscan.callback-base"),
-    redirectBase = loadConfig("upscan.redirect-base"),
     maxFileSizeMb = config.get[Int]("upscan.max-file-size-mb"),
     approvedFileExtensions = loadConfig("upscan.approved-file-extensions"),
     approvedFileTypes = loadConfig("upscan.approved-file-types")

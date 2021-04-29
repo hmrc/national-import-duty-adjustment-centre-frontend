@@ -56,8 +56,8 @@ trait FileUploading {
     for {
       upscanInitiateResponse <- upscanInitiateConnector.initiateV2(
         journeyId,
-        Some(appConfig.upscan.redirectBase + summaryAnchorUrl(successRedirectUrl(uploadId))),
-        Some(appConfig.upscan.redirectBase + errorBaseUrl)
+        Some(appConfig.selfUrl(summaryAnchorUrl(successRedirectUrl(uploadId)))),
+        Some(appConfig.selfUrl(errorBaseUrl))
       )
       _ <- uploadProgressTracker.requestUpload(
         uploadId,
