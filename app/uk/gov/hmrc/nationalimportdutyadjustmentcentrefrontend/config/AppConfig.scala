@@ -85,13 +85,15 @@ class AppConfig @Inject() (
   val addressLookupInitUrl: String         = s"$addressLookupBaseUrl${servicesConfig("address-lookup-frontend.init")}"
   val addressLookupConfirmedUrl: String    = s"$addressLookupBaseUrl${servicesConfig("address-lookup-frontend.confirmed")}"
 
+  val keepAliveUrl: String = s"$loginContinueUrl${controllers.routes.KeepAliveController.keepAlive().url}"
+
   val yourAddressLookupCallbackUrl: String =
     s"$loginContinueUrl/create${controllers.makeclaim.routes.AddressController.onUpdate("").url}"
 
   val importerAddressLookupCallbackUrl: String =
     s"$loginContinueUrl/create${controllers.makeclaim.routes.ImporterDetailsController.onUpdate("").url}"
 
-  val addressLookupShowPhaseBanner = true
+  val showPhaseBanner = config.get[Boolean]("phaseBanner.display")
 
   val barsBusinessAssessUrl: String =
     s"$barsBaseUrl${servicesConfig("bank-account-reputation.businessAssess")}"
