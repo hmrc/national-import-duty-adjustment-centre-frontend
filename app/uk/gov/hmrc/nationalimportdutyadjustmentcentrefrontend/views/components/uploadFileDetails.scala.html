@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html._
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components._
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ClaimType
 
 @this(govukDetails : GovukDetails)
@@ -22,10 +22,10 @@
 @(claimType: Option[ClaimType])(implicit messages: Messages)
 
 @detailContent ={
-  @components.uploadDocumentTypes(claimType)
+  @uploadDocumentTypes(claimType)
 
-  @components.paragraph(messages("upload_documents.body.files.details.filetypes"))
-  @components.uploadFileTypes()
+  @subHeadingSmall(messages("upload_documents.body.files.details.filetypes"))
+  @uploadFileTypes()
 }
 
 @govukDetails(Details(

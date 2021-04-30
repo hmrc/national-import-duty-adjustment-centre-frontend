@@ -14,15 +14,6 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components._
+@(content: String)
 
-@this()
-
-@(content: Html)(implicit messages: Messages)
-
-@paragraph(messages("upload_documents.body.files.size"))
-
-@subHeadingSmall(messages("upload_documents.body.files.details.filetypes"))
-@uploadFileTypes()
-
-@content
+<h2 class="govuk-heading-s govuk-!-margin-top-6">@{Text(content).asHtml}</h2>
