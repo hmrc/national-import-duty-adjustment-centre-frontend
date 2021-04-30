@@ -24,7 +24,7 @@
     hiddenLabel: Option[String] = None,
     isPageHeading: Boolean = false,
     headingMessageArgs: Seq[String] = Seq(),
-    hint: Option[String] = None,
+    hint: Option[Html] = None,
     classes: Option[String] = None,
     autocomplete: Option[String] = None,
     inputType: String = "text",
@@ -47,8 +47,8 @@
         isPageHeading = isPageHeading,
         classes = if(isPageHeading) "govuk-label--l" else ""
     ),
-    hint = hint.map(hintHtml => Hint(
-        content = HtmlContent(hintHtml)
+    hint = hint.map(hint => Hint(
+        content = HtmlContent(hint)
     )),
     value = form(name).value,
     autocomplete = autocomplete.map(value => value),

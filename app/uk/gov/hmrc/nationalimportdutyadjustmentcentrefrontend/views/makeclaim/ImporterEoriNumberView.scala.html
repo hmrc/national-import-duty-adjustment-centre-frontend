@@ -34,11 +34,17 @@
 
 @(form: Form[EoriNumber], backLink: NavigatorBack)(implicit request: Request[_], messages: Messages)
 
-@detailsContent = {
-    @Html(messages("importer.eori.details.getEori", externalLink(
-        text = messages("importer.eori.details.getEori.linktext"),
-        href = appConfig.getEoriUrl
-    )))
+@hintContent = {
+    @Html(
+        messages(
+            "importer.eori.hint1",
+            externalLink(
+                text = messages("importer.eori.getEori.linktext"),
+                href = appConfig.getEoriUrl
+            )
+        )
+    )
+    @paragraph(messages("importer.eori.hint2"), classes=Some("govuk-!-padding-top-4"))
 }
 
 @layout(pageTitle = Title(form, messages("importer.eori.title")), backLink) {
@@ -52,15 +58,11 @@
             name = "eoriNumber",
             isPageHeading = true,
             label = "importer.eori.title",
-            hint = Some(messages("importer.eori.hint")),
+            hint = Some(hintContent),
             attributes = Map("autocomplete" -> "off"),
             classes = Some("govuk-!-width-one-half")
         )
 
-        @govukDetails(Details(
-            summary = Text(messages("importer.eori.details.summary")),
-            content = HtmlContent(detailsContent)
-        ))
 
       @continueButton()
     }

@@ -50,7 +50,7 @@
                 name = "entryProcessingUnit",
                 label = "entryDetails.claimEpu.heading",
                 classes = Some("govuk-input--width-3"),
-                hint = Some(messages("entryDetails.claimEpu.hint")),
+                hint = Some(Html(messages("entryDetails.claimEpu.hint"))),
                 attributes = Map(
                     "autocomplete" -> "off",
                     "inputmode" -> "numeric",
@@ -64,7 +64,7 @@
                 name = "entryNumber",
                 label = "entryDetails.entryNumber.heading",
                 classes = Some("govuk-input--width-10"),
-                hint = Some(messages("entryDetails.entryNumber.hint")),
+                hint = Some(Html(messages("entryDetails.entryNumber.hint"))),
                 attributes = Map("autocomplete" -> "off")
             )
 
