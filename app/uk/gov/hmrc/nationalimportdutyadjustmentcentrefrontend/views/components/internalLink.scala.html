@@ -14,8 +14,8 @@
  * limitations under the License.
  *@
 
-@(text: String, call: Call)
+@(text: String, call: Call, classes: Option[String] = None)
 
-<a class="govuk-link govuk-link--no-visited-state" href="@{call.url}">
+<a class="govuk-link govuk-link--no-visited-state @classes" href="@{call.url}">
  @text
 </a>
