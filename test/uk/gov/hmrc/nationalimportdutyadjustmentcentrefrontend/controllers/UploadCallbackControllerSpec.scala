@@ -50,7 +50,7 @@ class UploadCallbackControllerSpec
   override protected def beforeEach(): Unit = {
     super.beforeEach()
 
-    when(mockUploadRepository.updateStatus(any(), any(), any())).thenReturn(Future.successful(uploadInProgress))
+    when(mockUploadRepository.updateStatus(any(), any(), any())).thenReturn(Future(true))
   }
 
   override protected def afterEach(): Unit = {
@@ -88,6 +88,23 @@ class UploadCallbackControllerSpec
 
         status(result) must be(NO_CONTENT)
       }
+    }
+
+    "return 404" when {
+
+      "upload repository does not contain record " in {
+
+        when(mockUploadRepository.updateStatus(any(), any(), any())).thenReturn(Future(false))
+
+        val request = post
+          .withHeaders((CONTENT_TYPE, JSON))
+          .withJsonBody(Json.parse(UpscanNotificationSpec.successNotificationBody))
+
+        val result: Future[Result] = route(app, request).get
+
+        status(result) must be(NOT_FOUND)
+      }
+
     }
 
   }

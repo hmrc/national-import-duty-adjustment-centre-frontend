@@ -36,7 +36,7 @@ class MongoBackedUploadProgressTracker @Inject() (repository: UploadRepository)(
     journeyId: JourneyId,
     uploadStatus: UploadStatus
   ): Future[Boolean] =
-    repository.updateStatus(fileReference, journeyId, uploadStatus).map(_ => true)
+    repository.updateStatus(fileReference, journeyId, uploadStatus)
 
   override def getUploadResult(id: UploadId, journeyId: JourneyId): Future[Option[UploadStatus]] =
     for (result <- repository.findUploadDetails(id, journeyId)) yield result.map(_.status)
