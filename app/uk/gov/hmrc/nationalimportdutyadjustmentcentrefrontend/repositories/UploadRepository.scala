@@ -113,12 +113,12 @@ class UploadRepository @Inject() (mongoComponent: MongoComponent, config: AppCon
     ).toFuture().map(_.headOption)
   }
 
-  def updateStatus(reference: Reference, journeyId: JourneyId, newStatus: UploadStatus): Future[UploadStatus] =
+  def updateStatus(reference: Reference, journeyId: JourneyId, newStatus: UploadStatus): Future[Boolean] =
     Mdc.preservingMdc {
-      collection.findOneAndUpdate(
+      collection.updateOne(
         and(equal("reference", Codecs.toBson(reference)), equal("journeyId", Codecs.toBson(journeyId))),
         set("status", Codecs.toBson(newStatus))
-      ).toFuture() map (details => details.status)
+      ).toFuture() map (result => result.getModifiedCount == 1)
     }
 
 }

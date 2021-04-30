@@ -37,7 +37,10 @@ class UploadCallbackController @Inject() (
 
   def callback(journeyId: JourneyId): Action[JsValue] = Action.async(parse.json) { implicit request =>
     withJsonBody[UpscanNotification] { feedback: UpscanNotification =>
-      handleCallback(journeyId, feedback).map(_ => NoContent)
+      handleCallback(journeyId, feedback).map {
+        case true => NoContent
+        case _    => NotFound
+      }
     } recover {
       case e: IllegalArgumentException => BadRequest
       case e                           => InternalServerError
