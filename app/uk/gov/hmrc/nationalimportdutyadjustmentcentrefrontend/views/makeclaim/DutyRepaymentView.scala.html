@@ -56,7 +56,7 @@ continueButton: components.continueButton )
                 id = "actuallyPaid",
                 name = "actuallyPaid",
                 label = s"$messagePrefix.actual.label",
-                hint = Some(messages(s"$messagePrefix.actual.hint")),
+                hint = Some(Html(messages(s"$messagePrefix.actual.hint"))),
                 prefix = Prefix.currencyPrefix,
                 classes = Some("govuk-input--width-10"),
                 attributes = Map("autocomplete" -> "off")

@@ -52,7 +52,7 @@
                 id = "accountName",
                 name = "accountName",
                 label = "bankDetails.name.heading",
-                hint = Some(messages("bankDetails.name.hint")),
+                hint = Some(Html(messages("bankDetails.name.hint"))),
                 attributes = Map("autocomplete" -> "off")
             )
 
@@ -61,7 +61,7 @@
                 id = "sortCode",
                 name = "sortCode",
                 label = "bankDetails.sortCode.heading",
-                hint = Some(messages("bankDetails.sortCode.hint")),
+                hint = Some(Html(messages("bankDetails.sortCode.hint"))),
                 classes = Some("govuk-input--width-5"),
                 attributes = Map("autocomplete" -> "off")
             )
@@ -71,7 +71,7 @@
                 id = "accountNumber",
                 name = "accountNumber",
                 label = "bankDetails.accountNumber.heading",
-                hint = Some(messages("bankDetails.accountNumber.hint")),
+                hint = Some(Html(messages("bankDetails.accountNumber.hint"))),
                 classes = Some("govuk-input--width-10"),
                 attributes = Map("autocomplete" -> "off")
             )
