@@ -14,6 +14,6 @@
  * limitations under the License.
  *@
 
-@(content: String)
+@(content: String, classes: Option[String] = None)
 
-<p class="govuk-body">@{Text(content).asHtml}</p>
+<p class="govuk-body @classes">@{Text(content).asHtml}</p>
