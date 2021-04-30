@@ -37,39 +37,39 @@ class CreateNavigator @Inject() ()
       representationTypeAnswered
     ),
     P(ClaimTypePage, makeclaim.routes.ClaimTypeController.onPageLoad, always, claimTypeAnswered),
-    P(EntryDetailsPage, makeclaim.routes.EntryDetailsController.onPageLoad, always, entryDetailsAnswered),
-    P(ItemNumbersPage, makeclaim.routes.ItemNumbersController.onPageLoad, always, itemNumbersAnswered),
-    P(ClaimReasonPage, makeclaim.routes.ClaimReasonController.onPageLoad, always, claimReasonAnswered),
-    P(ReclaimDutyTypePage, makeclaim.routes.ReclaimDutyTypeController.onPageLoad, always, reclaimDutyTypeAnswered),
-    P(
-      CustomsDutyRepaymentPage,
-      makeclaim.routes.DutyRepaymentController.onPageLoadCustomsDuty,
-      hasDutyType(Customs),
-      dutyPaymentAnswered(Customs)
-    ),
-    P(
-      ImportVatRepaymentPage,
-      makeclaim.routes.DutyRepaymentController.onPageLoadImportVat,
-      hasDutyType(Vat),
-      dutyPaymentAnswered(Vat)
-    ),
-    P(
-      OtherDutyRepaymentPage,
-      makeclaim.routes.DutyRepaymentController.onPageLoadOtherDuty,
-      hasDutyType(Other),
-      dutyPaymentAnswered(Other)
-    ),
-    P(
-      ReturnAmountSummaryPage,
-      makeclaim.routes.ReturnAmountSummaryController.onPageLoad,
-      always,
-      returnSummaryAnswered
-    ),
-    P(RequiredDocumentsPage, makeclaim.routes.RequiredDocumentsController.onPageLoad, always, always),
-    P(UploadPage, makeclaim.routes.UploadFormController.onPageLoad, always, uploadPageAnswered),
-    P(ContactDetailsPage, makeclaim.routes.ContactDetailsController.onPageLoad, always, contactDetailsAnswered),
-    P(BusinessNamePage, makeclaim.routes.BusinessNameController.onPageLoad, always, businessNameAnswered),
-    P(AddressPage, makeclaim.routes.AddressController.onPageLoad, always, claimantAnswered),
+//    P(EntryDetailsPage, makeclaim.routes.EntryDetailsController.onPageLoad, always, entryDetailsAnswered),
+//    P(ItemNumbersPage, makeclaim.routes.ItemNumbersController.onPageLoad, always, itemNumbersAnswered),
+//    P(ClaimReasonPage, makeclaim.routes.ClaimReasonController.onPageLoad, always, claimReasonAnswered),
+//    P(ReclaimDutyTypePage, makeclaim.routes.ReclaimDutyTypeController.onPageLoad, always, reclaimDutyTypeAnswered),
+//    P(
+//      CustomsDutyRepaymentPage,
+//      makeclaim.routes.DutyRepaymentController.onPageLoadCustomsDuty,
+//      hasDutyType(Customs),
+//      dutyPaymentAnswered(Customs)
+//    ),
+//    P(
+//      ImportVatRepaymentPage,
+//      makeclaim.routes.DutyRepaymentController.onPageLoadImportVat,
+//      hasDutyType(Vat),
+//      dutyPaymentAnswered(Vat)
+//    ),
+//    P(
+//      OtherDutyRepaymentPage,
+//      makeclaim.routes.DutyRepaymentController.onPageLoadOtherDuty,
+//      hasDutyType(Other),
+//      dutyPaymentAnswered(Other)
+//    ),
+//    P(
+//      ReturnAmountSummaryPage,
+//      makeclaim.routes.ReturnAmountSummaryController.onPageLoad,
+//      always,
+//      returnSummaryAnswered
+//    ),
+//    P(RequiredDocumentsPage, makeclaim.routes.RequiredDocumentsController.onPageLoad, always, always),
+//    P(UploadPage, makeclaim.routes.UploadFormController.onPageLoad, always, uploadPageAnswered),
+//    P(ContactDetailsPage, makeclaim.routes.ContactDetailsController.onPageLoad, always, contactDetailsAnswered),
+//    P(BusinessNamePage, makeclaim.routes.BusinessNameController.onPageLoad, always, businessNameAnswered),
+//    P(AddressPage, makeclaim.routes.AddressController.onPageLoad, always, claimantAnswered),
     P(RepayToPage, makeclaim.routes.RepayToController.onPageLoad, isRepresentative, repayToAnswered),
     P(BankDetailsPage, makeclaim.routes.BankDetailsController.onPageLoad, always, bankDetailsAnswered),
     P(
