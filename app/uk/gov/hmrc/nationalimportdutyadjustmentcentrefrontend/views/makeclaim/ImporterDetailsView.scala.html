@@ -51,9 +51,9 @@
         }
 
         @paragraphHtml {
-            @internalLink(messages("importer-details.change"), ImporterDetailsController.onChange())
+            @continueButton()
+            @internalLink(messages("importer-details.change"), ImporterDetailsController.onChange(), classes = Some("address-change-link"))
         }
 
-        @continueButton()
     }
 }

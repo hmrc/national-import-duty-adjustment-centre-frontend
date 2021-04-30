@@ -49,9 +49,9 @@
         }
 
         @paragraphHtml {
-            @internalLink(messages("address.change"), AddressController.onChange())
+            @continueButton()
+            @internalLink(messages("address.change"), AddressController.onChange(), classes = Some("address-change-link"))
         }
 
-        @continueButton()
     }
 }
