@@ -231,9 +231,7 @@ itemNumbers.error.length = Item numbers must be 500 characters or fewer
 
 importer.eori.title = What is the importer’s EORI number?
 importer.eori.hint = The number starts with GB and is followed by 12 digits. If the importer needs an EORI number that starts with GB, they will need to {0}.<br><br>For example, GB345834921000.
-importer.eori.details.summary = The importer’s EORI doesn’t start with GB
-importer.eori.details.getEori = If the importer’s EORI number does not start with GB, they will need to {0} (opens in a new tab).
-importer.eori.details.getEori.linktext = apply for a new EORI number (opens in a new tab)
+importer.eori.getEori.linktext = apply for a new EORI number (opens in a new tab)
 importer.eori.error.required = Enter the importer’s EORI number
 importer.eori.error.invalid = Enter an EORI number in the correct format
 
