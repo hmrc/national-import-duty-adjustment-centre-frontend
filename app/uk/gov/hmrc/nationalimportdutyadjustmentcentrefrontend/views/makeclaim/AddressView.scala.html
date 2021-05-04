@@ -48,10 +48,10 @@
           @components.hiddenInput("auditRef", form.value.flatMap(add => add.auditRef).getOrElse(""))
         }
 
-        @paragraphHtml {
+        <div class="govuk-button-group">
             @continueButton()
-            @internalLink(messages("address.change"), AddressController.onChange(), classes = Some("govuk-!-padding-left-4"))
-        }
+            @internalLink(messages("address.change"), AddressController.onChange())
+        </div>
 
     }
 }
