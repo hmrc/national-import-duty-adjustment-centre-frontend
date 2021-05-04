@@ -35,16 +35,18 @@
 @(form: Form[EoriNumber], backLink: NavigatorBack)(implicit request: Request[_], messages: Messages)
 
 @hintContent = {
-    @Html(
-        messages(
-            "importer.eori.hint1",
-            externalLink(
-                text = messages("importer.eori.getEori.linktext"),
-                href = appConfig.getEoriUrl
+    @paragraphHtml(
+        Html(
+            messages(
+                "importer.eori.hint1",
+                externalLink(
+                    text = messages("importer.eori.getEori.linktext"),
+                    href = appConfig.getEoriUrl
+                )
             )
         )
     )
-    @paragraph(messages("importer.eori.hint2"), classes=Some("govuk-!-padding-top-4"))
+    @paragraph(messages("importer.eori.hint2"), classes=Some("govuk-hint"))
 }
 
 @layout(pageTitle = Title(form, messages("importer.eori.title")), backLink) {
