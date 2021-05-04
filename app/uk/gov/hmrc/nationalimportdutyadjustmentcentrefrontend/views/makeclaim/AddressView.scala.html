@@ -29,7 +29,7 @@
     fieldSet: components.fieldSet,
     addressFields: components.addressInputFields,
     errorSummary: errorSummary,
-    govukButton : GovukButton
+    continueButton: components.continueButton
 )
 
 @(form: Form[Address], backLink: NavigatorBack)(implicit request: Request[_], messages: Messages)
@@ -49,11 +49,7 @@
         }
 
         <div class="govuk-button-group">
-            @govukButton(Button(
-                content = Text(messages("site.continue")),
-                attributes = Map("id" -> messages("site.continue.id")),
-                preventDoubleClick = true
-            ))
+            @continueButton()
             @internalLink(messages("address.change"), AddressController.onChange())
         </div>
 
