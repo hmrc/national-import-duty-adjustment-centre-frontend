@@ -23,8 +23,9 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.action
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.CacheDataRepository
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.amendclaim.ConfirmationView
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-
 import javax.inject.{Inject, Singleton}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.AmendClaim
+
 import scala.concurrent.ExecutionContext
 
 @Singleton
@@ -38,9 +39,9 @@ class ConfirmationController @Inject() (
 
   def onPageLoad(): Action[AnyContent] = identify.async { implicit request =>
     repository.get(request.identifier) map { maybeData =>
-      maybeData.flatMap(_.amendReference) match {
-        case Some(reference) => Ok(confirmationView(reference))
-        case _               => Redirect(controllers.routes.SessionExpiredController.onPageLoad())
+      maybeData.flatMap(_.amendClaimReceipt) match {
+        case Some(receipt) => Ok(confirmationView(receipt))
+        case _             => Redirect(controllers.routes.SessionExpiredController.onPageLoad())
       }
     }
   }

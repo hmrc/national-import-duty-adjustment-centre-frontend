@@ -30,6 +30,7 @@
 @(receipt: CreateClaimReceipt)(implicit request: Request[_], messages: Messages)
 
 @summaryContent = {
+    @components.heading(messages("create.claim.summary.title"))
     @claimSummaryHeading(receipt)
     @claimSummary(receipt.answers, withActions = false)
 }

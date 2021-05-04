@@ -348,7 +348,7 @@ confirmation.summary.view = View a summary of your claim and reference number (o
 
 create.claim.summary.title = Your application details
 create.claim.summary.section.heading = Application
-create.claim.summary.reference = Case reference
+create.claim.summary.reference = Claim reference number
 create.claim.summary.datetime = Submitted
 
 amend.case.reference.title = What is your claim reference number?
@@ -375,9 +375,18 @@ amend.check_answers.information.further_information = Further information
 amend.check_answers.information.further_information.accessible = Change your further information
 amend.check_answers.submit.heading = Send your amended claim
 amend.check_answers.submit.declaration = Before you send your amended claim, ensure that you have fully reviewed the information you have provided and that it is correct.
+amend.check_answers.submit.about.summary = You can print a summary of your amended claim on the next page.
+
+amend.claim.summary.title = Your amended application details
+amend.claim.summary.datetime = Submitted
 
 amend.confirmation.title = Information sent
 amend.confirmation.reference = Your reference number<br><strong>{0}</strong>
+amend.confirmation.paragraph1 = We have received your information.
+amend.confirmation.paragraph2 = You will be sent a decision letter by post. You will not receive an email confirmation of this claim.
+amend.confirmation.summary.print = Print a summary of your amended claim and reference number
+amend.confirmation.summary.view = View a summary of your amended claim and reference number (opens in a new tab)
+
 
 what_do_you_want_to_do.title = What do you want to do?
 what_do_you_want_to_do.error.required = Select whether you want to start a new claim or amend an existing claim
