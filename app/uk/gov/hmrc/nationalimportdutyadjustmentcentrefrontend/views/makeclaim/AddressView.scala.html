@@ -29,7 +29,7 @@
     fieldSet: components.fieldSet,
     addressFields: components.addressInputFields,
     errorSummary: errorSummary,
-    continueButton: components.continueButton
+    govukButton : GovukButton
 )
 
 @(form: Form[Address], backLink: NavigatorBack)(implicit request: Request[_], messages: Messages)
@@ -48,10 +48,14 @@
           @components.hiddenInput("auditRef", form.value.flatMap(add => add.auditRef).getOrElse(""))
         }
 
-        @paragraphHtml {
-            @continueButton()
-            @internalLink(messages("address.change"), AddressController.onChange(), classes = Some("govuk-!-padding-left-4"))
-        }
+        <div class="govuk-button-group">
+            @govukButton(Button(
+                content = Text(messages("site.continue")),
+                attributes = Map("id" -> messages("site.continue.id")),
+                preventDoubleClick = true
+            ))
+            @internalLink(messages("address.change"), AddressController.onChange())
+        </div>
 
     }
 }
