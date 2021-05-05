@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim
 
 import javax.inject.{Inject, Singleton}
 import play.api.i18n.I18nSupport
@@ -22,24 +22,24 @@ import play.api.mvc._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.IdentifierAction
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.CacheDataRepository
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ReviewClaimView
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.amendclaim.ReviewAmendClaimView
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class ReviewClaimController @Inject() (
+class ReviewAmendClaimController @Inject() (
   mcc: MessagesControllerComponents,
   identify: IdentifierAction,
   repository: CacheDataRepository,
-  reviewClaimView: ReviewClaimView
+  reviewView: ReviewAmendClaimView
 )(implicit ec: ExecutionContext)
     extends FrontendController(mcc) with I18nSupport {
 
   def onPageLoad(): Action[AnyContent] = identify.async { implicit request =>
     repository.get(request.identifier) map { maybeData =>
-      maybeData.flatMap(_.createClaimReceipt) match {
-        case Some(receipt) => Ok(reviewClaimView(receipt))
+      maybeData.flatMap(_.amendClaimReceipt) match {
+        case Some(receipt) => Ok(reviewView(receipt))
         case _             => Redirect(controllers.routes.SessionExpiredController.onPageLoad())
       }
     }

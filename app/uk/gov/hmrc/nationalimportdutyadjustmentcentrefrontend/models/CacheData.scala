@@ -20,7 +20,7 @@ import java.time.Instant
 
 import play.api.libs.json.{Json, OFormat}
 import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.{AmendAnswers, AmendClaimResponse}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.{AmendAnswers, AmendClaimReceipt}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{CreateAnswers, CreateClaimReceipt}
 
 final case class CacheData(
@@ -29,12 +29,10 @@ final case class CacheData(
   createAnswers: Option[CreateAnswers] = None,
   amendAnswers: Option[AmendAnswers] = None,
   createClaimReceipt: Option[CreateClaimReceipt] = None,
-  amendClaimResponse: Option[AmendClaimResponse] = None,
+  amendClaimReceipt: Option[AmendClaimReceipt] = None,
   lastUpdated: Instant = Instant.now()
 ) {
 
-  def claimReference: Option[String]  = createClaimReceipt.map(_.response).flatMap(_.result).map(_.caseReference)
-  def amendReference: Option[String]  = amendClaimResponse.flatMap(_.result).map(_.caseReference)
   def getCreateAnswers: CreateAnswers = createAnswers.getOrElse(CreateAnswers())
   def getAmendAnswers: AmendAnswers   = amendAnswers.getOrElse(AmendAnswers())
 }

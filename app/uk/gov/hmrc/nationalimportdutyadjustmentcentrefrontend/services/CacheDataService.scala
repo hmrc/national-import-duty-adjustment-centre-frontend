@@ -16,7 +16,11 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services
 
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.{AmendAnswers, AmendClaimResponse}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.{
+  AmendAnswers,
+  AmendClaimReceipt,
+  AmendClaimResponse
+}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{
   CreateAnswers,
   CreateClaimReceipt,
@@ -75,11 +79,11 @@ class CacheDataService @Inject() (repository: CacheDataRepository)(implicit ec: 
       repository.update(data.copy(createAnswers = None, createClaimReceipt = Some(claimReceipt)))
     }
 
-  def storeAmendResponse(
-    amendClaimResponse: AmendClaimResponse
+  def storeAmendReceipt(
+    amendClaimReceipt: AmendClaimReceipt
   )(implicit request: IdentifierRequest[_]): Future[Option[CacheData]] =
     getCacheData flatMap { data =>
-      repository.update(data.copy(amendAnswers = None, amendClaimResponse = Some(amendClaimResponse)))
+      repository.update(data.copy(amendAnswers = None, amendClaimReceipt = Some(amendClaimReceipt)))
     }
 
 }

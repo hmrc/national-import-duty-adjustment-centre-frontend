@@ -25,7 +25,11 @@ import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded, Request}
 import play.api.test.FakeRequest
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.FakeIdentifierActions
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.CacheData
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.{AmendAnswers, AmendClaimResponse}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.{
+  AmendAnswers,
+  AmendClaimReceipt,
+  AmendClaimResponse
+}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{
   CreateAnswers,
   CreateClaimReceipt,
@@ -88,7 +92,12 @@ trait ControllerSpec
   }
 
   def withCachedAmendClaimResponse(amendClaimResponse: Option[AmendClaimResponse]): Unit = {
-    val cacheData: Option[CacheData] = Some(CacheData("id", amendClaimResponse = amendClaimResponse))
+    val cacheData: Option[CacheData] = Some(
+      CacheData(
+        "id",
+        amendClaimReceipt = amendClaimResponse.map(response => AmendClaimReceipt(response, AmendAnswers()))
+      )
+    )
     when(dataRepository.get(anyString())).thenReturn(Future.successful(cacheData))
   }
 

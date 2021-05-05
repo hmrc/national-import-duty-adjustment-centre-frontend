@@ -14,23 +14,49 @@
  * limitations under the License.
  *@
 
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.AmendClaim
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.AmendClaimReceipt
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.InformationTitle
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html._
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.Layout
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components._
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.NavigatorBack
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim
 
 @this(
         layout: Layout,
         formHelper: FormWithCSRF,
+        amendSummary: AmendClaimSummary,
         govukPanel: GovukPanel
 )
 
-@(reference: String)(implicit request: Request[_], messages: Messages)
+@(receipt: AmendClaimReceipt)(implicit request: Request[_], messages: Messages)
+
+@summaryContent = {
+    @heading(messages("amend.claim.summary.title"))
+    @amendSummary(AmendClaim(receipt.answers), withActions = false, submitted = Some(receipt.timestamp))
+}
 
 @layout(pageTitle = InformationTitle(messages("amend.confirmation.title")), NavigatorBack(None)) {
 
-    @govukPanel(Panel(
-        title = Text(messages("amend.confirmation.title")),
-        content = HtmlContent(messages("amend.confirmation.reference",reference))
-    ))
+    <div class="govuk-!-display-none-print">
+        @govukPanel(Panel(
+            title = Text(messages("amend.confirmation.title")),
+            content = HtmlContent(messages("amend.confirmation.reference", receipt.caseReference))
+        ))
 
+        @paragraph(messages("amend.confirmation.paragraph1"))
+        @paragraph(messages("amend.confirmation.paragraph2"))
+
+        @printPage(messages("amend.confirmation.summary.print"))
+
+        <noscript>
+        @paragraphHtml(
+            externalLink(messages("confirmation.summary.view"), amendclaim.routes.ReviewAmendClaimController.onPageLoad().url)
+        )
+        </noscript>
+    </div>
+
+    <div class="nidac-!-display-only-print">
+        @summaryContent
+    </div>
 }

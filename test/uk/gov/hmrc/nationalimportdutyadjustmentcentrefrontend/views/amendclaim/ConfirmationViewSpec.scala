@@ -17,17 +17,16 @@
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.amendclaim
 
 import play.twirl.api.Html
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.UnitViewSpec
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, UnitViewSpec}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.AmendClaimReceipt
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.amendclaim.ConfirmationView
 
-import scala.util.Random
-
-class ConfirmationViewSpec extends UnitViewSpec {
+class ConfirmationViewSpec extends UnitViewSpec with TestData {
 
   private val page = instanceOf[ConfirmationView]
 
-  private val amendReference = Random.alphanumeric.take(16).mkString
-  private val view: Html     = page(amendReference)
+  private val receipt    = AmendClaimReceipt(validAmendClaimResponse, completeAmendAnswers)
+  private val view: Html = page(receipt)
 
   "ConfirmationPage" should {
 
@@ -40,8 +39,13 @@ class ConfirmationViewSpec extends UnitViewSpec {
     }
 
     "have correct reference" in {
-      view.getElementsByClass("govuk-panel__body").text() must include(amendReference)
+      view.getElementsByClass("govuk-panel__body").text() must include(receipt.caseReference)
     }
 
+    "have link to print summary" in {
+      view.getElementsByClass("nidac-print-link") must containMessage("amend.confirmation.summary.print")
+
+      view.getElementsByClass("nidac-print-link").first().attr("href") must include("window.print")
+    }
   }
 }

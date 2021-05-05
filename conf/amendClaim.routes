@@ -22,3 +22,4 @@ POST        /check-answers                               uk.gov.hmrc.nationalimp
 GET         /check-answers/change/:page                  uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim.CheckYourAnswersController.onChange(page)
 
 GET         /confirmation                                uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim.ConfirmationController.onPageLoad()
+GET         /review-amend-claim                          uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim.ReviewAmendClaimController.onPageLoad()

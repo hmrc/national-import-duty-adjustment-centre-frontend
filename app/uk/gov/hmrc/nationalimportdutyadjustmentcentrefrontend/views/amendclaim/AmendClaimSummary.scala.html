@@ -1,0 +1,127 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim.routes
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.AmendClaim
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.AmendPageNames
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.DateTimeFormats
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.ActionItemBuilder.actionItem
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components._
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.MessageKey
+
+@import java.time.Instant
+
+@this(
+    summaryList: summaryList
+)
+
+@(amendClaim: AmendClaim, withActions: Boolean = true, submitted: Option[Instant] = None)(implicit request: Request[_], messages: Messages)
+
+
+@summaryList(
+    id = "important_info_section",
+    summaryListRows = Seq(
+        Some(SummaryListRow(
+            classes = "case_reference_row",
+            key = Key(
+                content = Text(messages("amend.check_answers.information.caseReference"))
+            ),
+            value = Value(
+                content = Text(amendClaim.caseReference.number)
+            ),
+            actions = if(!withActions) None else Some(Actions(
+                items = Seq(
+                    actionItem(
+                        href = routes.CheckYourAnswersController.onChange(AmendPageNames.claimReference).url,
+                        content = HtmlContent(linkContent(messages("site.change"))),
+                        visuallyHiddenText = Some(messages("amend.check_answers.information.caseReference.accessible"))
+                    )
+                )
+            ))
+        )),
+        submitted.map(timestamp =>
+            SummaryListRow(
+                classes = "submitted_datetime",
+                key = Key(
+                    content = Text(messages("amend.claim.summary.datetime"))
+                ),
+                value = Value(
+                    content = Text(DateTimeFormats.formatSubmissionDateAtTime(timestamp))
+                ),
+                actions = None
+            )
+        ),
+        Some(SummaryListRow(
+            classes = "has_supporting_documents_row",
+            key = Key(
+                content = Text(messages("amend.check_answers.information.attach_more_documents"))
+            ),
+            value = Value(
+                content = Text(MessageKey.apply("amend.check_answers.information.attach_more_documents", amendClaim.hasMoreDocuments.toString ))
+            ),
+            actions = if(!withActions) None else Some(Actions(
+                items = Seq(
+                    actionItem(
+                        href = routes.CheckYourAnswersController.onChange(AmendPageNames.attachMoreDocuments).url,
+                        content = HtmlContent(linkContent(messages("site.change"))),
+                        visuallyHiddenText = Some(messages("amend.check_answers.information.attach_more_documents.accessible"))
+                    )
+                )
+            ))
+        )
+        ),
+        if(amendClaim.hasMoreDocuments){
+        Some(SummaryListRow(
+            classes = "upload_row",
+            key = Key(
+                content = Text(messages("amend.check_answers.information.uploadedDocuments"))
+            ),
+            value = Value(
+                content = HtmlContent(amendClaim.uploads.map(_.fileName).mkString("<br>"))
+            ),
+            actions = if(!withActions) None else Some(Actions(
+                items = Seq(
+                    actionItem(
+                        href = routes.CheckYourAnswersController.onChange(AmendPageNames.uploadSummary).url,
+                        content = HtmlContent(linkContent(messages("site.change"))),
+                        visuallyHiddenText = Some(messages("amend.check_answers.information.uploadedDocuments.accessible"))
+                    )
+                )
+            ))
+        ))} else None,
+        Some(SummaryListRow(
+            classes = "further_information_row",
+            key = Key(
+                content = Text(messages("amend.check_answers.information.further_information"))
+            ),
+            value = Value(
+                content = Text(amendClaim.furtherInformation.info)
+            ),
+            actions = if(!withActions) None else Some(Actions(
+                items = Seq(
+                    actionItem(
+                        href = routes.CheckYourAnswersController.onChange(AmendPageNames.furtherInformation).url,
+                        content = HtmlContent(linkContent(messages("site.change"))),
+                        visuallyHiddenText = Some(messages("amend.check_answers.information.further_information.accessible"))
+                    )
+                )
+            ))
+        ))
+    )
+)
+
+
+

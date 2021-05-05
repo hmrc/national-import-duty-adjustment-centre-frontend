@@ -16,109 +16,30 @@
 
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim.routes
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.AmendClaim
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.AmendPageNames
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.ActionItemBuilder.actionItem
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.InformationTitle
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html._
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.Layout
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components._
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.NavigatorBack
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.MessageKey
 
 @this(
     layout: Layout,
     formHelper: FormWithCSRF,
-    summaryList: summaryList,
-    submitButton: components.submitButton
+    amendSummary: AmendClaimSummary,
+    submitButton: submitButton
 )
 
 @(amendClaim: AmendClaim, backLink: NavigatorBack)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = InformationTitle(messages("amend.check_answers.title")), backLink) {
 
-    @components.heading(messages("amend.check_answers.title"))
+    @heading(messages("amend.check_answers.title"))
 
-    @summaryList(
-        id = "important_info_section",
-        summaryListRows = Seq(
-            Some(SummaryListRow(
-                classes = "case_reference_row",
-                key = Key(
-                    content = Text(messages("amend.check_answers.information.caseReference"))
-                ),
-                value = Value(
-                    content = Text(amendClaim.caseReference.number)
-                ),
-                actions = Some(Actions(
-                    items = Seq(
-                        actionItem(
-                            href = routes.CheckYourAnswersController.onChange(AmendPageNames.claimReference).url,
-                            content = HtmlContent(linkContent(messages("site.change"))),
-                            visuallyHiddenText = Some(messages("amend.check_answers.information.caseReference.accessible"))
-                        )
-                    )
-                ))
-            )),
-            Some(SummaryListRow(
-                classes = "has_supporting_documents_row",
-                key = Key(
-                    content = Text(messages("amend.check_answers.information.attach_more_documents"))
-                ),
-                value = Value(
-                    content = Text(MessageKey.apply("amend.check_answers.information.attach_more_documents", amendClaim.hasMoreDocuments.toString ))
-                ),
-                actions = Some(Actions(
-                    items = Seq(
-                        actionItem(
-                            href = routes.CheckYourAnswersController.onChange(AmendPageNames.attachMoreDocuments).url,
-                            content = HtmlContent(linkContent(messages("site.change"))),
-                            visuallyHiddenText = Some(messages("amend.check_answers.information.attach_more_documents.accessible"))
-                        )
-                    )
-                ))
-            )
-            ),
-            if(amendClaim.hasMoreDocuments){
-            Some(SummaryListRow(
-                classes = "upload_row",
-                key = Key(
-                    content = Text(messages("amend.check_answers.information.uploadedDocuments"))
-                ),
-                value = Value(
-                    content = HtmlContent(amendClaim.uploads.map(_.fileName).mkString("<br>"))
-                ),
-                actions = Some(Actions(
-                    items = Seq(
-                        actionItem(
-                            href = routes.CheckYourAnswersController.onChange(AmendPageNames.uploadSummary).url,
-                            content = HtmlContent(linkContent(messages("site.change"))),
-                            visuallyHiddenText = Some(messages("amend.check_answers.information.uploadedDocuments.accessible"))
-                        )
-                    )
-                ))
-            ))} else None,
-            Some(SummaryListRow(
-                classes = "further_information_row",
-                key = Key(
-                    content = Text(messages("amend.check_answers.information.further_information"))
-                ),
-                value = Value(
-                    content = Text(amendClaim.furtherInformation.info)
-                ),
-                actions = Some(Actions(
-                    items = Seq(
-                        actionItem(
-                            href = routes.CheckYourAnswersController.onChange(AmendPageNames.furtherInformation).url,
-                            content = HtmlContent(linkContent(messages("site.change"))),
-                            visuallyHiddenText = Some(messages("amend.check_answers.information.further_information.accessible"))
-                        )
-                    )
-                ))
-            ))
-        )
-    )
+    @amendSummary(amendClaim)
 
-    @components.subHeading(messages("amend.check_answers.submit.heading"))
-    @components.paragraph(messages("amend.check_answers.submit.declaration"))
+    @subHeading(messages("amend.check_answers.submit.heading"))
+    @paragraph(messages("amend.check_answers.submit.declaration"))
+
+    @paragraph(messages("amend.check_answers.submit.about.summary"))
 
     @formHelper(action = routes.CheckYourAnswersController.onSubmit(), 'autoComplete -> "off") {
         @submitButton()
