@@ -17,28 +17,29 @@
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim.routes
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.AmendClaim
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.InformationTitle
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html._
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.Layout
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components._
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.NavigatorBack
 
 @this(
     layout: Layout,
     formHelper: FormWithCSRF,
     amendSummary: AmendClaimSummary,
-    submitButton: components.submitButton
+    submitButton: submitButton
 )
 
 @(amendClaim: AmendClaim, backLink: NavigatorBack)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = InformationTitle(messages("amend.check_answers.title")), backLink) {
 
-    @components.heading(messages("amend.check_answers.title"))
+    @heading(messages("amend.check_answers.title"))
 
     @amendSummary(amendClaim)
 
-    @components.subHeading(messages("amend.check_answers.submit.heading"))
-    @components.paragraph(messages("amend.check_answers.submit.declaration"))
+    @subHeading(messages("amend.check_answers.submit.heading"))
+    @paragraph(messages("amend.check_answers.submit.declaration"))
 
-    @components.paragraph(messages("amend.check_answers.submit.about.summary"))
+    @paragraph(messages("amend.check_answers.submit.about.summary"))
 
     @formHelper(action = routes.CheckYourAnswersController.onSubmit(), 'autoComplete -> "off") {
         @submitButton()

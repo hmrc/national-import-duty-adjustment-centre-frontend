@@ -15,7 +15,8 @@
  *@
 
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.InformationTitle
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html._
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.Layout
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components.heading
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.NavigatorBack
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components.summaryList
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.AmendClaim
@@ -31,7 +32,7 @@
 
 @layout(pageTitle = InformationTitle(messages("amend.claim.summary.title")), NavigatorBack(None)) {
 
-    @components.heading(messages("amend.claim.summary.title"))
+    @heading(messages("amend.claim.summary.title"))
 
     @claimSummary(AmendClaim(receipt.answers), withActions = false, submitted = Some(receipt.timestamp))
 

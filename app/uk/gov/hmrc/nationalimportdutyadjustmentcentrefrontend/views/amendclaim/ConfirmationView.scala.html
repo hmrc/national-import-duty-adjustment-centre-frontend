@@ -17,7 +17,8 @@
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.AmendClaim
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.AmendClaimReceipt
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.InformationTitle
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html._
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.Layout
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components._
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.NavigatorBack
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim
 
@@ -31,7 +32,7 @@
 @(receipt: AmendClaimReceipt)(implicit request: Request[_], messages: Messages)
 
 @summaryContent = {
-    @components.heading(messages("amend.claim.summary.title"))
+    @heading(messages("amend.claim.summary.title"))
     @amendSummary(AmendClaim(receipt.answers), withActions = false, submitted = Some(receipt.timestamp))
 }
 
@@ -43,14 +44,14 @@
             content = HtmlContent(messages("amend.confirmation.reference", receipt.caseReference))
         ))
 
-        @components.paragraph(messages("amend.confirmation.paragraph1"))
-        @components.paragraph(messages("amend.confirmation.paragraph2"))
+        @paragraph(messages("amend.confirmation.paragraph1"))
+        @paragraph(messages("amend.confirmation.paragraph2"))
 
-        @components.printPage(messages("amend.confirmation.summary.print"))
+        @printPage(messages("amend.confirmation.summary.print"))
 
         <noscript>
-        @components.paragraphHtml(
-            components.externalLink(messages("confirmation.summary.view"), amendclaim.routes.ReviewAmendClaimController.onPageLoad().url)
+        @paragraphHtml(
+            externalLink(messages("confirmation.summary.view"), amendclaim.routes.ReviewAmendClaimController.onPageLoad().url)
         )
         </noscript>
     </div>
