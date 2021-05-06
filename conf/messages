@@ -341,6 +341,7 @@ check_answers.missing.resolve = Resolve missing answers
 
 confirmation.title = Application complete
 confirmation.reference = Your reference number<br><strong>{0}</strong>
+confirmation.reference.rory = Your reference number
 confirmation.paragraph1 = We have received your application.
 confirmation.paragraph2 = You will be sent a decision letter by post. You will not received an email confirmation of this claim.
 confirmation.summary.print = Print a summary of your claim and reference number
