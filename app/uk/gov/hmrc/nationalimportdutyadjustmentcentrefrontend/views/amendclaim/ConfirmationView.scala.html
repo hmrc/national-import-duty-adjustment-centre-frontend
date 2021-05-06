@@ -36,16 +36,12 @@
     @amendSummary(AmendClaim(receipt.answers), withActions = false, submitted = Some(receipt.timestamp))
 }
 
-@confirmationContent = {
-
-}
-
 @layout(pageTitle = InformationTitle(messages("amend.confirmation.title")), NavigatorBack(None)) {
 
     <div class="govuk-!-display-none-print">
         @govukPanel(Panel(
             title = Text(messages("amend.confirmation.title")),
-        content = HtmlContent(s"<p>${messages("confirmation.reference.rory")}</p><p class='govuk-!-font-weight-bold'>${receipt.caseReference}</p>")
+            content = HtmlContent(s"<span>${messages("amend.confirmation.reference")}</span><br><span class='govuk-!-font-weight-bold'>${receipt.caseReference}</span>")
         ))
 
         @paragraph(messages("amend.confirmation.paragraph1"))
