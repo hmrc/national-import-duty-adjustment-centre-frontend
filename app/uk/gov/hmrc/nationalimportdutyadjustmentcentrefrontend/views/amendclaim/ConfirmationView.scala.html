@@ -41,7 +41,7 @@
     <div class="govuk-!-display-none-print">
         @govukPanel(Panel(
             title = Text(messages("amend.confirmation.title")),
-            content = HtmlContent(messages("amend.confirmation.reference", receipt.caseReference))
+            content = HtmlContent(s"<span>${messages("amend.confirmation.reference")}</span><br><span class='govuk-!-font-weight-bold'>${receipt.caseReference}</span>")
         ))
 
         @paragraph(messages("amend.confirmation.paragraph1"))
