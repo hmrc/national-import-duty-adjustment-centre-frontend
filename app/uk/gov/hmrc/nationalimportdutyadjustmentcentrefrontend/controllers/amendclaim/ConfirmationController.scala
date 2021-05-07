@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim
 
+import javax.inject.{Inject, Singleton}
 import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
@@ -23,8 +24,6 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.action
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.CacheDataRepository
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.amendclaim.ConfirmationView
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import javax.inject.{Inject, Singleton}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.AmendClaim
 
 import scala.concurrent.ExecutionContext
 

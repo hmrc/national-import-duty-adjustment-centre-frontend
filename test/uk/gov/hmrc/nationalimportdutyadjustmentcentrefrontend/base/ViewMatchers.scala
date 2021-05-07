@@ -26,16 +26,14 @@ import play.api.mvc.{Call, Result}
 import play.api.test.Helpers.{contentAsString, _}
 import play.twirl.api.Html
 
-import scala.collection.JavaConverters._
 import scala.concurrent.Future
 import scala.util.Try
 
 trait ViewMatchers extends Matchers {
 
-  implicit private def elements2Scala(elements: Elements): Iterator[Element] = elements.iterator().asScala
-  implicit protected def htmlBodyOf(html: Html): Document                    = Jsoup.parse(html.toString())
-  implicit protected def htmlBodyOf(page: String): Document                  = Jsoup.parse(page)
-  implicit protected def htmlBodyOf(result: Future[Result]): Document        = htmlBodyOf(contentAsString(result))
+  implicit protected def htmlBodyOf(html: Html): Document             = Jsoup.parse(html.toString())
+  implicit protected def htmlBodyOf(page: String): Document           = Jsoup.parse(page)
+  implicit protected def htmlBodyOf(result: Future[Result]): Document = htmlBodyOf(contentAsString(result))
 
   def includeMessage(key: String, args: Any*)(implicit messages: Messages): Matcher[Element] =
     new ElementContainsMessageMatcher(key, args)

@@ -22,9 +22,8 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.ErrorTe
 class ErrorHandlerSpec extends UnitViewSpec {
 
   val errorPage: ErrorTemplate = instanceOf[ErrorTemplate]
-  val appConfig: AppConfig     = instanceOf[AppConfig]
 
-  val errorHandler = new ErrorHandler(errorPage, realMessagesApi)(appConfig)
+  val errorHandler = new ErrorHandler(errorPage, realMessagesApi)
 
   "ErrorHandler" should {
 

@@ -44,7 +44,7 @@ class WhatDoYouWantToDoControllerSpec extends ControllerSpec with TestData {
       navigator,
       amendNavigator,
       page
-    )(executionContext)
+    )
 
   private def unauthorisdController =
     new WhatDoYouWantToDoController(
@@ -54,7 +54,7 @@ class WhatDoYouWantToDoControllerSpec extends ControllerSpec with TestData {
       navigator,
       amendNavigator,
       page
-    )(executionContext)
+    )
 
   def theResponseForm: Form[ToDoType] = {
     val captor = ArgumentCaptor.forClass(classOf[Form[ToDoType]])

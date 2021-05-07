@@ -17,16 +17,14 @@
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config
 
 import javax.inject.{Inject, Singleton}
-
 import play.api.i18n.MessagesApi
 import play.api.mvc.Request
 import play.twirl.api.Html
-import uk.gov.hmrc.play.bootstrap.frontend.http.FrontendErrorHandler
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.ErrorTemplate
+import uk.gov.hmrc.play.bootstrap.frontend.http.FrontendErrorHandler
 
 @Singleton
-class ErrorHandler @Inject() (errorTemplate: ErrorTemplate, val messagesApi: MessagesApi)(implicit appConfig: AppConfig)
-    extends FrontendErrorHandler {
+class ErrorHandler @Inject() (errorTemplate: ErrorTemplate, val messagesApi: MessagesApi) extends FrontendErrorHandler {
 
   override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit
     request: Request[_]

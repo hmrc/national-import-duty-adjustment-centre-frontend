@@ -16,6 +16,8 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors
 
+import javax.inject.Inject
+import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpException}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ApiError
@@ -26,7 +28,6 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.requests.
   CreateEISClaimRequest
 }
 
-import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class NIDACConnector @Inject() (httpClient: HttpClient, appConfig: AppConfig)(implicit ec: ExecutionContext) {

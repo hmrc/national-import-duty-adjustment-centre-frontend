@@ -16,9 +16,10 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors
 
-import play.api.Logger
+import javax.inject.{Inject, Singleton}
 import play.api.http.HeaderNames.LOCATION
 import play.api.http.Status
+import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads, HttpResponse}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.InitialiseAddressLookupHttpParser.InitialiseAddressLookupReads
@@ -28,12 +29,10 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.addresslook
   AddressLookupRequest
 }
 
-import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class AddressLookupConnector @Inject() (val http: HttpClient, implicit val config: AppConfig) {
-  private val logger: Logger = Logger(this.getClass)
 
   def initialiseJourney(
     addressLookupRequest: AddressLookupRequest
@@ -61,6 +60,7 @@ object InitialiseAddressLookupHttpParser {
         case Status.ACCEPTED =>
           response.header(LOCATION) match {
             case Some(redirectUrl) => AddressLookupOnRamp(redirectUrl)
+            case None              => throw new IllegalStateException("Missing re-direct url")
           }
       }
 

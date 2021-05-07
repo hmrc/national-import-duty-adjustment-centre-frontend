@@ -19,6 +19,7 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors
 import javax.inject.Inject
 import play.api.libs.json.{Json, OFormat, Reads, Writes}
 import play.mvc.Http.HeaderNames
+import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers

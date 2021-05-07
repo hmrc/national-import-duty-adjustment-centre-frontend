@@ -24,7 +24,6 @@ import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.ControllerSpec
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.{AmendClaimResponse, AmendClaimResult}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{CreateClaimResponse, CreateClaimResult}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.amendclaim.ReviewAmendClaimView
 import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
 

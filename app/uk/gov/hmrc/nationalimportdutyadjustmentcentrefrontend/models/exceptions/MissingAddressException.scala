@@ -16,8 +16,6 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.exceptions
 
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.Page
-
 case class MissingAddressException()
     extends RuntimeException(
       "This should never happen. You are not allowed onto the manual address form unless you visited ALF first"
