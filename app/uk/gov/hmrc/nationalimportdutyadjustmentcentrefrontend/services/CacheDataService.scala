@@ -16,21 +16,12 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services
 
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.{
-  AmendAnswers,
-  AmendClaimReceipt,
-  AmendClaimResponse
-}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{
-  CreateAnswers,
-  CreateClaimReceipt,
-  CreateClaimResponse
-}
+import javax.inject.Inject
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.{AmendAnswers, AmendClaimReceipt}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{CreateAnswers, CreateClaimReceipt}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.requests.IdentifierRequest
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{CacheData, JourneyId}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.CacheDataRepository
-import javax.inject.Inject
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.exceptions.MissingAnswersException
 
 import scala.concurrent.{ExecutionContext, Future}
 

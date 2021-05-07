@@ -25,19 +25,16 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.AmendNa
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.FirstPage
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
-import scala.concurrent.ExecutionContext
-
 @Singleton
 class AmendClaimController @Inject() (
   mcc: MessagesControllerComponents,
   identify: IdentifierAction,
   navigator: AmendNavigator
-)(implicit ec: ExecutionContext)
-    extends FrontendController(mcc) with I18nSupport {
+) extends FrontendController(mcc) with I18nSupport {
 
   private val noAnswers = AmendAnswers()
 
-  val start: Action[AnyContent] = identify { implicit request =>
+  val start: Action[AnyContent] = identify { _ =>
     Redirect(navigator.nextPage(FirstPage, noAnswers))
   }
 

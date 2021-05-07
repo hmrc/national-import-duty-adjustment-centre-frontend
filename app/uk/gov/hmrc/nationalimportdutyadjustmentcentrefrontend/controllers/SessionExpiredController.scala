@@ -21,8 +21,6 @@ import play.api.mvc._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.SessionExpiredPage
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
-import scala.concurrent.Future
-
 @Singleton
 class SessionExpiredController @Inject() (mcc: MessagesControllerComponents, sessionExpiredPage: SessionExpiredPage)
     extends FrontendController(mcc) {

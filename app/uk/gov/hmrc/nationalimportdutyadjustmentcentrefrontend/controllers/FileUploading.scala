@@ -21,7 +21,6 @@ import play.api.mvc.Call
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.{Reference, UpscanInitiateConnector}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.requests.IdentifierRequest
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UpscanInitiateResponse
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{JourneyId, UploadId}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.UploadProgressTracker
@@ -51,7 +50,7 @@ trait FileUploading {
 
   protected def initiateForm(
     journeyId: JourneyId
-  )(implicit request: IdentifierRequest[_], hc: HeaderCarrier, ec: ExecutionContext): Future[UpscanInitiateResponse] = {
+  )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[UpscanInitiateResponse] = {
     val uploadId = UploadId.generate
     for {
       upscanInitiateResponse <- upscanInitiateConnector.initiateV2(

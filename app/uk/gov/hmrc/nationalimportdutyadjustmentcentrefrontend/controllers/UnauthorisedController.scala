@@ -21,8 +21,6 @@ import play.api.mvc._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.UnauthorisedPage
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
-import scala.concurrent.Future
-
 @Singleton
 class UnauthorisedController @Inject() (mcc: MessagesControllerComponents, unauthorisedPage: UnauthorisedPage)
     extends FrontendController(mcc) {

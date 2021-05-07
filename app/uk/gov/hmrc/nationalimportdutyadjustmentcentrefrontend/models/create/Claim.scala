@@ -19,7 +19,6 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create
 import java.time.LocalDate
 
 import play.api.Logger
-import play.api.libs.json.{Json, OFormat}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.exceptions.MissingAnswersException
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UploadedFile
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{create, EoriNumber}
@@ -97,6 +96,7 @@ object Claim {
             contactDetails = userAnswers.importerContactDetails.getOrElse(missing(ImporterContactDetailsPage))
           )
         )
+      case None => missing(RepresentationTypePage)
     }
 
   private def missing(answerPage: Page) = {

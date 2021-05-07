@@ -21,7 +21,6 @@ import play.api.Configuration
 import play.api.i18n.Lang
 import play.api.mvc.Request
 import uk.gov.hmrc.hmrcfrontend.views.Utils.urlEncode
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.play.bootstrap.frontend.filters.SessionTimeoutFilterConfig
 
