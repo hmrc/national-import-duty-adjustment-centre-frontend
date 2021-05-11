@@ -106,9 +106,10 @@ class DutyRepaymentControllerSpec extends ControllerSpec with TestData {
 
   "POST" should {
 
-    val validRequest = postRequest("actuallyPaid" -> "123", "shouldPaid" -> "23.99")
+    val validRequest = postRequest("actuallyPaid" -> "123", "shouldPaid" -> "23.9")
 
-    val dutyPaid = DutyPaid("123", "23.99")
+    // Note - stored amounts to 2 d.p.
+    val dutyPaid = DutyPaid("123.00", "23.90")
 
     "update cache and redirect when customs duty answer is submitted" in {
 

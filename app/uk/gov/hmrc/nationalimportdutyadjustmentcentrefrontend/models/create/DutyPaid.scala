@@ -23,5 +23,12 @@ case class DutyPaid(actuallyPaid: String, shouldHavePaid: String) {
 }
 
 object DutyPaid {
+  private val decimalPlaces              = 2
   implicit val format: OFormat[DutyPaid] = Json.format[DutyPaid]
+
+  private def setScale(amount: String) = BigDecimal.apply(amount).setScale(decimalPlaces).toString()
+
+  def apply(actuallyPaid: String, shouldHavePaid: String): DutyPaid =
+    new DutyPaid(setScale(actuallyPaid), setScale(shouldHavePaid))
+
 }
