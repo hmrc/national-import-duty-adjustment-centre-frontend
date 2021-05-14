@@ -14,10 +14,13 @@ if (window.history && window.history.replaceState && typeof window.history.repla
 function onFileSelect() {
   try{
     // NF-403 - hide the form controls, display the spinner and disable the 'Continue' button before submitting
+    document.getElementById("nidac-continue").disabled = true;
     document.getElementById("upload-form").classList.add("govuk-!-display-none");
     document.querySelector(".hidden-progress-row").classList.remove("govuk-!-display-none");
-    document.querySelector(".govuk-error-summary").classList.add("govuk-!-display-none");
-    document.getElementById("nidac-continue").disabled = true;
+    var errorBlock = document.querySelector(".govuk-error-summary");
+    if(errorBlock){
+      errorBlock.classList.add("govuk-!-display-none");
+    }
   }
   finally {
     document.getElementById("upload-form").submit();
