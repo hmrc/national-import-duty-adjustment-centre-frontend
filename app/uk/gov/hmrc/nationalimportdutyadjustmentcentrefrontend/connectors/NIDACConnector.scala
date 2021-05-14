@@ -25,37 +25,45 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ApiError
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.AmendClaimResponse
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.CreateClaimResponse
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.requests.{AmendEISClaimRequest, CreateEISClaimRequest}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.requests.{
+  AmendEISClaimRequest,
+  CreateEISClaimRequest
+}
 
 import java.util.concurrent.TimeUnit
 import scala.concurrent.duration.FiniteDuration
 import scala.concurrent.{ExecutionContext, Future}
 
-class NIDACConnector @Inject() (httpClient: HttpClient, appConfig: AppConfig, val actorSystem: ActorSystem)(implicit ec: ExecutionContext) extends Retry {
+class NIDACConnector @Inject() (httpClient: HttpClient, appConfig: AppConfig, val actorSystem: ActorSystem)(implicit
+  ec: ExecutionContext
+) extends Retry {
 
   private val baseUrl = appConfig.nidacServiceBaseUrl
 
-  def submitClaim(request: CreateEISClaimRequest, correlationId: String)(implicit hc: HeaderCarrier): Future[CreateClaimResponse] =
-
-    retry(FiniteDuration(5, TimeUnit.SECONDS), FiniteDuration(10, TimeUnit.SECONDS))(CreateClaimResponse.shouldRetry, CreateClaimResponse.errorMessage) {
-    httpClient.POST[CreateEISClaimRequest, CreateClaimResponse](
-      s"$baseUrl/create-claim",
-      request,
-      Seq("X-Correlation-Id" -> correlationId)
-    ) recover {
-      case httpException: HttpException =>
-        failResponse(correlationId, httpException.responseCode, httpException.message)
-    }
+  def submitClaim(request: CreateEISClaimRequest, correlationId: String)(implicit
+    hc: HeaderCarrier
+  ): Future[CreateClaimResponse] = httpClient.POST[CreateEISClaimRequest, CreateClaimResponse](
+    s"$baseUrl/create-claim",
+    request,
+    Seq("X-Correlation-Id" -> correlationId)
+  ) recover {
+    case httpException: HttpException =>
+      failResponse(correlationId, httpException.responseCode, httpException.message)
   }
 
-  def amendClaim(request: AmendEISClaimRequest, correlationId: String)(implicit hc: HeaderCarrier): Future[AmendClaimResponse] =
-    retry(FiniteDuration(5, TimeUnit.SECONDS), FiniteDuration(10, TimeUnit.SECONDS))(AmendClaimResponse.shouldRetry, AmendClaimResponse.errorMessage) {
+  def amendClaim(request: AmendEISClaimRequest, correlationId: String)(implicit
+    hc: HeaderCarrier
+  ): Future[AmendClaimResponse] =
+    retry(FiniteDuration(5, TimeUnit.SECONDS), FiniteDuration(10, TimeUnit.SECONDS))(
+      AmendClaimResponse.shouldRetry,
+      AmendClaimResponse.errorMessage
+    ) {
       httpClient.POST[AmendEISClaimRequest, AmendClaimResponse](
         s"$baseUrl/update-claim",
         request,
         Seq("X-Correlation-Id" -> correlationId)
       )
-  }
+    }
 
   private def failResponse(correlationId: String, errorCode: Int, errorMessage: String) = CreateClaimResponse(
     correlationId = correlationId,

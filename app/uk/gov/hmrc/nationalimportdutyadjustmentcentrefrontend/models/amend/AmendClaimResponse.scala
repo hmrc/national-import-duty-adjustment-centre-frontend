@@ -16,12 +16,11 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend
 
-import java.time.Instant
 import play.api.libs.json.{Json, OFormat}
+import uk.gov.hmrc.http.UpstreamErrorResponse
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ApiError
-import uk.gov.hmrc.http.{HttpException, Upstream4xxResponse, UpstreamErrorResponse}
-import uk.gov.hmrc.http.UpstreamErrorResponse.Upstream4xxResponse
 
+import java.time.Instant
 import scala.util.{Failure, Success, Try}
 
 case class AmendClaimResponse(
@@ -34,27 +33,20 @@ case class AmendClaimResponse(
 object AmendClaimResponse {
   implicit val format: OFormat[AmendClaimResponse] = Json.format[AmendClaimResponse]
 
-  final def shouldRetry(response: Try[AmendClaimResponse]): Boolean = {
-
-    println("======================================================================")
-    println(response)
-    println("======================================================================")
-
+  final def shouldRetry(response: Try[AmendClaimResponse]): Boolean =
     response match {
       case Success(result) if result.error.flatMap(error => error.errorMessage).contains("Busy") =>
         println("Succesfully informed downstream was busy")
         true
-      case Failure(e)  if e.asInstanceOf[UpstreamErrorResponse].statusCode == 429 =>
+      case Failure(e) if e.asInstanceOf[UpstreamErrorResponse].statusCode == 429 =>
         println("Quota reached")
         true
-      case Failure(e)  if e.asInstanceOf[UpstreamErrorResponse].statusCode == 503 =>
+      case Failure(e) if e.asInstanceOf[UpstreamErrorResponse].statusCode == 503 =>
         println("Server was busy")
         true
     }
-  }
 
   final def errorMessage(response: AmendClaimResponse): String =
     s"${response.error.map(_.errorCode).getOrElse("")} ${response.error.flatMap(_.errorMessage).getOrElse("")}"
-
 
 }
