@@ -15,7 +15,8 @@ function onFileSelect() {
   try{
     // NF-403 - hide the form controls, display the spinner and disable the 'Continue' button before submitting
     document.getElementById("upload-form").classList.add("govuk-!-display-none");
-    document.querySelector(".hidden-spinner-row").classList.remove("govuk-!-display-none");
+    document.querySelector(".hidden-progress-row").classList.remove("govuk-!-display-none");
+    document.querySelector(".govuk-error-summary").classList.add("govuk-!-display-none");
     document.getElementById("nidac-continue").disabled = true;
   }
   finally {

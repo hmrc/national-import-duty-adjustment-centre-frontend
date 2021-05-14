@@ -31,6 +31,7 @@ trait FileUploading {
 
   protected val ERROR_DUPLICATE      = "DUPLICATE"
   protected val UNKNOWN              = "UNKNOWN"
+  protected val TIMEOUT              = "TIMEOUT"
   protected val ERROR_MISSING_FILE   = "InvalidArgument"
   protected val ERROR_FILE_TOO_SMALL = "EntityTooSmall"
 
@@ -46,8 +47,6 @@ trait FileUploading {
   private val errorQuery        = "?errorCode="
   private lazy val errorBaseUrl = errorRedirectUrl("").url.dropRight(errorQuery.length)
 
-  protected def summaryAnchorUrl(call: Call) = call.url + "#summary"
-
   protected def initiateForm(
     journeyId: JourneyId
   )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[UpscanInitiateResponse] = {
@@ -55,7 +54,7 @@ trait FileUploading {
     for {
       upscanInitiateResponse <- upscanInitiateConnector.initiateV2(
         journeyId,
-        Some(appConfig.selfUrl(summaryAnchorUrl(successRedirectUrl(uploadId)))),
+        Some(appConfig.selfUrl(successRedirectUrl(uploadId).url)),
         Some(appConfig.selfUrl(errorBaseUrl))
       )
       _ <- uploadProgressTracker.requestUpload(
@@ -72,7 +71,7 @@ trait FileUploading {
     def error(message: String) = FormError("upload-file", message)
     code match {
       case "400" | ERROR_MISSING_FILE => error("error.file-upload.required")
-      case "InternalError"            => error("error.file-upload.try-again")
+      case "InternalError" | TIMEOUT  => error("error.file-upload.try-again")
       case "EntityTooLarge"           => error("error.file-upload.invalid-size-large")
       case ERROR_FILE_TOO_SMALL       => error("error.file-upload.invalid-size-small")
       case "QUARANTINE"               => error("error.file-upload.quarantine")

@@ -55,7 +55,7 @@ object UploadDetails {
   val read: Reads[UploadStatus] = (json: JsValue) => {
     val jsObject = json.asInstanceOf[JsObject]
     jsObject.value.get("_type") match {
-      case Some(JsString("InProgress")) => JsSuccess(InProgress)
+      case Some(JsString("InProgress")) => JsSuccess(InProgress())
       case Some(JsString("Failed")) =>
         Json.fromJson[Failed](jsObject)(uploadedFailedFormat)
       case Some(JsString("UploadedSuccessfully")) =>
@@ -66,7 +66,7 @@ object UploadDetails {
   }
 
   val write: Writes[UploadStatus] = {
-    case InProgress => JsObject(Map("_type" -> JsString("InProgress")))
+    case _: InProgress => JsObject(Map("_type" -> JsString("InProgress")))
     case f: Failed =>
       Json.toJson(f)(uploadedFailedFormat).as[JsObject] + ("_type" -> JsString("Failed"))
     case s: UploadedFile =>

@@ -28,13 +28,14 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.Amend
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.requests.IdentifierRequest
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.{
   Failed,
+  InProgress,
   UploadedFile,
   UpscanInitiateResponse
 }
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.AmendNavigator
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{Page, UploadPage}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.{CacheDataService, UploadProgressTracker}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.amendclaim.{UploadFormView, UploadProgressView}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.amendclaim.UploadFormView
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -48,8 +49,7 @@ class UploadFormController @Inject() (
   data: CacheDataService,
   val appConfig: AppConfig,
   val navigator: AmendNavigator,
-  uploadFormView: UploadFormView,
-  uploadProgressView: UploadProgressView
+  uploadFormView: UploadFormView
 )(implicit ec: ExecutionContext)
     extends FrontendController(mcc) with I18nSupport with Navigation[AmendAnswers] with FileUploading {
 
@@ -74,9 +74,8 @@ class UploadFormController @Inject() (
           processSuccessfulUpload(successUpload)
         case Some(failed: Failed) =>
           Future(Redirect(routes.UploadFormController.onError(failed.errorCode)))
-        case Some(_) =>
-          Future(Ok(uploadProgressView(backLink(answersWithJourneyID._1), answersWithJourneyID._1.uploads)))
-        case None => Future(Redirect(routes.UploadFormController.onError(UNKNOWN)))
+        case Some(_) => Future(Redirect(routes.UploadFormController.onError(TIMEOUT)))
+        case None    => Future(Redirect(routes.UploadFormController.onError(UNKNOWN)))
       }
     }
   }
@@ -103,7 +102,7 @@ class UploadFormController @Inject() (
 
   def onRemove(documentReference: String): Action[AnyContent] = identify.async { implicit request =>
     data.updateAmendAnswers(removeDocument(documentReference)) map { _ =>
-      Redirect(summaryAnchorUrl(routes.UploadFormController.onPageLoad()))
+      Redirect(routes.UploadFormController.onPageLoad())
     }
   }
 
@@ -128,7 +127,7 @@ class UploadFormController @Inject() (
         Future(Redirect(routes.UploadFormController.onError(ERROR_DUPLICATE)))
       else
         data.updateAmendAnswers(answers => answers.copy(uploads = uploads :+ successUpload)) map {
-          _ => Redirect(summaryAnchorUrl(routes.UploadFormController.onPageLoad()))
+          _ => Redirect(routes.UploadFormController.onPageLoad())
         }
     }
 

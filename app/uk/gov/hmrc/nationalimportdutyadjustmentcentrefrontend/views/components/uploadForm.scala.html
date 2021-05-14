@@ -15,6 +15,7 @@
  *@
 
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.{UploadedFile, UpscanInitiateResponse}
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components.{continueButton, uploadProgressBar, uploadSummary}
 
 @this(
         formHelper: FormWithCSRF,
@@ -35,8 +36,8 @@
 @uploadSummary(uploads, removeUrl, Some(
     SummaryListRow(
         key = Key(content = Text(messages("upload_documents.status.in_progress"))),
-        value = Value(content = HtmlContent(uploadSpinner())),
-        classes = "govuk-!-display-none hidden-spinner-row",
+        value = Value(content = HtmlContent(uploadProgressBar())),
+        classes = "govuk-!-display-none hidden-progress-row",
         actions = None
     )
 ))
