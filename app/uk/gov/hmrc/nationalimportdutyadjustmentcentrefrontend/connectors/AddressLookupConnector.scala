@@ -20,7 +20,7 @@ import javax.inject.{Inject, Singleton}
 import play.api.http.HeaderNames.LOCATION
 import play.api.http.Status
 import uk.gov.hmrc.http.HttpReads.Implicits._
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads, HttpResponse}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads, HttpResponse, Retries}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.InitialiseAddressLookupHttpParser.InitialiseAddressLookupReads
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.addresslookup.{
