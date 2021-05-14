@@ -36,14 +36,12 @@ object AmendClaimResponse {
   final def shouldRetry(response: Try[AmendClaimResponse]): Boolean =
     response match {
       case Success(result) if result.error.flatMap(error => error.errorMessage).contains("Busy") =>
-        println("Succesfully informed downstream was busy")
         true
       case Failure(e) if e.asInstanceOf[UpstreamErrorResponse].statusCode == 429 =>
-        println("Quota reached")
         true
       case Failure(e) if e.asInstanceOf[UpstreamErrorResponse].statusCode == 503 =>
-        println("Server was busy")
         true
+      case _ => false
     }
 
   final def errorMessage(response: Try[AmendClaimResponse]): String =
