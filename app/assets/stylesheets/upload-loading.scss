@@ -5,12 +5,13 @@
 }
 
 .nidac_progress_bar {
-  width: 100%;
+  width: 0%;
   height: 23px;
   background: #1d70b8;
   position :relative;
-  -webkit-animation: move_progress ease-out 10s;
-  animation: move_progress ease-out 10s;
+  // 500ms start delay for Safari - see nidacfrontend.js
+  -webkit-animation: move_progress 10s ease-out 500ms;
+  animation: move_progress 10s ease-out 500ms;
 }
 
 @keyframes move_progress {
