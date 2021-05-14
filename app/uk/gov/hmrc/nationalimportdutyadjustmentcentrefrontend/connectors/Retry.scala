@@ -32,7 +32,7 @@ trait Retry {
 
   protected def actorSystem: ActorSystem
 
-  def retry[A](intervals: FiniteDuration*)(shouldRetry: Try[A] => Boolean, retryReason: A => String)(
+  def retry[A](intervals: FiniteDuration*)(shouldRetry: Try[A] => Boolean, retryReason: Try[A] => String)(
     block: => Future[A]
   )(implicit ec: ExecutionContext): Future[A] = {
     def loop(remainingIntervals: Seq[FiniteDuration])(mdcData: Map[String, String])(block: => Future[A]): Future[A] =
@@ -43,7 +43,7 @@ trait Retry {
           result =>
             if (remainingIntervals.nonEmpty && shouldRetry(Success(result))) {
               val delay = remainingIntervals.head
-              Logger(getClass).warn(s"Retrying in $delay due to ${retryReason(result)}")
+              Logger(getClass).warn(s"Retrying in $delay due to ${retryReason(Success(result))}")
               after(delay, actorSystem.scheduler)(loop(remainingIntervals.tail)(mdcData)(block))
             } else
               Future.successful(result)
@@ -52,7 +52,7 @@ trait Retry {
           case e: Throwable =>
             if (remainingIntervals.nonEmpty && shouldRetry(Failure(e))) {
               val delay = remainingIntervals.head
-              Logger(getClass).warn(s"Retrying in $delay due to ${e.getClass.getName()}: ${e.getMessage()}")
+              Logger(getClass).warn(s"Retrying in $delay due to ${retryReason(Failure(e))}")
               after(delay, actorSystem.scheduler)(loop(remainingIntervals.tail)(mdcData)(block))
             } else
               Future.failed(e)

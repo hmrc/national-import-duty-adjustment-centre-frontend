@@ -46,7 +46,14 @@ object AmendClaimResponse {
         true
     }
 
-  final def errorMessage(response: AmendClaimResponse): String =
-    s"${response.error.map(_.errorCode).getOrElse("")} ${response.error.flatMap(_.errorMessage).getOrElse("")}"
+  final def errorMessage(response: Try[AmendClaimResponse]): String =
+    response match {
+      case Success(result) if result.error.flatMap(error => error.errorMessage).contains("Busy") =>
+        "Succesfully informed downstream was busy"
+      case Failure(e) if e.asInstanceOf[UpstreamErrorResponse].statusCode == 429 =>
+        "Quota reached"
+      case Failure(e) if e.asInstanceOf[UpstreamErrorResponse].statusCode == 503 =>
+        "Server was busy"
+    }
 
 }
