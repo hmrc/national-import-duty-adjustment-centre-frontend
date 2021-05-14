@@ -28,7 +28,6 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.Amend
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.requests.IdentifierRequest
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.{
   Failed,
-  InProgress,
   UploadedFile,
   UpscanInitiateResponse
 }
