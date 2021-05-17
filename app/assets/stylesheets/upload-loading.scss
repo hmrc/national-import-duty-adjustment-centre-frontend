@@ -10,8 +10,8 @@
   background: #1d70b8;
   position :relative;
   // 500ms start delay for Safari - see nidacfrontend.js
-  -webkit-animation: move_progress 10s ease-out 500ms;
-  animation: move_progress 10s ease-out 500ms;
+  -webkit-animation: move_progress 10s forwards 500ms;
+  animation: move_progress 10s forwards 500ms;
 }
 
 @keyframes move_progress {
