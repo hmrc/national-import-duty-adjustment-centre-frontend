@@ -4,9 +4,14 @@
   display: none;
 }
 
+.nidac_progress_bar_container {
+  border: solid;
+  width: 10rem;
+  border-color: #1d70b8;
+}
 .nidac_progress_bar {
   width: 0%;
-  height: 23px;
+  height: 20px;
   background: #1d70b8;
   position :relative;
   // 500ms start delay for Safari - see nidacfrontend.js
@@ -16,10 +21,10 @@
 
 @keyframes move_progress {
   from   {width: 0%;}
-  to  {width: 100%;}
+  to  {width: 95%;}
 }
 
 @-webkit-keyframes  move_progress {
   from   {width: 0%;}
-  to  {width: 100%;}
+  to  {width: 95%;}
 }

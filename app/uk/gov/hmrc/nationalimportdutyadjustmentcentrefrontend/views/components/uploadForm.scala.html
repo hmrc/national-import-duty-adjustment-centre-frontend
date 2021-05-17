@@ -35,10 +35,10 @@
 
 @uploadSummary(uploads, removeUrl, Some(
     SummaryListRow(
-        key = Key(content = Text(messages("upload_documents.status.in_progress"))),
+        key = Key(content = Text(messages("upload_documents.status.in_progress")), classes = "govuk-!-width-three-quarters"),
         value = Value(content = HtmlContent(uploadProgressBar())),
         classes = "govuk-!-display-none hidden-progress-row",
-        actions = None
+        actions = Some(Actions(items = Seq.empty))
     )
 ))
 
