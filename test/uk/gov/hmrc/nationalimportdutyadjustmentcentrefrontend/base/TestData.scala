@@ -187,10 +187,12 @@ trait TestData {
   val upscanInitiateResponse: UpscanInitiateResponse =
     UpscanInitiateResponse(UpscanFileReference("file-ref"), "post-target", Map("field-hidden" -> "value-hidden"))
 
-  def uploadResult(status: UploadStatus): UploadDetails =
-    UploadDetails(uploadId, journeyId, Reference("reference"), status, fixedInstant)
+  val fileReference = Reference("reference")
 
-  val uploadInProgress: UploadStatus = InProgress
+  def uploadResult(status: UploadStatus): UploadDetails =
+    UploadDetails(uploadId, journeyId, fileReference, status, fixedInstant)
+
+  val uploadInProgress: UploadStatus = InProgress()
   val uploadFailed: UploadStatus     = Failed(Quarantine, "bad file")
 
   val uploadFileSuccess: UploadStatus =

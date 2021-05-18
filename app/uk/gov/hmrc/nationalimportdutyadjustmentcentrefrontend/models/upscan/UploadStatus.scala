@@ -23,7 +23,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.Upsc
 
 sealed trait UploadStatus
 
-case object InProgress extends UploadStatus
+case class InProgress() extends UploadStatus
 
 case class Failed(failureReason: FailureReason, message: String) extends UploadStatus {
   def errorCode: String = failureReason.toString
