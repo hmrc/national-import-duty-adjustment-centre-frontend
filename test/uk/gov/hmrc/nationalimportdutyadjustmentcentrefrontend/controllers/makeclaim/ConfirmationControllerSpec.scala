@@ -46,7 +46,7 @@ class ConfirmationControllerSpec extends ControllerSpec {
 
   "GET" should {
     "return OK when cache contains claim reference" in {
-      withCachedClaimResponse(Some(CreateClaimResponse("id", result = Some(CreateClaimResult("reference", Seq.empty)))))
+      withCachedClaimResponse(CreateClaimResponse("id", result = Some(CreateClaimResult("reference", Seq.empty))))
       val result = controller.onPageLoad()(fakeGetRequest)
 
       status(result) mustBe Status.OK

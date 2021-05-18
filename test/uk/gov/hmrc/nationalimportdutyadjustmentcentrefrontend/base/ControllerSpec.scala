@@ -72,31 +72,25 @@ trait ControllerSpec
   def withEmptyCache(): Unit = when(dataRepository.get(anyString())).thenReturn(Future.successful(None))
 
   def withCacheCreateAnswers(answers: CreateAnswers): Unit = {
-    val cacheData: Option[CacheData] = Some(CacheData("id", createAnswers = Some(answers)))
+    val cacheData: Option[CacheData] = Some(CacheData("id", createAnswers = answers))
     when(dataRepository.get(anyString())).thenReturn(Future.successful(cacheData))
   }
 
   def withCacheAmendAnswers(answers: AmendAnswers): Unit = {
-    val cacheData: Option[CacheData] = Some(CacheData("id", amendAnswers = Some(answers)))
+    val cacheData: Option[CacheData] = Some(CacheData("id", amendAnswers = answers))
     when(dataRepository.get(anyString())).thenReturn(Future.successful(cacheData))
   }
 
-  def withCachedClaimResponse(createClaimResponse: Option[CreateClaimResponse]): Unit = {
+  def withCachedClaimResponse(response: CreateClaimResponse): Unit = {
     val cacheData: Option[CacheData] = Some(
-      CacheData(
-        "id",
-        createClaimReceipt = createClaimResponse.map(response => CreateClaimReceipt(response, CreateAnswers()))
-      )
+      CacheData("id", createClaimReceipt = CreateClaimReceipt(response, CreateAnswers()))
     )
     when(dataRepository.get(anyString())).thenReturn(Future.successful(cacheData))
   }
 
-  def withCachedAmendClaimResponse(amendClaimResponse: Option[AmendClaimResponse]): Unit = {
+  def withCachedAmendClaimResponse(response: AmendClaimResponse): Unit = {
     val cacheData: Option[CacheData] = Some(
-      CacheData(
-        "id",
-        amendClaimReceipt = amendClaimResponse.map(response => AmendClaimReceipt(response, AmendAnswers()))
-      )
+      CacheData("id", amendClaimReceipt = AmendClaimReceipt(response, AmendAnswers()))
     )
     when(dataRepository.get(anyString())).thenReturn(Future.successful(cacheData))
   }

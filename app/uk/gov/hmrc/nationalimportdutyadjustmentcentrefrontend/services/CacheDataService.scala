@@ -50,31 +50,39 @@ class CacheDataService @Inject() (repository: CacheDataRepository)(implicit ec: 
   def updateCreateAnswers(
     update: CreateAnswers => CreateAnswers
   )(implicit request: IdentifierRequest[_]): Future[CreateAnswers] =
-    getCacheData flatMap { data =>
-      val updatedAnswers: CreateAnswers = update(data.getCreateAnswers)
-      repository.update(data.copy(createAnswers = Some(updatedAnswers))) map { _ => updatedAnswers }
+    getCacheData flatMap { cacheData =>
+      val updatedAnswers: CreateAnswers = update(cacheData.getCreateAnswers)
+      repository.update(cacheData.copy(data = cacheData.data.copy(createAnswers = Some(updatedAnswers)))) map { _ =>
+        updatedAnswers
+      }
     }
 
   def updateAmendAnswers(
     update: AmendAnswers => AmendAnswers
   )(implicit request: IdentifierRequest[_]): Future[AmendAnswers] =
-    getCacheData flatMap { data =>
-      val updatedAnswers: AmendAnswers = update(data.getAmendAnswers)
-      repository.update(data.copy(amendAnswers = Some(updatedAnswers))) map { _ => updatedAnswers }
+    getCacheData flatMap { cacheData =>
+      val updatedAnswers: AmendAnswers = update(cacheData.getAmendAnswers)
+      repository.update(cacheData.copy(data = cacheData.data.copy(amendAnswers = Some(updatedAnswers)))) map { _ =>
+        updatedAnswers
+      }
     }
 
   def storeCreateReceipt(
     claimReceipt: CreateClaimReceipt
   )(implicit request: IdentifierRequest[_]): Future[Option[CacheData]] =
-    getCacheData flatMap { data =>
-      repository.update(data.copy(createAnswers = None, createClaimReceipt = Some(claimReceipt)))
+    getCacheData flatMap { cacheData =>
+      repository.update(
+        cacheData.copy(data = cacheData.data.copy(createAnswers = None, createClaimReceipt = Some(claimReceipt)))
+      )
     }
 
   def storeAmendReceipt(
     amendClaimReceipt: AmendClaimReceipt
   )(implicit request: IdentifierRequest[_]): Future[Option[CacheData]] =
-    getCacheData flatMap { data =>
-      repository.update(data.copy(amendAnswers = None, amendClaimReceipt = Some(amendClaimReceipt)))
+    getCacheData flatMap { cacheData =>
+      repository.update(
+        cacheData.copy(data = cacheData.data.copy(amendAnswers = None, amendClaimReceipt = Some(amendClaimReceipt)))
+      )
     }
 
 }
