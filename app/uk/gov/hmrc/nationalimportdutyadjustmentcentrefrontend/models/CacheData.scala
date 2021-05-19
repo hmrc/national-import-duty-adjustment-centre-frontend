@@ -18,28 +18,70 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models
 
 import java.time.Instant
 
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.json._
 import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.CryptoProvider
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.{AmendAnswers, AmendClaimReceipt}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{CreateAnswers, CreateClaimReceipt}
 
 final case class CacheData(
   id: String,
   journeyId: JourneyId = JourneyId.generate,
-  createAnswers: Option[CreateAnswers] = None,
-  amendAnswers: Option[AmendAnswers] = None,
-  createClaimReceipt: Option[CreateClaimReceipt] = None,
-  amendClaimReceipt: Option[AmendClaimReceipt] = None,
+  data: ProtectedData = ProtectedData(),
   lastUpdated: Instant = Instant.now()
 ) {
+  val createAnswers: CreateAnswers = data.createAnswers.getOrElse(CreateAnswers())
+  val amendAnswers: AmendAnswers   = data.amendAnswers.getOrElse(AmendAnswers())
 
-  def getCreateAnswers: CreateAnswers = createAnswers.getOrElse(CreateAnswers())
-  def getAmendAnswers: AmendAnswers   = amendAnswers.getOrElse(AmendAnswers())
+  val maybeCreateClaimReceipt: Option[CreateClaimReceipt] = data.createClaimReceipt
+  val maybeAmendClaimReceipt: Option[AmendClaimReceipt]   = data.amendClaimReceipt
+
+  def update(answers: CreateAnswers): CacheData = this.copy(data = data.copy(createAnswers = Some(answers)))
+  def update(answers: AmendAnswers): CacheData  = this.copy(data = data.copy(amendAnswers = Some(answers)))
+
+  def store(receipt: CreateClaimReceipt): CacheData =
+    this.copy(data = data.copy(createClaimReceipt = Some(receipt), createAnswers = None))
+
+  def store(receipt: AmendClaimReceipt): CacheData =
+    this.copy(data = data.copy(amendClaimReceipt = Some(receipt), amendAnswers = None))
+
 }
 
 object CacheData {
 
   implicit val formatInstant               = MongoJavatimeFormats.instantFormat
   implicit val formats: OFormat[CacheData] = Json.format[CacheData]
+
+  def apply(id: String, createAnswers: CreateAnswers): CacheData =
+    new CacheData(id, data = ProtectedData(createAnswers = Some(createAnswers)))
+
+  def apply(id: String, amendAnswers: AmendAnswers): CacheData =
+    new CacheData(id, data = ProtectedData(amendAnswers = Some(amendAnswers)))
+
+  def apply(id: String, createClaimReceipt: CreateClaimReceipt): CacheData =
+    new CacheData(id, data = ProtectedData(createClaimReceipt = Some(createClaimReceipt)))
+
+  def apply(id: String, amendClaimReceipt: AmendClaimReceipt): CacheData =
+    new CacheData(id, data = ProtectedData(amendClaimReceipt = Some(amendClaimReceipt)))
+
+}
+
+case class ProtectedData(
+  createAnswers: Option[CreateAnswers] = None,
+  amendAnswers: Option[AmendAnswers] = None,
+  createClaimReceipt: Option[CreateClaimReceipt] = None,
+  amendClaimReceipt: Option[AmendClaimReceipt] = None
+)
+
+object ProtectedData {
+  private implicit val formats: OFormat[ProtectedData] = Json.format[ProtectedData]
+
+  implicit val reads: Reads[ProtectedData] = Reads {
+    json: JsValue => Json.fromJson(CryptoProvider.decrypt(json))
+  }
+
+  implicit val writes: Writes[ProtectedData] = Writes {
+    data => CryptoProvider.encrypt(Json.toJson(data))
+  }
 
 }

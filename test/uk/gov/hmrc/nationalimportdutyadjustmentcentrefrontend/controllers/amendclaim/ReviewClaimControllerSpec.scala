@@ -51,9 +51,7 @@ class ReviewClaimControllerSpec extends ControllerSpec {
 
   "GET" should {
     "return OK when cache contains amend claim response" in {
-      withCachedAmendClaimResponse(
-        Some(AmendClaimResponse("id", result = Some(AmendClaimResult("reference", Seq.empty))))
-      )
+      withCachedAmendClaimResponse(AmendClaimResponse("id", result = Some(AmendClaimResult("reference", Seq.empty))))
       val result = controller.onPageLoad()(fakeGetRequest)
 
       status(result) mustBe Status.OK
