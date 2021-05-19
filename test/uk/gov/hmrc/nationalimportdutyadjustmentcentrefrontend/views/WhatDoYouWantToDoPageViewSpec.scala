@@ -70,7 +70,7 @@ class WhatDoYouWantToDoPageViewSpec extends UnitViewSpec {
       technicalIssue.text() must include("page not working")
       val link = technicalIssue.first().getElementsByClass("govuk-link")
 
-      link.attr("href") must include("contact/problem_reports_nonjs")
+      link.attr("href") must include("contact/report-technical-problem")
       link.attr("href") must include("service=national-import-duty-adjustment-centre")
     }
 
