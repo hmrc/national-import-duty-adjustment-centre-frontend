@@ -16,30 +16,61 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services
 
+import akka.actor.ActorSystem
+import akka.pattern.after
 import com.google.inject.ImplementedBy
 import javax.inject.Inject
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.Reference
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.{InProgress, UploadStatus}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{JourneyId, UploadId}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.repositories.{UploadDetails, UploadRepository}
+import uk.gov.hmrc.play.http.logging.Mdc
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class MongoBackedUploadProgressTracker @Inject() (repository: UploadRepository)(implicit ec: ExecutionContext)
+class MongoBackedUploadProgressTracker @Inject() (
+  repository: UploadRepository,
+  appConfig: AppConfig,
+  actorSystem: ActorSystem
+)(implicit ec: ExecutionContext)
     extends UploadProgressTracker {
 
+  private val timeout = appConfig.uploadTimeout
+  private val delay   = appConfig.uploadPollDelay
+
   override def requestUpload(uploadId: UploadId, journeyId: JourneyId, fileReference: Reference): Future[Boolean] =
-    repository.add(UploadDetails(uploadId, journeyId, fileReference, InProgress)).map(_ => true)
+    Mdc.preservingMdc {
+      repository.add(UploadDetails(uploadId, journeyId, fileReference, InProgress())).map(_ => true)
+    }
 
   override def registerUploadResult(
     fileReference: Reference,
     journeyId: JourneyId,
     uploadStatus: UploadStatus
-  ): Future[Boolean] =
+  ): Future[Boolean] = Mdc.preservingMdc {
     repository.updateStatus(fileReference, journeyId, uploadStatus)
+  }
+
+  private def checkUploadResult(id: UploadId, journeyId: JourneyId): Future[Option[UploadStatus]] = Mdc.preservingMdc {
+    for (result <- repository.findUploadDetails(id, journeyId)) yield result.map(_.status)
+  }
 
   override def getUploadResult(id: UploadId, journeyId: JourneyId): Future[Option[UploadStatus]] =
-    for (result <- repository.findUploadDetails(id, journeyId)) yield result.map(_.status)
+    Mdc.preservingMdc {
+      val deadLine = timeout.fromNow
+      def getUploadStatus: Future[Option[UploadStatus]] =
+        checkUploadResult(id, journeyId) flatMap {
+          case Some(inProgress: InProgress) =>
+            if (deadLine.isOverdue())
+              Future.successful(Some(inProgress))
+            else
+              after(delay, actorSystem.scheduler)(getUploadStatus)
+          case Some(result) => Future.successful(Some(result))
+          case None         => Future.successful(None)
+        }
+      getUploadStatus
+    }
 
 }
 

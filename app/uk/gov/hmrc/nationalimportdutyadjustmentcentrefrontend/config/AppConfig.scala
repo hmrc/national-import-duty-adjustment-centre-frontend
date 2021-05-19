@@ -24,6 +24,8 @@ import uk.gov.hmrc.hmrcfrontend.views.Utils.urlEncode
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.play.bootstrap.frontend.filters.SessionTimeoutFilterConfig
 
+import scala.concurrent.duration.{DurationLong, FiniteDuration}
+
 @Singleton
 class AppConfig @Inject() (
   config: Configuration,
@@ -70,6 +72,9 @@ class AppConfig @Inject() (
   val mongoTimeToLiveInSeconds: Int = sessionTimeoutSeconds + 60
   val mongoReplaceIndexes: Boolean  = config.getOptional[Boolean]("mongodb.replaceIndexes").getOrElse(false)
 
+  val uploadTimeout: FiniteDuration   = config.getMillis("upload.timeout").milliseconds
+  val uploadPollDelay: FiniteDuration = config.getMillis("upload.pollDelay").milliseconds
+
   val nidacServiceBaseUrl: String = servicesConfig.baseUrl("national-import-duty-adjustment-centre")
   val upscanInitiateV2Url: String = servicesConfig.baseUrl("upscan-initiate") + "/upscan/v2/initiate"
 
@@ -79,7 +84,7 @@ class AppConfig @Inject() (
   val addressLookupInitUrl: String         = s"$addressLookupBaseUrl${servicesConfig("address-lookup-frontend.init")}"
   val addressLookupConfirmedUrl: String    = s"$addressLookupBaseUrl${servicesConfig("address-lookup-frontend.confirmed")}"
 
-  val showPhaseBanner = config.get[Boolean]("phaseBanner.display")
+  val showPhaseBanner: Boolean = config.get[Boolean]("phaseBanner.display")
 
   val barsBusinessAssessUrl: String =
     s"$barsBaseUrl${servicesConfig("bank-account-reputation.businessAssess")}"
