@@ -18,9 +18,7 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models
 
 import java.time.Instant
 
-import play.api.libs.json.{Json, OFormat, Reads, Writes}
-import uk.gov.hmrc.crypto.Protected
-import uk.gov.hmrc.crypto.json.{JsonDecryptor, JsonEncryptor}
+import play.api.libs.json._
 import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.CryptoProvider
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.{AmendAnswers, AmendClaimReceipt}
@@ -32,14 +30,21 @@ final case class CacheData(
   data: ProtectedData = ProtectedData(),
   lastUpdated: Instant = Instant.now()
 ) {
+  val createAnswers: CreateAnswers = data.createAnswers.getOrElse(CreateAnswers())
+  val amendAnswers: AmendAnswers   = data.amendAnswers.getOrElse(AmendAnswers())
 
-  val createAnswers      = data.createAnswers
-  val amendAnswers       = data.amendAnswers
-  val createClaimReceipt = data.createClaimReceipt
-  val amendClaimReceipt  = data.amendClaimReceipt
+  val maybeCreateClaimReceipt: Option[CreateClaimReceipt] = data.createClaimReceipt
+  val maybeAmendClaimReceipt: Option[AmendClaimReceipt]   = data.amendClaimReceipt
 
-  def getCreateAnswers: CreateAnswers = data.createAnswers.getOrElse(CreateAnswers())
-  def getAmendAnswers: AmendAnswers   = data.amendAnswers.getOrElse(AmendAnswers())
+  def update(answers: CreateAnswers): CacheData = this.copy(data = data.copy(createAnswers = Some(answers)))
+  def update(answers: AmendAnswers): CacheData  = this.copy(data = data.copy(amendAnswers = Some(answers)))
+
+  def store(receipt: CreateClaimReceipt): CacheData =
+    this.copy(data = data.copy(createClaimReceipt = Some(receipt), createAnswers = None))
+
+  def store(receipt: AmendClaimReceipt): CacheData =
+    this.copy(data = data.copy(amendClaimReceipt = Some(receipt), amendAnswers = None))
+
 }
 
 object CacheData {
@@ -69,24 +74,14 @@ case class ProtectedData(
 )
 
 object ProtectedData {
-  private val formats: OFormat[ProtectedData] = Json.format[ProtectedData]
-  private val jsonEncryptor                   = new JsonEncryptor()(CryptoProvider.crypto, formats)
-  private val jsonDecryptor                   = new JsonDecryptor()(CryptoProvider.crypto, formats)
+  private implicit val formats: OFormat[ProtectedData] = Json.format[ProtectedData]
 
   implicit val reads: Reads[ProtectedData] = Reads {
-    json =>
-      if (CryptoProvider.enabled)
-        Json.fromJson[Protected[ProtectedData]](json)(jsonDecryptor).map(_.decryptedValue)
-      else
-        Json.fromJson(json)(formats)
+    json: JsValue => Json.fromJson(CryptoProvider.decrypt(json))
   }
 
-  implicit val writes: Writes[ProtectedData] = Writes { data =>
-    if (CryptoProvider.enabled)
-      Json.toJson(Protected[ProtectedData](data))(jsonEncryptor)
-    else
-      Json.toJson(data)(formats)
-
+  implicit val writes: Writes[ProtectedData] = Writes {
+    data => CryptoProvider.encrypt(Json.toJson(data))
   }
 
 }

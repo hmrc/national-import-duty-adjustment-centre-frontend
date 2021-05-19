@@ -36,23 +36,23 @@ class CacheDataService @Inject() (repository: CacheDataRepository)(implicit ec: 
     }
 
   def getCreateAnswersWithJourneyId(implicit request: IdentifierRequest[_]): Future[(CreateAnswers, JourneyId)] =
-    getCacheData map (cache => (cache.getCreateAnswers, cache.journeyId))
+    getCacheData map (cache => (cache.createAnswers, cache.journeyId))
 
   def getAmendAnswersWithJourneyId(implicit request: IdentifierRequest[_]): Future[(AmendAnswers, JourneyId)] =
-    getCacheData map (cache => (cache.getAmendAnswers, cache.journeyId))
+    getCacheData map (cache => (cache.amendAnswers, cache.journeyId))
 
   def getCreateAnswers(implicit request: IdentifierRequest[_]): Future[CreateAnswers] =
-    getCacheData map (_.getCreateAnswers)
+    getCacheData map (_.createAnswers)
 
   def getAmendAnswers(implicit request: IdentifierRequest[_]): Future[AmendAnswers] =
-    getCacheData map (_.getAmendAnswers)
+    getCacheData map (_.amendAnswers)
 
   def updateCreateAnswers(
     update: CreateAnswers => CreateAnswers
   )(implicit request: IdentifierRequest[_]): Future[CreateAnswers] =
     getCacheData flatMap { cacheData =>
-      val updatedAnswers: CreateAnswers = update(cacheData.getCreateAnswers)
-      repository.update(cacheData.copy(data = cacheData.data.copy(createAnswers = Some(updatedAnswers)))) map { _ =>
+      val updatedAnswers: CreateAnswers = update(cacheData.createAnswers)
+      repository.update(cacheData.update(updatedAnswers)) map { _ =>
         updatedAnswers
       }
     }
@@ -61,8 +61,8 @@ class CacheDataService @Inject() (repository: CacheDataRepository)(implicit ec: 
     update: AmendAnswers => AmendAnswers
   )(implicit request: IdentifierRequest[_]): Future[AmendAnswers] =
     getCacheData flatMap { cacheData =>
-      val updatedAnswers: AmendAnswers = update(cacheData.getAmendAnswers)
-      repository.update(cacheData.copy(data = cacheData.data.copy(amendAnswers = Some(updatedAnswers)))) map { _ =>
+      val updatedAnswers: AmendAnswers = update(cacheData.amendAnswers)
+      repository.update(cacheData.update(updatedAnswers)) map { _ =>
         updatedAnswers
       }
     }
@@ -71,18 +71,14 @@ class CacheDataService @Inject() (repository: CacheDataRepository)(implicit ec: 
     claimReceipt: CreateClaimReceipt
   )(implicit request: IdentifierRequest[_]): Future[Option[CacheData]] =
     getCacheData flatMap { cacheData =>
-      repository.update(
-        cacheData.copy(data = cacheData.data.copy(createAnswers = None, createClaimReceipt = Some(claimReceipt)))
-      )
+      repository.update(cacheData.store(claimReceipt))
     }
 
   def storeAmendReceipt(
     amendClaimReceipt: AmendClaimReceipt
   )(implicit request: IdentifierRequest[_]): Future[Option[CacheData]] =
     getCacheData flatMap { cacheData =>
-      repository.update(
-        cacheData.copy(data = cacheData.data.copy(amendAnswers = None, amendClaimReceipt = Some(amendClaimReceipt)))
-      )
+      repository.update(cacheData.store(amendClaimReceipt))
     }
 
 }

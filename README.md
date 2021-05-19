@@ -11,6 +11,10 @@
 
 Open the app in your browser at `http://localhost:8490/apply-for-return-import-duty-paid-on-deposit-or-guarantee`
 
+User data (answers) are encrypted in Mongo by default.  Encryption can be turned off locally for development/testsing using the following configuration key
+
+`json.encryption.enabled = false`
+
 ## Tampermonkey
 
 [Tampermonkey](https://www.tampermonkey.net/) scripts are provided for testing / demonstration purposes.

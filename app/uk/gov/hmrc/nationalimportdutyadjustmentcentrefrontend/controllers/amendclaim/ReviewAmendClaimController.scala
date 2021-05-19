@@ -38,7 +38,7 @@ class ReviewAmendClaimController @Inject() (
 
   def onPageLoad(): Action[AnyContent] = identify.async { implicit request =>
     repository.get(request.identifier) map { maybeData =>
-      maybeData.flatMap(_.amendClaimReceipt) match {
+      maybeData.flatMap(_.maybeAmendClaimReceipt) match {
         case Some(receipt) => Ok(reviewView(receipt))
         case _             => Redirect(controllers.routes.SessionExpiredController.onPageLoad())
       }

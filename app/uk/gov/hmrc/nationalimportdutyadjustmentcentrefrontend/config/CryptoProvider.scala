@@ -17,14 +17,25 @@
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config
 
 import com.typesafe.config.ConfigFactory
-import uk.gov.hmrc.crypto.ApplicationCrypto
+import play.api.libs.json._
+import uk.gov.hmrc.crypto.{ApplicationCrypto, Crypted, PlainText}
 
 object CryptoProvider {
 
-  private val configPath        = "json.encryption.enabled"
-  private val config            = ConfigFactory.load()
-  private val applicationCrypto = new ApplicationCrypto(config)
-  val crypto                    = applicationCrypto.JsonCrypto
+  private val enabledKey = "json.encryption.enabled"
+  private val config     = ConfigFactory.load()
+  private val crypto     = new ApplicationCrypto(config).JsonCrypto
 
-  val enabled = if (config.hasPath(configPath)) config.getBoolean(configPath) else true
+  private val enabled = if (config.hasPath(enabledKey)) config.getBoolean(enabledKey) else true
+
+  def decrypt(json: JsValue): JsValue = if (enabled)
+    Json.parse(crypto.decrypt(Crypted(json.toString())).value)
+  else
+    json
+
+  def encrypt(json: JsValue): JsValue = if (enabled)
+    JsString(crypto.encrypt(PlainText(json.toString())).value)
+  else
+    json
+
 }
