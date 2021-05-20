@@ -38,18 +38,14 @@
     @formHelper(action = BusinessNameController.onSubmit(), 'autoComplete -> "off") {
         @errorSummary(form.errors)
 
-        @fieldSet(
-            legend = "businessName.title"
-        ) {
-
-            @inputText(
-                form = form,
-                id = "name",
-                name = "name",
-                label = "",
-                autocomplete = Some("organization")
-            )
-        }
+        @inputText(
+            form = form,
+            id = "name",
+            name = "name",
+            isPageHeading = true,
+            label = "businessName.title",
+            autocomplete = Some("organization")
+        )
 
         @continueButton()
     }
