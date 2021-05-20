@@ -37,7 +37,7 @@ class DutyPaidFormProvider @Inject() extends Mappings {
         .verifying(
           firstError(
             regexp(Validation.dutyPattern, "dutyPaid.error.invalid"),
-            greaterThanZero("dutyPaid.should.error.zero")
+            greaterThanOrEqualZero("dutyPaid.should.error.negative")
           )
         )
     )(DutyPaid.apply)(DutyPaid.unapply)
