@@ -20,15 +20,25 @@ import javax.inject.Inject
 import play.api.data.Form
 import play.api.data.Forms._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.mappings.{Mappings, Validation}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.Implicits.SanitizedString
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.CaseReference
 
 class CaseReferenceFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[CaseReference] = Form(
-    mapping(
-      "caseReference" -> text("amend.case.reference.error.required")
-        .verifying(firstError(regexp(Validation.caseReference, "amend.case.reference.error.invalid")))
-    )(CaseReference.apply)(CaseReference.unapply)
-  )
+  def apply(): Form[CaseReference] = {
+
+    val formToModel = (reference: String) => CaseReference(reference.stripSpaces.toUpperCase)
+
+    Form(
+      mapping(
+        "caseReference" -> text("amend.case.reference.error.required")
+          .verifying(
+            firstError(
+              regexp(Validation.caseReference, "amend.case.reference.error.invalid", _.stripSpaces.toUpperCase)
+            )
+          )
+      )(formToModel)(CaseReference.unapply)
+    )
+  }
 
 }

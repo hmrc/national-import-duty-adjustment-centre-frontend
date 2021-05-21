@@ -45,10 +45,19 @@ class EntryDetailsFormProviderSpec extends StringFieldBehaviours {
   "Form" must {
 
     "Accept valid form data" in {
-      val form2 = new EntryDetailsFormProvider().apply().bind(buildFormData())
+      val form = new EntryDetailsFormProvider().apply().bind(buildFormData())
 
-      form2.hasErrors mustBe false
-      form2.value mustBe Some(EntryDetails("123", "123456Q", LocalDate.of(2020, 12, 31)))
+      form.hasErrors mustBe false
+      form.value mustBe Some(EntryDetails("123", "123456Q", LocalDate.of(2020, 12, 31)))
+    }
+
+    "Remove spaces from EPU and Entry number" in {
+      val form = new EntryDetailsFormProvider().apply().bind(
+        buildFormData(epu = Some(" 1 2 3 "), entryNumber = Some(" 123 456 Q "))
+      )
+
+      form.hasErrors mustBe false
+      form.value mustBe Some(EntryDetails("123", "123456Q", LocalDate.of(2020, 12, 31)))
     }
 
   }
@@ -70,6 +79,18 @@ class EntryDetailsFormProviderSpec extends StringFieldBehaviours {
     )
 
     behave like mandatoryField(form, fieldName, requiredError = FormError(fieldName, requiredKey))
+
+    "bind value with spaces" in {
+      val result = form.bind(Map(fieldName -> "12 3 ")).apply(fieldName)
+      result.value.value mustBe "12 3 "
+      result.hasErrors mustBe false
+    }
+
+    "fail to bind value not containing 3 digits" in {
+      val result        = form.bind(Map(fieldName -> "1 2")).apply(fieldName)
+      val expectedError = FormError(fieldName, lengthKey, Seq(Validation.entryProcessingUnit))
+      result.errors mustEqual Seq(expectedError)
+    }
   }
 
   ".EntryNumber" must {
@@ -90,10 +111,13 @@ class EntryDetailsFormProviderSpec extends StringFieldBehaviours {
 
     behave like mandatoryField(form, fieldName, requiredError = FormError(fieldName, requiredKey))
 
-    "fail to bind entries that do not contain 6 digits and a letter" in {
-      val fieldName = "entryNumber"
-      val lengthKey = "entryDetails.entryNumber.error.invalid"
+    "bind value with spaces" in {
+      val result = form.bind(Map(fieldName -> "12 34 56 Q")).apply(fieldName)
+      result.value.value mustBe "12 34 56 Q"
+      result.hasErrors mustBe false
+    }
 
+    "fail to bind entries that do not contain 6 digits and a letter" in {
       val result        = form.bind(Map(fieldName -> "12345678AQ")).apply(fieldName)
       val expectedError = FormError(fieldName, lengthKey, Seq(Validation.entryNumber))
       result.errors mustEqual Seq(expectedError)

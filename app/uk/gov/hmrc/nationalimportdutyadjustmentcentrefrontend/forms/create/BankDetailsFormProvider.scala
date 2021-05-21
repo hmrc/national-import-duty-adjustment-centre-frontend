@@ -20,31 +20,39 @@ import javax.inject.Inject
 import play.api.data.Form
 import play.api.data.Forms._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.mappings.{Mappings, Validation}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.BankDetails
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.Implicits.SanitizedString
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.BankDetails
 
 class BankDetailsFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[BankDetails] = Form(
-    mapping(
-      "accountName" -> text("bankDetails.name.error.required")
-        .verifying(
-          firstError(
-            maxLength(40, "bankDetails.name.error.length"),
-            regexp(Validation.safeInputPattern, "bankDetails.name.error.invalid")
+  def apply(): Form[BankDetails] = {
+
+    val formToModel = (accountName: String, sortCode: String, accountNumber: String) =>
+      BankDetails(accountName, sortCode.stripSpacesAndDashes, accountNumber.stripSpaces.leftPadAccountNumber)
+
+    Form(
+      mapping(
+        "accountName" -> text("bankDetails.name.error.required")
+          .verifying(
+            firstError(
+              maxLength(40, "bankDetails.name.error.length"),
+              regexp(Validation.safeInputPattern, "bankDetails.name.error.invalid")
+            )
+          ),
+        "sortCode" -> text("bankDetails.sortCode.error.required")
+          .verifying(
+            firstError(
+              regexp(Validation.sortCodePattern.toString, "bankDetails.sortCode.error.invalid", _.stripSpacesAndDashes)
+            )
+          ),
+        "accountNumber" -> text("bankDetails.accountNumber.error.required")
+          .verifying(
+            firstError(
+              regexp(Validation.accountNumberPattern.toString, "bankDetails.accountNumber.error.invalid", _.stripSpaces)
+            )
           )
-        ),
-      "sortCode" -> text("bankDetails.sortCode.error.required")
-        .verifying(
-          firstError(
-            regexp(Validation.sortCodePattern.toString, "bankDetails.sortCode.error.invalid", _.stripSpacesAndDashes())
-          )
-        ),
-      "accountNumber" -> text("bankDetails.accountNumber.error.required")
-        .verifying(
-          firstError(regexp(Validation.accountNumberPattern.toString, "bankDetails.accountNumber.error.invalid"))
-        )
-    )(BankDetails.apply)(BankDetails.unapply)
-  )
+      )(formToModel)(BankDetails.unapply)
+    )
+  }
 
 }

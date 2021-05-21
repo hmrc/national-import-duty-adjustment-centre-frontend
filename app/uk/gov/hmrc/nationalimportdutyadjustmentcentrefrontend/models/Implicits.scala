@@ -19,11 +19,13 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models
 object Implicits {
 
   implicit class SanitizedString(unwrap: String) {
-    def stripSpacesAndDashes() = unwrap.replaceAll("""[ \-]""", "")
+    def stripSpaces: String = unwrap.replaceAll("""[ ]""", "")
 
-    def leftPadAccountNumber() = f"${unwrap.toInt}%08d"
+    def stripSpacesAndDashes: String = unwrap.replaceAll("""[\-]""", "").stripSpaces
 
-    def stripExternalAndReduceInternalSpaces(): String = unwrap.trim.replaceAll("[ ]+", " ")
+    def leftPadAccountNumber: String = f"${unwrap.toInt}%08d"
+
+    def stripExternalAndReduceInternalSpaces: String = unwrap.trim.replaceAll("[ ]+", " ")
 
   }
 

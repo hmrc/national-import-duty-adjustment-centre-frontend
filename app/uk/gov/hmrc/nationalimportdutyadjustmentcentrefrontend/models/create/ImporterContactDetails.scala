@@ -43,7 +43,7 @@ object ImporterContactDetails {
       addressLine2,
       addressLine3,
       city,
-      postCode.stripExternalAndReduceInternalSpaces()
+      postCode.stripExternalAndReduceInternalSpaces
     )
 
 }

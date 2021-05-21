@@ -24,4 +24,5 @@ case class EntryDetails(entryProcessingUnit: String, entryNumber: String, entryD
 
 object EntryDetails {
   implicit val format: OFormat[EntryDetails] = Json.format[EntryDetails]
+
 }

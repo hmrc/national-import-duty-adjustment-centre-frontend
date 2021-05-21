@@ -21,14 +21,22 @@ import play.api.data.Form
 import play.api.data.Forms._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.mappings.{Mappings, Validation}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.EoriNumber
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.Implicits.SanitizedString
 
 class EoriNumberFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[EoriNumber] = Form(
-    mapping(
-      "eoriNumber" -> text("importer.eori.error.required")
-        .verifying(firstError(regexp(Validation.eoriNumber, "importer.eori.error.invalid")))
-    )(EoriNumber.apply)(EoriNumber.unapply)
-  )
+  def apply(): Form[EoriNumber] = {
+
+    val formToModel = (eoriNumber: String) => EoriNumber(eoriNumber.stripSpaces.toUpperCase)
+
+    Form(
+      mapping(
+        "eoriNumber" -> text("importer.eori.error.required")
+          .verifying(
+            firstError(regexp(Validation.eoriNumber, "importer.eori.error.invalid", _.stripSpaces.toUpperCase))
+          )
+      )(formToModel)(EoriNumber.unapply)
+    )
+  }
 
 }
