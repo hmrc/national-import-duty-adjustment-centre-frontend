@@ -89,7 +89,7 @@ class UploadFormViewSpec extends UnitViewSpec with TestData {
     "have correct document types" when {
 
       def documentTypes(claimType: ClaimType) =
-        view(Some(claimType)).getElementById("document-type-list").children().eachText().asScala
+        view(Some(claimType)).getElementById("document-type-list").children().asScala.map(_.text())
 
       "claim type is Preference" in {
         val types = documentTypes(Preference)
