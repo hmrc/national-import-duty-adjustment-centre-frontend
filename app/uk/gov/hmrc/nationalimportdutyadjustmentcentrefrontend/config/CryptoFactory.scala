@@ -20,22 +20,27 @@ import com.typesafe.config.ConfigFactory
 import play.api.libs.json._
 import uk.gov.hmrc.crypto.{ApplicationCrypto, Crypted, PlainText}
 
-object CryptoProvider {
+object CryptoFactory {
 
-  private val enabledKey = "json.encryption.enabled"
-  private val config     = ConfigFactory.load()
-  private val crypto     = new ApplicationCrypto(config).JsonCrypto
+  lazy val instance: Crypto = new Crypto
 
-  private val enabled = if (config.hasPath(enabledKey)) config.getBoolean(enabledKey) else true
+  class Crypto() {
+    private val enabledKey = "json.encryption.enabled"
+    private val config     = ConfigFactory.load()
+    private val crypto     = new ApplicationCrypto(config).JsonCrypto
 
-  def decrypt(json: JsValue): JsValue = if (enabled)
-    Json.parse(crypto.decrypt(Crypted(json.toString())).value)
-  else
-    json
+    private val enabled = if (config.hasPath(enabledKey)) config.getBoolean(enabledKey) else true
 
-  def encrypt(json: JsValue): JsValue = if (enabled)
-    JsString(crypto.encrypt(PlainText(json.toString())).value)
-  else
-    json
+    def decrypt(json: JsValue): JsValue = if (enabled)
+      Json.parse(crypto.decrypt(Crypted(json.toString())).value)
+    else
+      json
+
+    def encrypt(json: JsValue): JsValue = if (enabled)
+      JsString(crypto.encrypt(PlainText(json.toString())).value)
+    else
+      json
+
+  }
 
 }
