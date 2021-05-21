@@ -42,19 +42,25 @@ class DutyPaidFormProviderSpec extends StringFieldBehaviours {
       FormError(fieldName, invalidKey, Seq(Validation.dutyPattern))
     )
 
+    "not error with valid value" in {
+      assertErrorsForValue(fieldName, "0.1", Seq.empty)
+    }
+
     "error when input is zero" in {
-      val result        = form.bind(Map(fieldName -> "0")).apply(fieldName)
-      val expectedError = FormError(fieldName, zeroError, Seq.empty)
-      result.errors mustEqual Seq(expectedError)
+      assertErrorsForValue(fieldName, "0", Seq(FormError(fieldName, zeroError, Seq.empty)))
+    }
+
+    "error when format is invalid" in {
+      assertErrorsForValue(fieldName, "10.120", Seq(FormError(fieldName, invalidKey, Seq(Validation.dutyPattern))))
     }
   }
 
   "ShouldPaid" must {
 
-    val fieldName   = "shouldPaid"
-    val requiredKey = "dutyPaid.should.error.required"
-    val invalidKey  = "dutyPaid.error.invalid"
-    val zeroError   = "dutyPaid.should.error.negative"
+    val fieldName     = "shouldPaid"
+    val requiredKey   = "dutyPaid.should.error.required"
+    val invalidKey    = "dutyPaid.error.invalid"
+    val negativeError = "dutyPaid.should.error.negative"
 
     behave like fieldThatBindsValidData(form, fieldName, decimals)
 
@@ -67,11 +73,22 @@ class DutyPaidFormProviderSpec extends StringFieldBehaviours {
       FormError(fieldName, invalidKey, Seq(Validation.dutyPattern))
     )
 
-    "error when input is negative" in {
-      val result        = form.bind(Map(fieldName -> "-10")).apply(fieldName)
-      val expectedError = FormError(fieldName, zeroError, Seq.empty)
-      result.errors mustEqual Seq(expectedError)
+    "not error with valid value" in {
+      assertErrorsForValue(fieldName, "0.00", Seq.empty)
     }
+
+    "error when input is negative" in {
+      assertErrorsForValue(fieldName, "-10", Seq(FormError(fieldName, negativeError, Seq.empty)))
+    }
+
+    "error when format is invalid" in {
+      assertErrorsForValue(fieldName, "0.000", Seq(FormError(fieldName, invalidKey, Seq(Validation.dutyPattern))))
+    }
+  }
+
+  def assertErrorsForValue(field: String, value: String, expectedErrors: Seq[FormError]): Unit = {
+    val result = form.bind(Map(field -> value)).apply(field)
+    result.errors mustEqual expectedErrors
   }
 
 }
