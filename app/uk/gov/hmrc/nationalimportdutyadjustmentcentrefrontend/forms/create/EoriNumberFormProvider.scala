@@ -21,7 +21,7 @@ import play.api.data.Form
 import play.api.data.Forms._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.mappings.{Mappings, Validation}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.EoriNumber
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.Implicits.SanitizedString
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.mappings.Implicits.SanitizedString
 
 class EoriNumberFormProvider @Inject() extends Mappings {
 

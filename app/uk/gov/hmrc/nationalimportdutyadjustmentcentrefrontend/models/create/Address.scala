@@ -17,7 +17,6 @@
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create
 
 import play.api.libs.json.{Json, OFormat}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.Implicits.SanitizedString
 
 case class Address(
   addressLine1: String,
@@ -30,14 +29,4 @@ case class Address(
 
 object Address {
   implicit val format: OFormat[Address] = Json.format[Address]
-
-  def apply(
-    addressLine1: String,
-    addressLine2: Option[String],
-    addressLine3: Option[String],
-    city: String,
-    postCode: String
-  ): Address =
-    new Address(addressLine1, addressLine2, addressLine3, city, postCode.stripExternalAndReduceInternalSpaces)
-
 }

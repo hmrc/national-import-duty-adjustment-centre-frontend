@@ -16,39 +16,62 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create
 
+import javax.inject.Inject
 import play.api.data.Form
 import play.api.data.Forms._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.mappings.{Mappings, Validation}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.Implicits.SanitizedString
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.mappings.Implicits.SanitizedString
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ImporterContactDetails
-
-import javax.inject.Inject
 
 class ImporterDetailsFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[ImporterContactDetails] = Form(
-    mapping(
-      "addressLine1" -> text("address.line1.error.required")
-        .verifying(firstError(maxLength(100, "address.line1.error.length"))),
-      "addressLine2" -> optional(
-        text()
-          .verifying(firstError(maxLength(50, "address.line2.error.length")))
-      ),
-      "addressLine3" -> optional(
-        text()
-          .verifying(firstError(maxLength(256, "address.line3.error.length")))
-      ),
-      "city" -> text("address.city.error.required")
-        .verifying(firstError(maxLength(50, "address.city.error.length"))),
-      "postcode" -> text("address.postcode.error.required")
-        .verifying(
-          firstError(
-            postcodeLength("address.postcode.error.required", "address.postcode.error.length"),
-            regexp(Validation.postcodePattern, "address.postcode.error.invalid", _.stripExternalAndReduceInternalSpaces)
-          )
+  def apply(): Form[ImporterContactDetails] = {
+
+    val formToModel = (
+      addressLine1: String,
+      addressLine2: Option[String],
+      addressLine3: Option[String],
+      city: String,
+      postCode: String,
+      auditRef: Option[String]
+    ) =>
+      new ImporterContactDetails(
+        addressLine1,
+        addressLine2,
+        addressLine3,
+        city,
+        postCode.stripExternalAndReduceInternalSpaces,
+        auditRef
+      )
+
+    Form(
+      mapping(
+        "addressLine1" -> text("address.line1.error.required")
+          .verifying(firstError(maxLength(100, "address.line1.error.length"))),
+        "addressLine2" -> optional(
+          text()
+            .verifying(firstError(maxLength(50, "address.line2.error.length")))
         ),
-      "auditRef" -> optional(text())
-    )(ImporterContactDetails.apply)(ImporterContactDetails.unapply)
-  )
+        "addressLine3" -> optional(
+          text()
+            .verifying(firstError(maxLength(256, "address.line3.error.length")))
+        ),
+        "city" -> text("address.city.error.required")
+          .verifying(firstError(maxLength(50, "address.city.error.length"))),
+        "postcode" -> text("address.postcode.error.required")
+          .verifying(
+            firstError(
+              postcodeLength("address.postcode.error.required", "address.postcode.error.length"),
+              regexp(
+                Validation.postcodePattern,
+                "address.postcode.error.invalid",
+                _.stripExternalAndReduceInternalSpaces
+              )
+            )
+          ),
+        "auditRef" -> optional(text())
+      )(formToModel)(ImporterContactDetails.unapply)
+    )
+  }
 
 }
