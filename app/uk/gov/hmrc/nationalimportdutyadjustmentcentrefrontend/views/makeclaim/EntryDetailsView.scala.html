@@ -52,10 +52,10 @@
                 classes = Some("govuk-input--width-3"),
                 hint = Some(Html(messages("entryDetails.claimEpu.hint"))),
                 attributes = Map(
-                    "autocomplete" -> "off",
-                    "inputmode" -> "numeric",
-                    "pattern" -> "[0-9]*"
-                )
+                    "autocomplete" -> "off"
+                ),
+                inputmode = Some("numeric"),
+                pattern = Some("[0-9]*")
             )
 
             @inputText(

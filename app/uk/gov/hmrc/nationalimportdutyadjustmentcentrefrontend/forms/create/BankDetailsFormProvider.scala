@@ -37,12 +37,14 @@ class BankDetailsFormProvider @Inject() extends Mappings {
       "sortCode" -> text("bankDetails.sortCode.error.required")
         .verifying(
           firstError(
-            regexp(Validation.sortCodePattern.toString, "bankDetails.sortCode.error.invalid", _.stripSpacesAndDashes())
+            regexp(Validation.sortCodePattern.toString, "bankDetails.sortCode.error.invalid", _.stripSpacesAndDashes)
           )
         ),
       "accountNumber" -> text("bankDetails.accountNumber.error.required")
         .verifying(
-          firstError(regexp(Validation.accountNumberPattern.toString, "bankDetails.accountNumber.error.invalid"))
+          firstError(
+            regexp(Validation.accountNumberPattern.toString, "bankDetails.accountNumber.error.invalid", _.stripSpaces)
+          )
         )
     )(BankDetails.apply)(BankDetails.unapply)
   )

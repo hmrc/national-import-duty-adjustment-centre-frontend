@@ -70,6 +70,18 @@ class EntryDetailsFormProviderSpec extends StringFieldBehaviours {
     )
 
     behave like mandatoryField(form, fieldName, requiredError = FormError(fieldName, requiredKey))
+
+    "bind value with spaces" in {
+      val result = form.bind(Map(fieldName -> "12 3 ")).apply(fieldName)
+      result.value.value mustBe "12 3 "
+      result.hasErrors mustBe false
+    }
+
+    "fail to bind value not containing 3 digits" in {
+      val result        = form.bind(Map(fieldName -> "1 2")).apply(fieldName)
+      val expectedError = FormError(fieldName, lengthKey, Seq(Validation.entryProcessingUnit))
+      result.errors mustEqual Seq(expectedError)
+    }
   }
 
   ".EntryNumber" must {
@@ -90,10 +102,13 @@ class EntryDetailsFormProviderSpec extends StringFieldBehaviours {
 
     behave like mandatoryField(form, fieldName, requiredError = FormError(fieldName, requiredKey))
 
-    "fail to bind entries that do not contain 6 digits and a letter" in {
-      val fieldName = "entryNumber"
-      val lengthKey = "entryDetails.entryNumber.error.invalid"
+    "bind value with spaces" in {
+      val result = form.bind(Map(fieldName -> "12 34 56 Q")).apply(fieldName)
+      result.value.value mustBe "12 34 56 Q"
+      result.hasErrors mustBe false
+    }
 
+    "fail to bind entries that do not contain 6 digits and a letter" in {
       val result        = form.bind(Map(fieldName -> "12345678AQ")).apply(fieldName)
       val expectedError = FormError(fieldName, lengthKey, Seq(Validation.entryNumber))
       result.errors mustEqual Seq(expectedError)

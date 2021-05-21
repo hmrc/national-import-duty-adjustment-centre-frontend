@@ -120,7 +120,7 @@ class BankDetailsFormProviderSpec extends StringFieldBehaviours {
     val fieldName   = "accountNumber"
     val requiredKey = "bankDetails.accountNumber.error.required"
     val invalidKey  = "bankDetails.accountNumber.error.invalid"
-    val minLength   = 8
+    val minLength   = 6
     val maxLength   = 8
 
     val validAccountNumberGen = for {
@@ -135,6 +135,7 @@ class BankDetailsFormProviderSpec extends StringFieldBehaviours {
     "bind account number in format with any number of spaces nn   nn    nn format" in {
       val result = form.bind(Map(fieldName -> "12   34   56")).apply(fieldName)
       result.value.value mustBe "12   34   56"
+      result.hasErrors mustBe false
     }
 
     "not bind strings with characters" in {
@@ -144,13 +145,13 @@ class BankDetailsFormProviderSpec extends StringFieldBehaviours {
     }
 
     "not bind strings with less than 6 digit" in {
-      val result        = form.bind(Map(fieldName -> "12 34   5")).apply(fieldName)
+      val result        = form.bind(Map(fieldName -> "12345")).apply(fieldName)
       val expectedError = FormError(fieldName, invalidKey, Seq(Validation.accountNumberPattern))
       result.errors mustEqual Seq(expectedError)
     }
 
     "not bind strings with more than 8 digit" in {
-      val result        = form.bind(Map(fieldName -> "12 34 56 789")).apply(fieldName)
+      val result        = form.bind(Map(fieldName -> "123456789")).apply(fieldName)
       val expectedError = FormError(fieldName, invalidKey, Seq(Validation.accountNumberPattern))
       result.errors mustEqual Seq(expectedError)
     }

@@ -24,6 +24,7 @@ import play.api.data.Forms._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.mappings.{Mappings, Validation}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.EntryDetails
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.DateFormatter._
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.Implicits.SanitizedString
 
 class EntryDetailsFormProvider @Inject() extends Mappings {
 
@@ -34,9 +35,9 @@ class EntryDetailsFormProvider @Inject() extends Mappings {
     Form(
       mapping(
         "entryProcessingUnit" -> text("entryDetails.claimEpu.error.required")
-          .verifying(regexp(Validation.entryProcessingUnit, "entryDetails.claimEpu.error.invalid")),
+          .verifying(regexp(Validation.entryProcessingUnit, "entryDetails.claimEpu.error.invalid", _.stripSpaces)),
         "entryNumber" -> text("entryDetails.entryNumber.error.required")
-          .verifying(regexp(Validation.entryNumber, "entryDetails.entryNumber.error.invalid")),
+          .verifying(regexp(Validation.entryNumber, "entryDetails.entryNumber.error.invalid", _.stripSpaces)),
         "entryDate" -> localDate(
           invalidKey = "entryDetails.claimEntryDate.error.invalid",
           requiredKey = "entryDetails.claimEntryDate.error.required"

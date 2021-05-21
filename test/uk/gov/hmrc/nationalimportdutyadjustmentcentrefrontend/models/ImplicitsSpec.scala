@@ -24,56 +24,56 @@ class ImplicitsSpec extends UnitSpec with TestData {
   "Implicits.SanitizedString" should {
 
     "left-pad a sort code" in {
-      "123456".leftPadAccountNumber() mustBe "00123456"
-      "0123456".leftPadAccountNumber() mustBe "00123456"
+      "123456".leftPadAccountNumber mustBe "00123456"
+      "0123456".leftPadAccountNumber mustBe "00123456"
     }
 
     "strip spaces" in {
-      "12 34 56".stripSpacesAndDashes() mustBe "123456"
+      "12 34 56".stripSpacesAndDashes mustBe "123456"
     }
 
     "strip dashes" in {
-      "12-34-56".stripSpacesAndDashes() mustBe "123456"
+      "12-34-56".stripSpacesAndDashes mustBe "123456"
     }
 
     "strip spaces and dashes" in {
-      "12 - 34 - 56".stripSpacesAndDashes() mustBe "123456"
+      "12 - 34 - 56".stripSpacesAndDashes mustBe "123456"
     }
 
     "removes leading space" in {
-      "         hello".stripExternalAndReduceInternalSpaces() mustBe "hello"
+      "         hello".stripExternalAndReduceInternalSpaces mustBe "hello"
     }
 
     "removes trailing space" in {
-      "hello            ".stripExternalAndReduceInternalSpaces() mustBe "hello"
+      "hello            ".stripExternalAndReduceInternalSpaces mustBe "hello"
     }
 
     "removes leading and trailing space" in {
-      "         hello          ".stripExternalAndReduceInternalSpaces() mustBe "hello"
+      "         hello          ".stripExternalAndReduceInternalSpaces mustBe "hello"
     }
 
     "reduces internal space" in {
-      "hi           there".stripExternalAndReduceInternalSpaces() mustBe "hi there"
+      "hi           there".stripExternalAndReduceInternalSpaces mustBe "hi there"
     }
 
     "removes leading space and reduces internal space" in {
-      "    erm     hello".stripExternalAndReduceInternalSpaces() mustBe "erm hello"
+      "    erm     hello".stripExternalAndReduceInternalSpaces mustBe "erm hello"
     }
 
     "removes trailing space and reduces internal space" in {
-      "erm         hello               ".stripExternalAndReduceInternalSpaces() mustBe "erm hello"
+      "erm         hello               ".stripExternalAndReduceInternalSpaces mustBe "erm hello"
     }
 
     "removes trailing and leading space and reduces internal space" in {
-      "              erm         hello               ".stripExternalAndReduceInternalSpaces() mustBe "erm hello"
+      "              erm         hello               ".stripExternalAndReduceInternalSpaces mustBe "erm hello"
     }
 
     "reduces multiple internal spaces" in {
-      "         erm         hello    there           ".stripExternalAndReduceInternalSpaces() mustBe "erm hello there"
+      "         erm         hello    there           ".stripExternalAndReduceInternalSpaces mustBe "erm hello there"
     }
 
     "makes no unexpected changes" in {
-      "Hi There".stripExternalAndReduceInternalSpaces() mustBe "Hi There"
+      "Hi There".stripExternalAndReduceInternalSpaces mustBe "Hi There"
     }
   }
 

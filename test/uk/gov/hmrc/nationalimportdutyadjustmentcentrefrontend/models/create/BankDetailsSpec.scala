@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models
+package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create
 
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, UnitSpec}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.BankDetails
 
 class BankDetailsSpec extends UnitSpec with TestData {
 
@@ -26,6 +25,12 @@ class BankDetailsSpec extends UnitSpec with TestData {
     "pad a 6 digit account number" in {
 
       BankDetails("Account", "001122", "123456").accountNumber mustBe "00123456"
+    }
+
+    "strip spaces from account number" in {
+
+      BankDetails("Account", "123456", "1234 5678").accountNumber mustBe "12345678"
+      BankDetails("Account", "123456", " 123 456 ").accountNumber mustBe "00123456"
     }
 
     "strip spaces and dashes from sort code" in {

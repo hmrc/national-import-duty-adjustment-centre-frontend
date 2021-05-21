@@ -16,15 +16,24 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create
 
-import play.api.libs.json.{Json, OFormat}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.Implicits.SanitizedString
+import java.time.LocalDate
 
-case class BankDetails(accountName: String, sortCode: String, accountNumber: String)
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, UnitSpec}
 
-object BankDetails {
-  implicit val format: OFormat[BankDetails] = Json.format[BankDetails]
+class EntryDetailsSpec extends UnitSpec with TestData {
 
-  def apply(accountName: String, sortCode: String, accountNumber: String): BankDetails =
-    new BankDetails(accountName, sortCode.stripSpacesAndDashes, accountNumber.stripSpaces.leftPadAccountNumber)
+  "EntryDetails" should {
+
+    "strip spaces from EPU" in {
+      EntryDetails("12 3", "123456Q", LocalDate.now()).entryProcessingUnit mustBe "123"
+      EntryDetails(" 123 ", "123456Q", LocalDate.now()).entryProcessingUnit mustBe "123"
+    }
+
+    "strip spaces from Entry number" in {
+      EntryDetails("123", "123 456Q", LocalDate.now()).entryNumber mustBe "123456Q"
+      EntryDetails("123", " 123456Q ", LocalDate.now()).entryNumber mustBe "123456Q"
+    }
+
+  }
 
 }

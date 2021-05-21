@@ -38,6 +38,6 @@ object Address {
     city: String,
     postCode: String
   ): Address =
-    new Address(addressLine1, addressLine2, addressLine3, city, postCode.stripExternalAndReduceInternalSpaces())
+    new Address(addressLine1, addressLine2, addressLine3, city, postCode.stripExternalAndReduceInternalSpaces)
 
 }

@@ -19,9 +19,14 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create
 import java.time.LocalDate
 
 import play.api.libs.json.{Json, OFormat}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.Implicits.SanitizedString
 
 case class EntryDetails(entryProcessingUnit: String, entryNumber: String, entryDate: LocalDate)
 
 object EntryDetails {
   implicit val format: OFormat[EntryDetails] = Json.format[EntryDetails]
+
+  def apply(entryProcessingUnit: String, entryNumber: String, entryDate: LocalDate): EntryDetails =
+    new EntryDetails(entryProcessingUnit.stripSpaces, entryNumber.stripSpaces, entryDate)
+
 }
