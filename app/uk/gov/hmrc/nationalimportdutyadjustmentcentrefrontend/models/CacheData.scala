@@ -20,7 +20,7 @@ import java.time.Instant
 
 import play.api.libs.json._
 import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.CryptoProvider
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.CryptoFactory
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.{AmendAnswers, AmendClaimReceipt}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{CreateAnswers, CreateClaimReceipt}
 
@@ -76,12 +76,14 @@ case class ProtectedData(
 object ProtectedData {
   private implicit val formats: OFormat[ProtectedData] = Json.format[ProtectedData]
 
+  private val crypto = CryptoFactory.instance
+
   implicit val reads: Reads[ProtectedData] = Reads {
-    json: JsValue => Json.fromJson(CryptoProvider.decrypt(json))
+    json: JsValue => Json.fromJson(crypto.decrypt(json))
   }
 
   implicit val writes: Writes[ProtectedData] = Writes {
-    data => CryptoProvider.encrypt(Json.toJson(data))
+    data => crypto.encrypt(Json.toJson(data))
   }
 
 }
