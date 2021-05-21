@@ -29,9 +29,7 @@
     autocomplete: Option[String] = None,
     inputType: String = "text",
     attributes: Map[String, String] = Map.empty,
-    prefix: Option[PrefixOrSuffix] = None,
-    inputmode: Option[String] = None,
-    pattern: Option[String] = None
+    prefix: Option[PrefixOrSuffix] = None
 )(implicit messages: Messages)
 
 
@@ -57,7 +55,5 @@
     inputType = inputType,
     attributes = attributes,
     prefix = prefix,
-    inputmode = inputmode,
-    pattern = pattern,
     errorMessage = form(name).error.map(err => ErrorMessage(content = Text(messages(err.message, err.args: _*))))
 ))
