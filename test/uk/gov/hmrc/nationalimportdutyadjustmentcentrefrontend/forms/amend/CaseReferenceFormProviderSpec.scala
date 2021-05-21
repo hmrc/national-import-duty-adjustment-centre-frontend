@@ -19,15 +19,15 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.amend
 import play.api.data.FormError
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.behaviours.StringFieldBehaviours
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.mappings.Validation
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.CaseReference
 
 class CaseReferenceFormProviderSpec extends StringFieldBehaviours {
 
   val requiredKey = "amend.case.reference.error.required"
   val invalidKey  = "amend.case.reference.error.invalid"
 
-  val form = new CaseReferenceFormProvider()()
-
   ".CaseReference" must {
+    val form = new CaseReferenceFormProvider()()
 
     val fieldName = "caseReference"
 
@@ -41,6 +41,25 @@ class CaseReferenceFormProviderSpec extends StringFieldBehaviours {
     )
 
     behave like mandatoryField(form, fieldName, requiredError = FormError(fieldName, requiredKey))
+  }
+
+  "Form" must {
+    "Accept valid form data" in {
+      val form = new CaseReferenceFormProvider().apply().bind(buildFormData("NID21134557697RM8WIB13"))
+
+      form.hasErrors mustBe false
+      form.value mustBe Some(CaseReference("NID21134557697RM8WIB13"))
+    }
+
+    "Accept lower case reference with spaces and convert to correct format" in {
+      val form = new CaseReferenceFormProvider().apply().bind(buildFormData(" nid 2113 4557697 RM8 wiB13 "))
+
+      form.hasErrors mustBe false
+      form.value mustBe Some(CaseReference("NID21134557697RM8WIB13"))
+    }
+
+    def buildFormData(caseReference: String) =
+      Map("caseReference" -> caseReference)
   }
 
 }

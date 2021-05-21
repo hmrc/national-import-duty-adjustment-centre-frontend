@@ -22,15 +22,18 @@ import javax.inject.Inject
 import play.api.data.Form
 import play.api.data.Forms._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.mappings.{Mappings, Validation}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.Implicits.SanitizedString
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.EntryDetails
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.DateFormatter._
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.Implicits.SanitizedString
 
 class EntryDetailsFormProvider @Inject() extends Mappings {
 
   def apply(): Form[EntryDetails] = {
 
     val earliestDate = LocalDate.parse("2000-01-01")
+
+    val formToModel = (epu: String, entryNumber: String, entryDate: LocalDate) =>
+      EntryDetails(epu.stripSpaces, entryNumber.stripSpaces, entryDate)
 
     Form(
       mapping(
@@ -43,7 +46,7 @@ class EntryDetailsFormProvider @Inject() extends Mappings {
           requiredKey = "entryDetails.claimEntryDate.error.required"
         ).verifying(maxDate(LocalDate.now, "entryDetails.claimEntryDate.error.maxDate", format(LocalDate.now)))
           .verifying(minDate(earliestDate, "entryDetails.claimEntryDate.error.minDate", format(earliestDate)))
-      )(EntryDetails.apply)(EntryDetails.unapply)
+      )(formToModel)(EntryDetails.unapply)
     )
   }
 

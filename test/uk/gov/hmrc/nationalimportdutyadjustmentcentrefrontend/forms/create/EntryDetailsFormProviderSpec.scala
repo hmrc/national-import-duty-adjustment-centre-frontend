@@ -45,10 +45,19 @@ class EntryDetailsFormProviderSpec extends StringFieldBehaviours {
   "Form" must {
 
     "Accept valid form data" in {
-      val form2 = new EntryDetailsFormProvider().apply().bind(buildFormData())
+      val form = new EntryDetailsFormProvider().apply().bind(buildFormData())
 
-      form2.hasErrors mustBe false
-      form2.value mustBe Some(EntryDetails("123", "123456Q", LocalDate.of(2020, 12, 31)))
+      form.hasErrors mustBe false
+      form.value mustBe Some(EntryDetails("123", "123456Q", LocalDate.of(2020, 12, 31)))
+    }
+
+    "Remove spaces from EPU and Entry number" in {
+      val form = new EntryDetailsFormProvider().apply().bind(
+        buildFormData(epu = Some(" 1 2 3 "), entryNumber = Some(" 123 456 Q "))
+      )
+
+      form.hasErrors mustBe false
+      form.value mustBe Some(EntryDetails("123", "123456Q", LocalDate.of(2020, 12, 31)))
     }
 
   }

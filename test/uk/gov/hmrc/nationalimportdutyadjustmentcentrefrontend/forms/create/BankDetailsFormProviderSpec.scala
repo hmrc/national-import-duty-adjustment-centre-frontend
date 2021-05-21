@@ -20,6 +20,7 @@ import org.scalacheck.Gen
 import play.api.data.FormError
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.behaviours.StringFieldBehaviours
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.mappings.Validation
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.BankDetails
 
 class BankDetailsFormProviderSpec extends StringFieldBehaviours {
 
@@ -156,4 +157,38 @@ class BankDetailsFormProviderSpec extends StringFieldBehaviours {
       result.errors mustEqual Seq(expectedError)
     }
   }
+
+  "Form" must {
+    "Accept valid form data" in {
+      val form = new BankDetailsFormProvider().apply().bind(buildFormData("123456", "12345678"))
+
+      form.hasErrors mustBe false
+      form.value mustBe Some(BankDetails("Account", "123456", "12345678"))
+    }
+
+    "Pad 6 digit account codes" in {
+      val form = new BankDetailsFormProvider().apply().bind(buildFormData("123456", "123456"))
+
+      form.hasErrors mustBe false
+      form.value mustBe Some(BankDetails("Account", "123456", "00123456"))
+    }
+
+    "Remove dashes from sort codes" in {
+      val form = new BankDetailsFormProvider().apply().bind(buildFormData("12-34-56", "12345678"))
+
+      form.hasErrors mustBe false
+      form.value mustBe Some(BankDetails("Account", "123456", "12345678"))
+    }
+
+    "Remove spaces from sort codes and account numbers" in {
+      val form = new BankDetailsFormProvider().apply().bind(buildFormData(" 12 34 56 ", " 1234 5678 "))
+
+      form.hasErrors mustBe false
+      form.value mustBe Some(BankDetails("Account", "123456", "12345678"))
+    }
+  }
+
+  private def buildFormData(sortCode: String, accountNumber: String) =
+    Map("accountName" -> "Account", "sortCode" -> sortCode, "accountNumber" -> accountNumber)
+
 }

@@ -19,16 +19,16 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create
 import play.api.data.FormError
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.behaviours.StringFieldBehaviours
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.mappings.Validation
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.EoriNumber
 
 class EoriNumberFormProviderSpec extends StringFieldBehaviours {
 
   val requiredKey = "importer.eori.error.required"
   val invalidKey  = "importer.eori.error.invalid"
 
-  val form = new EoriNumberFormProvider()()
-
   ".EoriNumber" must {
 
+    val form      = new EoriNumberFormProvider()()
     val fieldName = "eoriNumber"
 
     behave like fieldThatBindsValidData(form, fieldName, eoriNumber)
@@ -41,6 +41,25 @@ class EoriNumberFormProviderSpec extends StringFieldBehaviours {
     )
 
     behave like mandatoryField(form, fieldName, requiredError = FormError(fieldName, requiredKey))
+  }
+
+  "Form" must {
+    "Accept valid form data" in {
+      val form = new EoriNumberFormProvider().apply().bind(buildFormData("GB123456789012"))
+
+      form.hasErrors mustBe false
+      form.value mustBe Some(EoriNumber("GB123456789012"))
+    }
+
+    "Accept lower case EORI with spaces and convert to correct format" in {
+      val form = new EoriNumberFormProvider().apply().bind(buildFormData(" gb 1234 5678 9012 "))
+
+      form.hasErrors mustBe false
+      form.value mustBe Some(EoriNumber("GB123456789012"))
+    }
+
+    def buildFormData(eoriNumber: String) =
+      Map("eoriNumber" -> eoriNumber)
   }
 
 }
