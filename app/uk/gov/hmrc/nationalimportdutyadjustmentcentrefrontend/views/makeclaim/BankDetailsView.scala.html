@@ -73,7 +73,9 @@
                 label = "bankDetails.accountNumber.heading",
                 hint = Some(Html(messages("bankDetails.accountNumber.hint"))),
                 classes = Some("govuk-input--width-10"),
-                attributes = Map("autocomplete" -> "off")
+                attributes = Map("autocomplete" -> "off"),
+                inputmode = Some("numeric"),
+                pattern = Some("[0-9]*")
             )
         }
 
