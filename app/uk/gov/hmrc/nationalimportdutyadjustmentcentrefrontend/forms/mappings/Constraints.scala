@@ -17,7 +17,7 @@
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.mappings
 
 import play.api.data.validation.{Constraint, Invalid, Valid}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.Implicits.SanitizedString
+import Implicits.SanitizedString
 
 import java.time.LocalDate
 import scala.util.{Success, Try}

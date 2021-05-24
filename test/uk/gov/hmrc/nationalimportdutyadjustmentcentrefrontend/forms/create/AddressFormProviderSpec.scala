@@ -20,6 +20,7 @@ import org.scalacheck.Gen
 import play.api.data.FormError
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.behaviours.StringFieldBehaviours
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.mappings.Validation
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.Address
 
 class AddressFormProviderSpec extends StringFieldBehaviours {
 
@@ -143,4 +144,41 @@ class AddressFormProviderSpec extends StringFieldBehaviours {
     }
 
   }
+
+  "Form" must {
+    "Accept valid form data" in {
+      val form = new AddressFormProvider().apply().bind(buildFormData("HG12GH"))
+
+      form.hasErrors mustBe false
+      form.value mustBe Some(
+        Address(
+          "Address Line 1",
+          Some("Address Line 2"),
+          Some("Address Line 3"),
+          "City",
+          "HG12GH",
+          Some("Some Audit Ref")
+        )
+      )
+    }
+
+    "Remove excessive spaces in postcode" in {
+      val form = new AddressFormProvider().apply().bind(buildFormData("HG1     2GH"))
+
+      form.hasErrors mustBe false
+      form.value.map(_.postCode) mustBe Some("HG1 2GH")
+    }
+
+  }
+
+  private def buildFormData(postCode: String) =
+    Map(
+      "addressLine1" -> "Address Line 1",
+      "addressLine2" -> "Address Line 2",
+      "addressLine3" -> "Address Line 3",
+      "city"         -> "City",
+      "postcode"     -> postCode,
+      "auditRef"     -> "Some Audit Ref"
+    )
+
 }
