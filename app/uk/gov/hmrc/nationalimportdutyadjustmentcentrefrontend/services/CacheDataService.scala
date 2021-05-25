@@ -32,7 +32,7 @@ class CacheDataService @Inject() (repository: CacheDataRepository)(implicit ec: 
       case Some(data) => Future(data)
       case None =>
         val data = CacheData(request.identifier)
-        repository.insert(data) map { _ => data }
+        repository.update(data)
     }
 
   def getCreateAnswersWithJourneyId(implicit request: IdentifierRequest[_]): Future[(CreateAnswers, JourneyId)] =
@@ -67,16 +67,14 @@ class CacheDataService @Inject() (repository: CacheDataRepository)(implicit ec: 
       }
     }
 
-  def storeCreateReceipt(
-    claimReceipt: CreateClaimReceipt
-  )(implicit request: IdentifierRequest[_]): Future[Option[CacheData]] =
+  def storeCreateReceipt(claimReceipt: CreateClaimReceipt)(implicit request: IdentifierRequest[_]): Future[CacheData] =
     getCacheData flatMap { cacheData =>
       repository.update(cacheData.store(claimReceipt))
     }
 
   def storeAmendReceipt(
     amendClaimReceipt: AmendClaimReceipt
-  )(implicit request: IdentifierRequest[_]): Future[Option[CacheData]] =
+  )(implicit request: IdentifierRequest[_]): Future[CacheData] =
     getCacheData flatMap { cacheData =>
       repository.update(cacheData.store(amendClaimReceipt))
     }

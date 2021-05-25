@@ -23,7 +23,7 @@ import com.mongodb.client.model.Indexes.ascending
 import javax.inject.Inject
 import org.mongodb.scala.model.Filters.equal
 import org.mongodb.scala.model.Updates.set
-import org.mongodb.scala.model.{IndexModel, IndexOptions}
+import org.mongodb.scala.model.{IndexModel, IndexOptions, ReplaceOptions}
 import uk.gov.hmrc.mongo.MongoComponent
 import uk.gov.hmrc.mongo.play.json.{Codecs, PlayMongoRepository}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
@@ -52,16 +52,15 @@ class CacheDataRepository @Inject() (mongoComponent: MongoComponent, config: App
       replaceIndexes = config.mongoReplaceIndexes
     ) {
 
+  private val upsert = ReplaceOptions().upsert(true)
+
   def get(id: String): Future[Option[CacheData]] = Mdc.preservingMdc {
     collection.findOneAndUpdate(filter(id), set("lastUpdated", Instant.now())).toFutureOption()
   }
 
-  def insert(data: CacheData): Future[Unit] = Mdc.preservingMdc {
-    collection.insertOne(data).toFuture().map(_ => Unit)
-  }
-
-  def update(data: CacheData): Future[Option[CacheData]] = Mdc.preservingMdc {
-    collection.findOneAndReplace(filter(data.id), data.copy(lastUpdated = Instant.now())).toFutureOption()
+  def update(data: CacheData): Future[CacheData] = Mdc.preservingMdc {
+    val updated = data.copy(lastUpdated = Instant.now())
+    collection.replaceOne(filter(data.id), updated, upsert).toFutureOption() map (_ => updated)
   }
 
   def delete(id: String): Future[Unit] = Mdc.preservingMdc {

@@ -60,8 +60,7 @@ trait ControllerSpec
 
   override protected def beforeEach(): Unit = {
     super.beforeEach()
-    when(dataRepository.insert(any[CacheData])).thenReturn(Future.successful(()))
-    when(dataRepository.update(any[CacheData])).thenReturn(Future.successful(None))
+    when(dataRepository.update(any[CacheData])).thenReturn(Future.successful(CacheData("id")))
   }
 
   override protected def afterEach(): Unit = {
