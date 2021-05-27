@@ -1,0 +1,144 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendNdrc.routes
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amendNdrcClaim.AmendNdrcClaim
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.AmendPageNames
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.DateTimeFormats
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.ActionItemBuilder.actionItem
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components._
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.MessageKey
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amendNdrcClaim.AmendCaseResponseType._
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amendNdrcClaim.AmendCaseResponseType
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages._
+
+@import java.time.Instant
+
+@this(
+summaryList: summaryList
+)
+
+@(amendClaim: AmendNdrcClaim, withActions: Boolean = true, submitted: Option[Instant] = None)(implicit request: Request[_], messages: Messages)
+
+@responseTypeValue(x: Set[AmendCaseResponseType]) = @{
+    if (x.contains(FurtherInformation) && x.contains(SupportingDocuments))
+        messages("amendCaseResponseType.sendInformationAndDocuments.checkYourAnswersLabel")
+    else if (x.contains(FurtherInformation)) messages("amendCaseResponseType.sendInformation.checkYourAnswersLabel")
+        else messages("amendCaseResponseType.sendDocuments.checkYourAnswersLabel")
+}
+
+@documentsAddedValue(noOfDocuments: Int) = @{
+    if (noOfDocuments == 1)
+        messages("view.amend-upload-file.document.added", noOfDocuments)
+    else
+        messages("view.amend-upload-file.documents.added", noOfDocuments)
+}
+
+@summaryList(
+    id = "important_info_section",
+    summaryListRows = Seq(
+        Some(SummaryListRow(
+            classes = "case_reference_row",
+            key = Key(
+                content = Text(messages("referenceNumber.checkYourAnswersLabel"))
+            ),
+            value = Value(
+                content = Text(amendClaim.caseReference)
+            ),
+            actions = if(!withActions) None else Some(Actions(
+                items = Seq(
+                    actionItem(
+                        href = routes.CheckYourAnswersController.onChange(CaseReferencePage.toString).url,
+                        content = HtmlContent(linkContent(messages("site.change"))),
+                        visuallyHiddenText = Some(messages("todo"))
+                    )
+                )
+            ))
+        )),
+        submitted.map(timestamp =>
+            SummaryListRow(
+                classes = "submitted_datetime",
+                key = Key(
+                    content = Text(messages("amend.claim.summary.datetime"))
+                ),
+                value = Value(
+                    content = Text(DateTimeFormats.formatSubmissionDateAtTime(timestamp))
+                ),
+                actions = None
+            )
+        ),
+        Some(SummaryListRow(
+            classes = "response_type_row",
+            key = Key(
+                content = Text(messages("amendCaseResponseType.checkYourAnswersLabel"))
+            ),
+            value = Value(
+                content = Text(responseTypeValue(amendClaim.amendCaseResponseType))
+            ),
+            actions = if(!withActions) None else Some(Actions(
+                items = Seq(
+                    actionItem(
+                        href = routes.CheckYourAnswersController.onChange(AmendCaseResponseTypePage.toString).url,
+                        content = HtmlContent(linkContent(messages("site.change"))),
+                        visuallyHiddenText = Some(messages("amend.check_answers.information.attach_more_documents.accessible"))
+                    )
+                )
+            ))
+        )
+        ),
+        if(amendClaim.amendCaseResponseType.contains(SupportingDocuments)){
+        Some(SummaryListRow(
+            classes = "upload_row",
+            key = Key(
+                content = Text(messages("view.amend-upload-file.checkYourAnswersLabel"))
+            ),
+            value = Value(
+                content = Text(documentsAddedValue(amendClaim.uploads.size))
+            ),
+            actions = if(!withActions) None else Some(Actions(
+                items = Seq(
+                    actionItem(
+                        href = routes.CheckYourAnswersController.onChange(UploadPage.toString).url,
+                        content = HtmlContent(linkContent(messages("site.change"))),
+                        visuallyHiddenText = Some(messages("amend.check_answers.information.uploadedDocuments.accessible"))
+                    )
+                )
+            ))
+        ))} else None,
+        if(amendClaim.amendCaseResponseType.contains(FurtherInformation)){
+        Some(SummaryListRow(
+            classes = "further_information_row",
+            key = Key(
+                content = Text(messages("furtherInformation.checkYourAnswersLabel"))
+            ),
+            value = Value(
+                content = Text(amendClaim.furtherInformation)
+            ),
+            actions = if(!withActions) None else Some(Actions(
+                items = Seq(
+                    actionItem(
+                        href = routes.CheckYourAnswersController.onChange(AmendPageNames.furtherInformation).url,
+                        content = HtmlContent(linkContent(messages("site.change"))),
+                        visuallyHiddenText = Some(messages("amend.check_answers.information.further_information.accessible"))
+                    )
+                )
+            ))
+        ))} else None
+    )
+)
+
+
+

@@ -22,6 +22,7 @@ import play.api.libs.json._
 import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.CryptoFactory
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.{AmendAnswers, AmendClaimReceipt}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amendNdrcClaim.AmendNdrcAnswers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{CreateAnswers, CreateClaimReceipt}
 
 final case class CacheData(
@@ -32,12 +33,14 @@ final case class CacheData(
 ) {
   val createAnswers: CreateAnswers = data.createAnswers.getOrElse(CreateAnswers())
   val amendAnswers: AmendAnswers   = data.amendAnswers.getOrElse(AmendAnswers())
+  val amendNdrcAnswers: AmendNdrcAnswers   = data.amendNdrcAnswers.getOrElse(AmendNdrcAnswers())
 
   val maybeCreateClaimReceipt: Option[CreateClaimReceipt] = data.createClaimReceipt
   val maybeAmendClaimReceipt: Option[AmendClaimReceipt]   = data.amendClaimReceipt
 
   def update(answers: CreateAnswers): CacheData = this.copy(data = data.copy(createAnswers = Some(answers)))
   def update(answers: AmendAnswers): CacheData  = this.copy(data = data.copy(amendAnswers = Some(answers)))
+  def update(answers: AmendNdrcAnswers): CacheData  = this.copy(data = data.copy(amendNdrcAnswers = Some(answers)))
 
   def store(receipt: CreateClaimReceipt): CacheData =
     this.copy(data = data.copy(createClaimReceipt = Some(receipt), createAnswers = None))
@@ -69,6 +72,7 @@ object CacheData {
 case class ProtectedData(
   createAnswers: Option[CreateAnswers] = None,
   amendAnswers: Option[AmendAnswers] = None,
+  amendNdrcAnswers: Option[AmendNdrcAnswers] = None,
   createClaimReceipt: Option[CreateClaimReceipt] = None,
   amendClaimReceipt: Option[AmendClaimReceipt] = None
 )

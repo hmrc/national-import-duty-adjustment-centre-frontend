@@ -18,6 +18,7 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services
 
 import javax.inject.Inject
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.{AmendAnswers, AmendClaimReceipt}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amendNdrcClaim.AmendNdrcAnswers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{CreateAnswers, CreateClaimReceipt}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.requests.IdentifierRequest
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{CacheData, JourneyId}
@@ -41,11 +42,18 @@ class CacheDataService @Inject() (repository: CacheDataRepository)(implicit ec: 
   def getAmendAnswersWithJourneyId(implicit request: IdentifierRequest[_]): Future[(AmendAnswers, JourneyId)] =
     getCacheData map (cache => (cache.amendAnswers, cache.journeyId))
 
+  def getAmendNdrcAnswersWithJourneyId(implicit request: IdentifierRequest[_]): Future[(AmendNdrcAnswers, JourneyId)] =
+    getCacheData map (cache => (cache.amendNdrcAnswers, cache.journeyId))
+
   def getCreateAnswers(implicit request: IdentifierRequest[_]): Future[CreateAnswers] =
     getCacheData map (_.createAnswers)
 
   def getAmendAnswers(implicit request: IdentifierRequest[_]): Future[AmendAnswers] =
     getCacheData map (_.amendAnswers)
+
+
+  def getAmendNdrcAnswers(implicit request: IdentifierRequest[_]): Future[AmendNdrcAnswers] =
+    getCacheData map (_.amendNdrcAnswers)
 
   def updateCreateAnswers(
     update: CreateAnswers => CreateAnswers
@@ -62,6 +70,16 @@ class CacheDataService @Inject() (repository: CacheDataRepository)(implicit ec: 
   )(implicit request: IdentifierRequest[_]): Future[AmendAnswers] =
     getCacheData flatMap { cacheData =>
       val updatedAnswers: AmendAnswers = update(cacheData.amendAnswers)
+      repository.update(cacheData.update(updatedAnswers)) map { _ =>
+        updatedAnswers
+      }
+    }
+
+  def updateAmendNdrcAnswers(
+                          update: AmendNdrcAnswers => AmendNdrcAnswers
+                        )(implicit request: IdentifierRequest[_]): Future[AmendNdrcAnswers] =
+    getCacheData flatMap { cacheData =>
+      val updatedAnswers: AmendNdrcAnswers = update(cacheData.amendNdrcAnswers)
       repository.update(cacheData.update(updatedAnswers)) map { _ =>
         updatedAnswers
       }

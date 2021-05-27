@@ -18,8 +18,12 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.mappings
 
 import play.api.data.validation.{Constraint, Invalid, Valid}
 import Implicits.SanitizedString
-
 import java.time.LocalDate
+
+import play.api.data.{FieldMapping, FormError}
+import play.api.data.Forms.of
+import play.api.data.format.Formatter
+
 import scala.util.{Success, Try}
 
 trait Constraints {
@@ -111,4 +115,28 @@ trait Constraints {
         }
     }
 
+  protected def startsWith(errorKey: String): Constraint[String] =
+    Constraint {
+      case str if str.trim.toUpperCase.startsWith("NDRC")  =>
+        Valid
+      case _ =>
+        Invalid(errorKey)
+    }
+
+  protected def textNoSpaces(errorKey: String = "error.required"): FieldMapping[String] =
+    of(stringFormatterNoSpaces(errorKey))
+
+  private[mappings] def stringFormatterNoSpaces(errorKey: String): Formatter[String] = new Formatter[String] {
+
+    override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], String] =
+      data.get(key) match {
+        case None | Some("") => Left(Seq(FormError(key, errorKey)))
+        case Some(s) => Right(trimWhitespace(s))
+      }
+
+    override def unbind(key: String, value: String): Map[String, String] =
+      Map(key -> trimWhitespace(value))
+  }
+
+  def trimWhitespace(string: String): String = string.split("\\s+").mkString
 }

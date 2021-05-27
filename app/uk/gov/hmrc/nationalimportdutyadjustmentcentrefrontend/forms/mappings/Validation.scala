@@ -33,4 +33,7 @@ object Validation {
   val dutyPattern = "^-?[0-9]{1,7}$|^-?[0-9]{1,7}[.][0-9]{1,2}$"
 
   val caseReference = "^[0-9a-zA-Z]{2,22}$"
+
+
+  val referenceNumberPattern        = """^[a-zA-Z0-9]*$"""
 }

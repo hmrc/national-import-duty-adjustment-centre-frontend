@@ -5,6 +5,7 @@
 
 ->          /amend                              amendClaim.Routes
 ->          /create                             createClaim.Routes
+->          /ndrc-amend                         amendNdrcClaim.Routes
 
 GET         /                                   uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.StartController.start
 GET         /what-do-you-want-to-do             uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.WhatDoYouWantToDoController.onPageLoad()

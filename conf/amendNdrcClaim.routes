@@ -1,0 +1,22 @@
+
+# amend claim
+GET         /                             uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendNdrc.AmendClaimController.start()
+
+GET         /referenceNumber              uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendNdrc.CaseReferenceController.onPageLoad()
+POST        /referenceNumber              uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendNdrc.CaseReferenceController.onSubmit()
+
+GET         /amendCaseResponseType        uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendNdrc.AmendCaseResponseTypeController.onPageLoad()
+POST        /amendCaseResponseType        uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendNdrc.AmendCaseResponseTypeController.onSubmit()
+
+GET         /furtherInformation           uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendNdrc.FurtherInformationController.onPageLoad()
+POST        /furtherInformation           uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendNdrc.FurtherInformationController.onSubmit()
+
+GET         /file-upload                 uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendNdrc.UploadFormController.onPageLoad()
+GET         /file-upload/progress        uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendNdrc.UploadFormController.onProgress(uploadId: UploadId)
+GET         /file-upload/continue        uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendNdrc.UploadFormController.onContinue()
+GET         /file-upload/error           uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendNdrc.UploadFormController.onError(errorCode: String)
+GET         /file-upload/remove          uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendNdrc.UploadFormController.onRemove(documentReference: String)
+
+GET         /check-answers                               uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendNdrc.CheckYourAnswersController.onPageLoad()
+POST        /check-answers                               uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendNdrc.CheckYourAnswersController.onSubmit()
+GET         /check-answers/change/:page                  uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendNdrc.CheckYourAnswersController.onChange(page)

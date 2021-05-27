@@ -23,8 +23,9 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.action
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.WhatDoYouWantToDoFormProvider
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.ToDoType
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.AmendAnswers
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amendNdrcClaim.AmendNdrcAnswers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.CreateAnswers
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.{AmendNavigator, CreateNavigator}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.{AmendNdrcNavigator, CreateNavigator}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.FirstPage
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.WhatDoYouWantToDoPage
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -35,7 +36,7 @@ class WhatDoYouWantToDoController @Inject() (
   formProvider: WhatDoYouWantToDoFormProvider,
   val controllerComponents: MessagesControllerComponents,
   createNavigator: CreateNavigator,
-  amendNavigator: AmendNavigator,
+  amendNavigator: AmendNdrcNavigator,
   whatDoYouWantToDoPage: WhatDoYouWantToDoPage
 ) extends FrontendBaseController with I18nSupport {
 
@@ -50,7 +51,7 @@ class WhatDoYouWantToDoController @Inject() (
       formWithErrors => BadRequest(whatDoYouWantToDoPage(formWithErrors)),
       {
         case ToDoType.NewClaim   => Redirect(createNavigator.nextPage(FirstPage, CreateAnswers()))
-        case ToDoType.AmendClaim => Redirect(amendNavigator.nextPage(FirstPage, AmendAnswers()))
+        case ToDoType.AmendClaim => Redirect(amendNavigator.nextPage(FirstPage, AmendNdrcAnswers()))
         case _                   => BadRequest(whatDoYouWantToDoPage(form))
       }
     )

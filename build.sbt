@@ -11,10 +11,14 @@ PlayKeys.devSettings := Seq("play.server.http.port" -> "8490")
 lazy val microservice = Project(appName, file("."))
   .enablePlugins(play.sbt.PlayScala, SbtDistributablesPlugin)
   .settings(
-    majorVersion                     := 0,
-    scalaVersion                     := "2.12.12",
-    libraryDependencies              ++= AppDependencies.compile ++ AppDependencies.test,
-    RoutesKeys.routesImport += "uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models._",
+    majorVersion := 0,
+    scalaVersion := "2.12.12",
+    libraryDependencies ++= AppDependencies.compile ++ AppDependencies.test,
+    RoutesKeys.routesImport
+      ++= Seq(
+        "uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.UploadId",
+        "uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.JourneyId"
+      ),
     TwirlKeys.templateImports ++= Seq(
       "uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig",
       "uk.gov.hmrc.govukfrontend.views.html.components._",
@@ -36,11 +40,11 @@ lazy val microservice = Project(appName, file("."))
   .settings(publishingSettings: _*)
   .configs(IntegrationTest)
   .settings(integrationTestSettings(): _*)
-  .settings(resolvers += "third-party-maven-releases" at "https://artefacts.tax.service.gov.uk/artifactory/third-party-maven-releases/")
-  .settings(scoverageSettings)
   .settings(
-    resourceDirectory in Test := baseDirectory.value / "test" / "resources",
+    resolvers += "third-party-maven-releases" at "https://artefacts.tax.service.gov.uk/artifactory/third-party-maven-releases/"
   )
+  .settings(scoverageSettings)
+  .settings(resourceDirectory in Test := baseDirectory.value / "test" / "resources")
   .disablePlugins(JUnitXmlReportPlugin) //Required to prevent https://github.com/scalatest/scalatest/issues/1427
 
 lazy val scoverageSettings: Seq[Setting[_]] = Seq(
