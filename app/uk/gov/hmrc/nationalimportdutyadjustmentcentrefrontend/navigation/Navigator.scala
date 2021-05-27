@@ -30,7 +30,7 @@ trait Navigator[T <: Answers] {
   protected def checkYourAnswersPage: Call
 
   protected def pageFor: String => Option[Page] = (pageName: String) =>
-    pageOrder.find(p => pageName.equalsIgnoreCase(p.page)).map(_.page)
+    pageOrder.find(p => pageName == name(p.page)).map(_.page)
 
   private lazy val reversePageOrder = pageOrder.reverse
 
