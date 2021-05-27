@@ -21,7 +21,8 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, Un
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.routes
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.CreateAnswers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ReclaimDutyType.{Customs, Other, Vat}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.CreatePageNames
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.Implicit._
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ReturnAmountSummaryView
 
 class ReturnAmountSummaryViewSpec extends UnitViewSpec with TestData {
@@ -76,7 +77,7 @@ class ReturnAmountSummaryViewSpec extends UnitViewSpec with TestData {
         )
 
         customsDutyTotalRow must haveSummaryActionsHref(
-          routes.CheckYourAnswersController.onChange(CreatePageNames.dutyCustoms)
+          routes.CheckYourAnswersController.onChange(CustomsDutyRepaymentPage)
         )
       }
 
@@ -112,7 +113,7 @@ class ReturnAmountSummaryViewSpec extends UnitViewSpec with TestData {
         vatTotalRow must haveSummaryChangeLinkText(
           s"${messages("site.change")} ${messages("returnAmountSummary.change.02.accessible")}"
         )
-        vatTotalRow must haveSummaryActionsHref(routes.CheckYourAnswersController.onChange(CreatePageNames.dutyVAT))
+        vatTotalRow must haveSummaryActionsHref(routes.CheckYourAnswersController.onChange(ImportVatRepaymentPage))
       }
 
     }
@@ -147,7 +148,7 @@ class ReturnAmountSummaryViewSpec extends UnitViewSpec with TestData {
         otherTotalRow must haveSummaryChangeLinkText(
           s"${messages("site.change")} ${messages("returnAmountSummary.change.03.accessible")}"
         )
-        otherTotalRow must haveSummaryActionsHref(routes.CheckYourAnswersController.onChange(CreatePageNames.dutyOther))
+        otherTotalRow must haveSummaryActionsHref(routes.CheckYourAnswersController.onChange(OtherDutyRepaymentPage))
       }
 
     }

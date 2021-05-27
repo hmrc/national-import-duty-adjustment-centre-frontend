@@ -18,9 +18,10 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.amendclaim
 
 import org.jsoup.nodes.Document
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, UnitViewSpec}
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.AmendClaim
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim.routes
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.AmendPageNames
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.AmendClaim
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.Implicit._
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.MessageKey
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.amendclaim.CheckYourAnswersView
 
@@ -58,7 +59,7 @@ class CheckYourAnswersViewSpec extends UnitViewSpec with TestData {
           s"${messages("site.change")} ${messages("amend.check_answers.information.caseReference.accessible")}"
         )
 
-        caseRow must haveSummaryActionsHref(routes.CheckYourAnswersController.onChange(AmendPageNames.claimReference))
+        caseRow must haveSummaryActionsHref(routes.CheckYourAnswersController.onChange(CaseReferencePage))
       }
 
       "contains do you want to attach docs?" in {
@@ -74,9 +75,7 @@ class CheckYourAnswersViewSpec extends UnitViewSpec with TestData {
           s"${messages("site.change")} ${messages("amend.check_answers.information.attach_more_documents.accessible")}"
         )
 
-        attachDocsRow must haveSummaryActionsHref(
-          routes.CheckYourAnswersController.onChange(AmendPageNames.attachMoreDocuments)
-        )
+        attachDocsRow must haveSummaryActionsHref(routes.CheckYourAnswersController.onChange(AttachMoreDocumentsPage))
       }
 
       "contains uploaded documents" in {
@@ -90,7 +89,7 @@ class CheckYourAnswersViewSpec extends UnitViewSpec with TestData {
           s"${messages("site.change")} ${messages("amend.check_answers.information.uploadedDocuments.accessible")}"
         )
 
-        uploadRow must haveSummaryActionsHref(routes.CheckYourAnswersController.onChange(AmendPageNames.uploadSummary))
+        uploadRow must haveSummaryActionsHref(routes.CheckYourAnswersController.onChange(UploadPage))
       }
 
       "contains further information" in {
@@ -104,9 +103,7 @@ class CheckYourAnswersViewSpec extends UnitViewSpec with TestData {
           s"${messages("site.change")} ${messages("amend.check_answers.information.further_information.accessible")}"
         )
 
-        furtherInfoRow must haveSummaryActionsHref(
-          routes.CheckYourAnswersController.onChange(AmendPageNames.furtherInformation)
-        )
+        furtherInfoRow must haveSummaryActionsHref(routes.CheckYourAnswersController.onChange(FurtherInformationPage))
       }
     }
 

@@ -23,3 +23,8 @@ case object RequiredDocumentsPage extends Page
 case object UploadPage            extends Page
 case object CheckYourAnswersPage  extends Page
 case object ConfirmationPage      extends Page
+
+object Implicit {
+  import scala.language.implicitConversions
+  implicit def name(page: Page): String = page.toString.toLowerCase
+}

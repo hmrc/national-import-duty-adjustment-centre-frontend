@@ -27,6 +27,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{
   RepresentationType
 }
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.upscan.UploadedFile
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.Implicit._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.utils.Injector
 
@@ -228,58 +229,55 @@ class CreateNavigatorSpec extends UnitSpec with Injector with TestData {
   "Navigating to page" should {
     "go directly to named page" in {
 
-      navigator.gotoPage(CreatePageNames.representationType) mustBe routes.RepresentationTypeController.onPageLoad
-      navigator.gotoPage(CreatePageNames.claimType) mustBe routes.ClaimTypeController.onPageLoad
-      navigator.gotoPage(CreatePageNames.entryDetails) mustBe routes.EntryDetailsController.onPageLoad
-      navigator.gotoPage(CreatePageNames.itemNumbers) mustBe routes.ItemNumbersController.onPageLoad
-      navigator.gotoPage(CreatePageNames.claimReason) mustBe routes.ClaimReasonController.onPageLoad
-      navigator.gotoPage(CreatePageNames.dutyTypes) mustBe routes.ReclaimDutyTypeController.onPageLoad
-      navigator.gotoPage(CreatePageNames.uploadSummary) mustBe routes.UploadFormController.onPageLoad
-      navigator.gotoPage(CreatePageNames.contactDetails) mustBe routes.ContactDetailsController.onPageLoad
-      navigator.gotoPage(CreatePageNames.contactAddress) mustBe routes.AddressController.onPageLoad
-      navigator.gotoPage(CreatePageNames.importerEori) mustBe routes.ImporterEoriNumberController.onPageLoad
-      navigator.gotoPage(CreatePageNames.importerDetails) mustBe routes.ImporterDetailsController.onPageLoad
-      navigator.gotoPage(CreatePageNames.repayTo) mustBe routes.RepayToController.onPageLoad
-      navigator.gotoPage(CreatePageNames.bankDetails) mustBe routes.BankDetailsController.onPageLoad
+      navigator.gotoPage(RepresentationTypePage) mustBe routes.RepresentationTypeController.onPageLoad
+      navigator.gotoPage(ClaimTypePage) mustBe routes.ClaimTypeController.onPageLoad
+      navigator.gotoPage(EntryDetailsPage) mustBe routes.EntryDetailsController.onPageLoad
+      navigator.gotoPage(ItemNumbersPage) mustBe routes.ItemNumbersController.onPageLoad
+      navigator.gotoPage(ClaimReasonPage) mustBe routes.ClaimReasonController.onPageLoad
+      navigator.gotoPage(ReclaimDutyTypePage) mustBe routes.ReclaimDutyTypeController.onPageLoad
+      navigator.gotoPage(UploadPage) mustBe routes.UploadFormController.onPageLoad
+      navigator.gotoPage(ContactDetailsPage) mustBe routes.ContactDetailsController.onPageLoad
+      navigator.gotoPage(AddressPage) mustBe routes.AddressController.onPageLoad
+      navigator.gotoPage(ImporterEoriNumberPage) mustBe routes.ImporterEoriNumberController.onPageLoad
+      navigator.gotoPage(ImporterContactDetailsPage) mustBe routes.ImporterDetailsController.onPageLoad
+      navigator.gotoPage(RepayToPage) mustBe routes.RepayToController.onPageLoad
+      navigator.gotoPage(BankDetailsPage) mustBe routes.BankDetailsController.onPageLoad
     }
   }
 
   "Navigating to next page when changing answers" should {
 
     "goto change your answers when no further answers required" in {
-      val answers = completeAnswers.copy(changePage = Some(CreatePageNames.claimReason))
+      val answers = completeAnswers.copy(changePage = Some(ClaimReasonPage))
       navigator.nextPage(ClaimReasonPage, answers) mustBe routes.CheckYourAnswersController.onPageLoad
     }
 
     "goto importer EORI page when changing from repay agent to repay importer" in {
-      val answers = completeAnswers.copy(
-        importerEori = None,
-        changePage = Some(CreatePageNames.repayTo),
-        repayTo = Some(RepayTo.Importer)
-      )
+      val answers =
+        completeAnswers.copy(importerEori = None, changePage = Some(RepayToPage), repayTo = Some(RepayTo.Importer))
       navigator.nextPage(RepayToPage, answers) mustBe routes.ImporterEoriNumberController.onPageLoad
     }
 
     "goto repay to page when changing from Importer to Representative" in {
       val answers = importerAnswers.copy(
-        changePage = Some(CreatePageNames.representationType),
+        changePage = Some(RepresentationTypePage),
         representationType = Some(RepresentationType.Representative)
       )
       navigator.nextPage(RepresentationTypePage, answers) mustBe routes.RepayToController.onPageLoad
     }
 
     "goto repayment summary page when changing duty types" in {
-      val answers = completeAnswers.copy(changePage = Some(CreatePageNames.dutyTypes))
+      val answers = completeAnswers.copy(changePage = Some(ReclaimDutyTypePage))
       navigator.nextPage(ReclaimDutyTypePage, answers) mustBe routes.ReturnAmountSummaryController.onPageLoad
     }
 
     "goto repayment summary page when changing VAT duty amounts" in {
-      val answers = completeAnswers.copy(changePage = Some(CreatePageNames.dutyVAT))
+      val answers = completeAnswers.copy(changePage = Some(ImportVatRepaymentPage))
       navigator.nextPage(ImportVatRepaymentPage, answers) mustBe routes.ReturnAmountSummaryController.onPageLoad
     }
 
     "skip repayment summary page when changing earlier question" in {
-      val answers = completeAnswers.copy(changePage = Some(CreatePageNames.claimReason))
+      val answers = completeAnswers.copy(changePage = Some(ClaimReasonPage))
       navigator.nextPage(ClaimReasonPage, answers) mustBe routes.CheckYourAnswersController.onPageLoad
     }
   }
@@ -287,7 +285,7 @@ class CreateNavigatorSpec extends UnitSpec with Injector with TestData {
   "Previous back (back link) when changing answers" should {
 
     "use javascript history function" in {
-      val answers = completeAnswers.copy(changePage = Some(CreatePageNames.claimReason))
+      val answers = completeAnswers.copy(changePage = Some(ClaimReasonPage))
       navigator.previousPage(ClaimReasonPage, answers).maybeCall.map(_.url) mustBe Some("javascript:history.back()")
 
     }

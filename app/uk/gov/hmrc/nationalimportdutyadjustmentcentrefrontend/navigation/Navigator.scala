@@ -20,6 +20,7 @@ import play.api.mvc.Call
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.Answers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.Page
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.NavigatorBack
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.Implicit._
 
 trait Navigator[T <: Answers] {
   protected case class P(page: Page, destination: () => Call, canAccessGiven: T => Boolean, hasAnswer: T => Boolean)
@@ -28,7 +29,8 @@ trait Navigator[T <: Answers] {
 
   protected def checkYourAnswersPage: Call
 
-  protected def pageFor: String => Option[Page]
+  protected def pageFor: String => Option[Page] = (pageName: String) =>
+    pageOrder.find(p => pageName.equalsIgnoreCase(p.page)).map(_.page)
 
   private lazy val reversePageOrder = pageOrder.reverse
 

@@ -16,16 +16,16 @@
 
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim
 @import uk.gov.hmrc.govukfrontend.views.html.components._
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.Layout
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components._
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.MessageKey
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.ActionItemBuilder.actionItem
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.CreatePageNames
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.DateFormatter
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.CreateAnswers
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.RepayTo
 @import play.twirl.api.{HtmlFormat}
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages._
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.Implicit._
+
 
 @this(summaryList: summaryList)
 
@@ -51,7 +51,7 @@
                 actions = if(!withActions) None else Some(Actions(
                     items = Seq(
                         actionItem(
-                            href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.representationType).url,
+                            href = makeclaim.routes.CheckYourAnswersController.onChange(RepresentationTypePage).url,
                             content = HtmlContent(linkContent(changeText(answers.representationType))),
                             visuallyHiddenText = Some(messages("check_answers.information.representation.type.accessible"))
                         )
@@ -77,7 +77,7 @@
             actions = if(!withActions) None else  Some(Actions(
                 items = Seq(
                     actionItem(
-                        href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.claimType).url,
+                        href = makeclaim.routes.CheckYourAnswersController.onChange(ClaimTypePage).url,
                         content = HtmlContent(linkContent(changeText(answers.claimType))),
                         visuallyHiddenText = Some(messages("check_answers.claim.claimType.accessible"))
                     )
@@ -100,7 +100,7 @@
             actions = if(!withActions) None else  Some(Actions(
                 items = Seq(
                     actionItem(
-                        href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.entryDetails).url,
+                        href = makeclaim.routes.CheckYourAnswersController.onChange(EntryDetailsPage).url,
                         content = HtmlContent(linkContent(changeText(answers.entryDetails))),
                         visuallyHiddenText = Some(messages("check_answers.claim.entryDetails.accessible"))
                     )
@@ -119,7 +119,7 @@
             actions = if(!withActions) None else  Some(Actions(
                 items = Seq(
                     actionItem(
-                        href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.itemNumbers).url,
+                        href = makeclaim.routes.CheckYourAnswersController.onChange(ItemNumbersPage).url,
                         content = HtmlContent(linkContent(changeText(answers.itemNumbers))),
                         visuallyHiddenText = Some(messages("check_answers.claim.itemNumbers.accessible"))
                     )
@@ -138,7 +138,7 @@
             actions = if(!withActions) None else  Some(Actions(
                 items = Seq(
                     actionItem(
-                        href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.claimReason).url,
+                        href = makeclaim.routes.CheckYourAnswersController.onChange(ClaimReasonPage).url,
                         content = HtmlContent(linkContent(changeText(answers.claimReason))),
                         visuallyHiddenText = Some(messages("check_answers.claim.reason.accessible"))
                     )
@@ -156,7 +156,7 @@
             actions = if(!withActions) None else  Some(Actions(
                 items = Seq(
                     actionItem(
-                        href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.dutyTypes).url,
+                        href = makeclaim.routes.CheckYourAnswersController.onChange(ReclaimDutyTypePage).url,
                         content = HtmlContent(linkContent(messages(if(answers.reclaimDutyTypes.nonEmpty) "site.change" else "site.resolve"))),
                         visuallyHiddenText = Some(messages("check_answers.repayment.reclaimDutyType.accessible"))
                     )
@@ -174,7 +174,7 @@
             actions = if(!withActions) None else  Some(Actions(
                 items = Seq(
                     actionItem(
-                        href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.dutySummary).url,
+                        href = makeclaim.routes.CheckYourAnswersController.onChange(ReturnAmountSummaryPage).url,
                         content = HtmlContent(linkContent(messages(if(answers.reclaimDutyComplete) "check_answers.repayment.total.change" else "site.resolve"))),
                         visuallyHiddenText = Some(messages("check_answers.repayment.total.accessible"))
                     )
@@ -192,7 +192,7 @@
             actions = if(!withActions) None else  Some(Actions(
                 items = Seq(
                     actionItem(
-                        href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.uploadSummary).url,
+                        href = makeclaim.routes.CheckYourAnswersController.onChange(UploadPage).url,
                         content = HtmlContent(linkContent(messages(if(answers.uploads.nonEmpty) "site.change" else "site.resolve"))),
                         visuallyHiddenText = Some(messages("check_answers.claim.uploaded.accessible"))
                     )
@@ -222,7 +222,7 @@
             actions = if(!withActions) None else  Some(Actions(
                 items = Seq(
                     actionItem(
-                        href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.contactDetails).url,
+                        href = makeclaim.routes.CheckYourAnswersController.onChange(ContactDetailsPage).url,
                         content = HtmlContent(linkContent(changeText(answers.contactDetails))),
                         visuallyHiddenText = Some(messages("check_answers.yourDetails.contactDetails.accessible"))
                     )
@@ -241,7 +241,7 @@
             actions = if(!withActions) None else  Some(Actions(
                 items = Seq(
                     actionItem(
-                        href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.businessName).url,
+                        href = makeclaim.routes.CheckYourAnswersController.onChange(BusinessNamePage).url,
                         content = HtmlContent(linkContent(changeText(answers.businessName))),
                         visuallyHiddenText = Some(messages("check_answers.yourDetails.businessName.accessible"))
                     )
@@ -266,7 +266,7 @@
             actions = if(!withActions) None else  Some(Actions(
                 items = Seq(
                     actionItem(
-                        href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.contactAddress).url,
+                        href = makeclaim.routes.CheckYourAnswersController.onChange(AddressPage).url,
                         content = HtmlContent(linkContent(changeText(answers.claimantAddress))),
                         visuallyHiddenText = Some(messages("check_answers.yourDetails.yourAddress.accessible"))
                     )
@@ -293,7 +293,7 @@
                 actions = if(!withActions) None else  Some(Actions(
                     items = Seq(
                         actionItem(
-                            href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.repayTo).url,
+                            href = makeclaim.routes.CheckYourAnswersController.onChange(RepayToPage).url,
                             content = HtmlContent(linkContent(changeText(answers.repayTo))),
                             visuallyHiddenText = Some(messages("check_answers.payment.payTo.accessible"))
                         )
@@ -313,7 +313,7 @@
                 actions = if(!withActions) None else  Some(Actions(
                     items = Seq(
                         actionItem(
-                            href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.bankDetails).url,
+                            href = makeclaim.routes.CheckYourAnswersController.onChange(BankDetailsPage).url,
                             content = HtmlContent(linkContent(changeText(answers.bankDetails))),
                             visuallyHiddenText = Some(messages("check_answers.payment.bankDetails.accessible"))
                         )
@@ -366,7 +366,7 @@
                     actions = if(!withActions) None else  Some(Actions(
                         items = Seq(
                             actionItem(
-                                href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.importerEori).url,
+                                href = makeclaim.routes.CheckYourAnswersController.onChange(ImporterEoriNumberPage).url,
                                 content = HtmlContent(linkContent(changeText(answers.importerEori))),
                                 visuallyHiddenText = Some(messages("check_answers.importer.eori.accessible"))
                             )
@@ -386,7 +386,7 @@
                     actions = if(!withActions) None else  Some(Actions(
                         items = Seq(
                             actionItem(
-                                href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.importerBusinessName).url,
+                                href = makeclaim.routes.CheckYourAnswersController.onChange(ImporterBusinessNamePage).url,
                                 content = HtmlContent(linkContent(changeText(answers.importerBusinessName))),
                                 visuallyHiddenText = Some(messages("check_answers.importer.businessName.accessible"))
                             )
@@ -412,7 +412,7 @@
                     actions = if(!withActions) None else  Some(Actions(
                         items = Seq(
                             actionItem(
-                                href = makeclaim.routes.CheckYourAnswersController.onChange(CreatePageNames.importerDetails).url,
+                                href = makeclaim.routes.CheckYourAnswersController.onChange(ImporterContactDetailsPage).url,
                                 content = HtmlContent(linkContent(changeText(answers.importerContactDetails))),
                                 visuallyHiddenText = Some(messages("check_answers.importer.contactDetails.accessible"))
                             )

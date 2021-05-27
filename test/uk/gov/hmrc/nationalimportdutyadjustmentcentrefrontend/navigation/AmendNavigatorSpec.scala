@@ -20,6 +20,7 @@ import play.api.mvc.Call
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, UnitSpec}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim.routes
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.AmendAnswers
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.Implicit._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.utils.Injector
 
@@ -106,25 +107,22 @@ class AmendNavigatorSpec extends UnitSpec with Injector with TestData {
   "Goto Page" should {
     "go directly to named page" in {
 
-      amendNavigator.gotoPage(AmendPageNames.claimReference) mustBe routes.CaseReferenceController.onPageLoad
-      amendNavigator.gotoPage(AmendPageNames.attachMoreDocuments) mustBe routes.AttachMoreDocumentsController.onPageLoad
-      amendNavigator.gotoPage(AmendPageNames.uploadSummary) mustBe routes.UploadFormController.onPageLoad
-      amendNavigator.gotoPage(AmendPageNames.furtherInformation) mustBe routes.FurtherInformationController.onPageLoad
+      amendNavigator.gotoPage(CaseReferencePage) mustBe routes.CaseReferenceController.onPageLoad
+      amendNavigator.gotoPage(AttachMoreDocumentsPage) mustBe routes.AttachMoreDocumentsController.onPageLoad
+      amendNavigator.gotoPage(UploadPage) mustBe routes.UploadFormController.onPageLoad
+      amendNavigator.gotoPage(FurtherInformationPage) mustBe routes.FurtherInformationController.onPageLoad
     }
   }
 
   "Next page when changing answers" should {
     "goto change your answers when no further answers required" in {
-      val answers = completeAmendAnswers.copy(changePage = Some(AmendPageNames.claimReference))
+      val answers = completeAmendAnswers.copy(changePage = Some(CaseReferencePage))
       amendNavigator.nextPage(CaseReferencePage, answers) mustBe routes.CheckYourAnswersController.onPageLoad()
     }
 
     "goto next question with missing answer" in {
-      val answers = completeAmendAnswers.copy(
-        changePage = Some(AmendPageNames.claimReference),
-        uploads = Seq.empty,
-        uploadAnotherFile = None
-      )
+      val answers =
+        completeAmendAnswers.copy(changePage = Some(CaseReferencePage), uploads = Seq.empty, uploadAnotherFile = None)
       amendNavigator.nextPage(AttachMoreDocumentsPage, answers) mustBe routes.UploadFormController.onPageLoad()
     }
   }

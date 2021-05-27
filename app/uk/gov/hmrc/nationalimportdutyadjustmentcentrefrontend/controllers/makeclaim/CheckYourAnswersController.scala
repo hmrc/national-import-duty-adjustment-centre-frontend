@@ -23,7 +23,8 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.Naviga
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.IdentifierAction
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{Claim, CreateAnswers, CreateClaimReceipt}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.requests.IdentifierRequest
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.{CreateNavigator, CreatePageNames}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.CreateNavigator
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.Implicit._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{CheckYourAnswersPage, Page}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.{CacheDataService, ClaimService}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.{
@@ -91,7 +92,7 @@ class CheckYourAnswersController @Inject() (
   }
 
   private def handleMissingAnswers(answers: CreateAnswers)(implicit request: IdentifierRequest[_]) =
-    data.updateCreateAnswers(answers => answers.copy(changePage = Some(CreatePageNames.checkYourAnswers))) map {
+    data.updateCreateAnswers(answers => answers.copy(changePage = Some(CheckYourAnswersPage))) map {
       updatedAnswers =>
         BadRequest(errorView(answers, backLink(updatedAnswers)))
     }

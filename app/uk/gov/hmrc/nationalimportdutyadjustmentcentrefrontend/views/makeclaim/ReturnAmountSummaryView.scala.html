@@ -16,13 +16,14 @@
 
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.CreateAnswers
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.CreatePageNames
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.ActionItemBuilder.actionItem
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.InformationTitle
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html._
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ReclaimDutyType
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components._
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.NavigatorBack
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages._
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.Implicit._
 
 @this(
         layout: Layout,
@@ -105,15 +106,15 @@
     }
 
     @if(createAnswers.reclaimDutyTypes.contains(ReclaimDutyType.Customs)) {
-        @dutySummary(ReclaimDutyType.Customs.toString, CreatePageNames.dutyCustoms)
+        @dutySummary(ReclaimDutyType.Customs.toString, CustomsDutyRepaymentPage)
     }
 
     @if(createAnswers.reclaimDutyTypes.contains(ReclaimDutyType.Vat)) {
-        @dutySummary(ReclaimDutyType.Vat.toString, CreatePageNames.dutyVAT)
+        @dutySummary(ReclaimDutyType.Vat.toString, ImportVatRepaymentPage)
     }
 
     @if(createAnswers.reclaimDutyTypes.contains(ReclaimDutyType.Other)) {
-        @dutySummary(ReclaimDutyType.Other.toString, CreatePageNames.dutyOther)
+        @dutySummary(ReclaimDutyType.Other.toString, OtherDutyRepaymentPage)
     }
 
     @if(createAnswers.reclaimDutyTypes.size > 1) {
