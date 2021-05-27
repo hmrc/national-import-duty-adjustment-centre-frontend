@@ -20,7 +20,7 @@ import org.scalacheck.Gen
 import play.api.data.FormError
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.behaviours.StringFieldBehaviours
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.mappings.Validation
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{Address, ImporterContactDetails}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ImporterContactDetails
 
 class ImporterDetailsFormProviderSpec extends StringFieldBehaviours {
 

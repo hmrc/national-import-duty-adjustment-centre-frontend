@@ -25,7 +25,8 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{
   RepayTo,
   RepresentationType
 }
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.CreatePageNames
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.Implicit._
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.{DateFormatter, MessageKey}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.CheckYourAnswersView
 
@@ -68,7 +69,7 @@ class CheckYourAnswersViewSpec extends UnitViewSpec with TestData {
         )
 
         representativeTypeRow must haveSummaryActionsHref(
-          routes.CheckYourAnswersController.onChange(CreatePageNames.representationType)
+          routes.CheckYourAnswersController.onChange(RepresentationTypePage)
         )
       }
 
@@ -89,7 +90,7 @@ class CheckYourAnswersViewSpec extends UnitViewSpec with TestData {
           s"${messages("site.change")} ${messages("check_answers.claim.claimType.accessible")}"
         )
 
-        claimTypeRow must haveSummaryActionsHref(routes.CheckYourAnswersController.onChange(CreatePageNames.claimType))
+        claimTypeRow must haveSummaryActionsHref(routes.CheckYourAnswersController.onChange(ClaimTypePage))
       }
 
       "contains valid entry details" in {
@@ -105,9 +106,7 @@ class CheckYourAnswersViewSpec extends UnitViewSpec with TestData {
           s"${messages("site.change")} ${messages("check_answers.claim.entryDetails.accessible")}"
         )
 
-        entryDetailsRow must haveSummaryActionsHref(
-          routes.CheckYourAnswersController.onChange(CreatePageNames.entryDetails)
-        )
+        entryDetailsRow must haveSummaryActionsHref(routes.CheckYourAnswersController.onChange(EntryDetailsPage))
       }
 
       "contains valid item number" in {
@@ -121,9 +120,7 @@ class CheckYourAnswersViewSpec extends UnitViewSpec with TestData {
           s"${messages("site.change")} ${messages("check_answers.claim.itemNumbers.accessible")}"
         )
 
-        itemNumberRow must haveSummaryActionsHref(
-          routes.CheckYourAnswersController.onChange(CreatePageNames.itemNumbers)
-        )
+        itemNumberRow must haveSummaryActionsHref(routes.CheckYourAnswersController.onChange(ItemNumbersPage))
       }
 
       "contains valid claim reason" in {
@@ -137,9 +134,7 @@ class CheckYourAnswersViewSpec extends UnitViewSpec with TestData {
           s"${messages("site.change")} ${messages("check_answers.claim.reason.accessible")}"
         )
 
-        claimReasonRow must haveSummaryActionsHref(
-          routes.CheckYourAnswersController.onChange(CreatePageNames.claimReason)
-        )
+        claimReasonRow must haveSummaryActionsHref(routes.CheckYourAnswersController.onChange(ClaimReasonPage))
       }
 
       "contains valid reclaim duty type" in {
@@ -157,9 +152,7 @@ class CheckYourAnswersViewSpec extends UnitViewSpec with TestData {
           s"${messages("site.change")} ${messages("check_answers.repayment.reclaimDutyType.accessible")}"
         )
 
-        reclaimDutyTypeRow must haveSummaryActionsHref(
-          routes.CheckYourAnswersController.onChange(CreatePageNames.dutyTypes)
-        )
+        reclaimDutyTypeRow must haveSummaryActionsHref(routes.CheckYourAnswersController.onChange(ReclaimDutyTypePage))
       }
 
       "contains valid reclaim duty total" in {
@@ -174,7 +167,7 @@ class CheckYourAnswersViewSpec extends UnitViewSpec with TestData {
         )
 
         reclaimDutyTotalRow must haveSummaryActionsHref(
-          routes.CheckYourAnswersController.onChange(CreatePageNames.dutySummary)
+          routes.CheckYourAnswersController.onChange(ReturnAmountSummaryPage)
         )
       }
 
@@ -189,7 +182,7 @@ class CheckYourAnswersViewSpec extends UnitViewSpec with TestData {
           s"${messages("site.change")} ${messages("check_answers.claim.uploaded.accessible")}"
         )
 
-        uploadRow must haveSummaryActionsHref(routes.CheckYourAnswersController.onChange(CreatePageNames.uploadSummary))
+        uploadRow must haveSummaryActionsHref(routes.CheckYourAnswersController.onChange(UploadPage))
       }
     }
 
@@ -210,9 +203,7 @@ class CheckYourAnswersViewSpec extends UnitViewSpec with TestData {
           s"${messages("site.change")} ${messages("check_answers.yourDetails.contactDetails.accessible")}"
         )
 
-        contactDetailsRow must haveSummaryActionsHref(
-          routes.CheckYourAnswersController.onChange(CreatePageNames.contactDetails)
-        )
+        contactDetailsRow must haveSummaryActionsHref(routes.CheckYourAnswersController.onChange(ContactDetailsPage))
       }
 
       "contains business name" in {
@@ -226,9 +217,7 @@ class CheckYourAnswersViewSpec extends UnitViewSpec with TestData {
           s"${messages("site.change")} ${messages("check_answers.yourDetails.businessName.accessible")}"
         )
 
-        businessNameRow must haveSummaryActionsHref(
-          routes.CheckYourAnswersController.onChange(CreatePageNames.businessName)
-        )
+        businessNameRow must haveSummaryActionsHref(routes.CheckYourAnswersController.onChange(BusinessNamePage))
       }
 
       "contains valid address details" in {
@@ -244,9 +233,7 @@ class CheckYourAnswersViewSpec extends UnitViewSpec with TestData {
           s"${messages("site.change")} ${messages("check_answers.yourDetails.yourAddress.accessible")}"
         )
 
-        addressDetailsRow must haveSummaryActionsHref(
-          routes.CheckYourAnswersController.onChange(CreatePageNames.contactAddress)
-        )
+        addressDetailsRow must haveSummaryActionsHref(routes.CheckYourAnswersController.onChange(AddressPage))
       }
 
     }
@@ -268,7 +255,7 @@ class CheckYourAnswersViewSpec extends UnitViewSpec with TestData {
         eoriRow must haveSummaryChangeLinkText(
           s"${messages("site.change")} ${messages("check_answers.importer.eori.accessible")}"
         )
-        eoriRow must haveSummaryActionsHref(routes.CheckYourAnswersController.onChange(CreatePageNames.importerEori))
+        eoriRow must haveSummaryActionsHref(routes.CheckYourAnswersController.onChange(ImporterEoriNumberPage))
       }
 
       "does not contains Eori number when repayment is to representative" in {
@@ -291,7 +278,7 @@ class CheckYourAnswersViewSpec extends UnitViewSpec with TestData {
         )
 
         importerBusinessNameRow must haveSummaryActionsHref(
-          routes.CheckYourAnswersController.onChange(CreatePageNames.importerBusinessName)
+          routes.CheckYourAnswersController.onChange(ImporterBusinessNamePage)
         )
       }
 
@@ -312,7 +299,7 @@ class CheckYourAnswersViewSpec extends UnitViewSpec with TestData {
           s"${messages("site.change")} ${messages("check_answers.importer.contactDetails.accessible")}"
         )
         importerDetailsRow must haveSummaryActionsHref(
-          routes.CheckYourAnswersController.onChange(CreatePageNames.importerDetails)
+          routes.CheckYourAnswersController.onChange(ImporterContactDetailsPage)
         )
       }
     }
@@ -332,7 +319,7 @@ class CheckYourAnswersViewSpec extends UnitViewSpec with TestData {
           s"${messages("site.change")} ${messages("check_answers.payment.payTo.accessible")}"
         )
 
-        payToRow must haveSummaryActionsHref(routes.CheckYourAnswersController.onChange(CreatePageNames.repayTo))
+        payToRow must haveSummaryActionsHref(routes.CheckYourAnswersController.onChange(RepayToPage))
       }
 
       "contains account name" in {
@@ -344,9 +331,7 @@ class CheckYourAnswersViewSpec extends UnitViewSpec with TestData {
           s"${messages("site.change")} ${messages("check_answers.payment.bankDetails.accessible")}"
         )
 
-        accountNameRow must haveSummaryActionsHref(
-          routes.CheckYourAnswersController.onChange(CreatePageNames.bankDetails)
-        )
+        accountNameRow must haveSummaryActionsHref(routes.CheckYourAnswersController.onChange(BankDetailsPage))
 
       }
 

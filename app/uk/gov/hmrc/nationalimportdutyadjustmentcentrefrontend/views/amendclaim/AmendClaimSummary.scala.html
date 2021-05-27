@@ -16,11 +16,12 @@
 
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.amendclaim.routes
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.AmendClaim
-@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.AmendPageNames
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.DateTimeFormats
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.components.ActionItemBuilder.actionItem
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.components._
 @import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.viewmodels.MessageKey
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages._
+@import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.Implicit._
 
 @import java.time.Instant
 
@@ -45,7 +46,7 @@
             actions = if(!withActions) None else Some(Actions(
                 items = Seq(
                     actionItem(
-                        href = routes.CheckYourAnswersController.onChange(AmendPageNames.claimReference).url,
+                        href = routes.CheckYourAnswersController.onChange(CaseReferencePage).url,
                         content = HtmlContent(linkContent(messages("site.change"))),
                         visuallyHiddenText = Some(messages("amend.check_answers.information.caseReference.accessible"))
                     )
@@ -75,7 +76,7 @@
             actions = if(!withActions) None else Some(Actions(
                 items = Seq(
                     actionItem(
-                        href = routes.CheckYourAnswersController.onChange(AmendPageNames.attachMoreDocuments).url,
+                        href = routes.CheckYourAnswersController.onChange(AttachMoreDocumentsPage).url,
                         content = HtmlContent(linkContent(messages("site.change"))),
                         visuallyHiddenText = Some(messages("amend.check_answers.information.attach_more_documents.accessible"))
                     )
@@ -95,7 +96,7 @@
             actions = if(!withActions) None else Some(Actions(
                 items = Seq(
                     actionItem(
-                        href = routes.CheckYourAnswersController.onChange(AmendPageNames.uploadSummary).url,
+                        href = routes.CheckYourAnswersController.onChange(UploadPage).url,
                         content = HtmlContent(linkContent(messages("site.change"))),
                         visuallyHiddenText = Some(messages("amend.check_answers.information.uploadedDocuments.accessible"))
                     )
@@ -113,7 +114,7 @@
             actions = if(!withActions) None else Some(Actions(
                 items = Seq(
                     actionItem(
-                        href = routes.CheckYourAnswersController.onChange(AmendPageNames.furtherInformation).url,
+                        href = routes.CheckYourAnswersController.onChange(FurtherInformationPage).url,
                         content = HtmlContent(linkContent(messages("site.change"))),
                         visuallyHiddenText = Some(messages("amend.check_answers.information.further_information.accessible"))
                     )

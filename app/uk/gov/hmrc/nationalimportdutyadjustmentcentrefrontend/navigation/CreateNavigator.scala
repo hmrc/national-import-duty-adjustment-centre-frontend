@@ -22,6 +22,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makecl
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.Answers
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ReclaimDutyType.{Customs, Other, Vat}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{CreateAnswers, ReclaimDutyType, RepayTo}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.Implicit._
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages._
 
 @Singleton
@@ -96,55 +97,6 @@ class CreateNavigator @Inject() ()
 
   override protected def checkYourAnswersPage: Call = makeclaim.routes.CheckYourAnswersController.onPageLoad
 
-  override protected def pageFor: String => Option[Page] = (pageName: String) => {
-    pageName match {
-      case CreatePageNames.representationType   => Some(RepresentationTypePage)
-      case CreatePageNames.claimType            => Some(ClaimTypePage)
-      case CreatePageNames.entryDetails         => Some(EntryDetailsPage)
-      case CreatePageNames.itemNumbers          => Some(ItemNumbersPage)
-      case CreatePageNames.claimReason          => Some(ClaimReasonPage)
-      case CreatePageNames.dutyTypes            => Some(ReclaimDutyTypePage)
-      case CreatePageNames.dutyCustoms          => Some(CustomsDutyRepaymentPage)
-      case CreatePageNames.dutyVAT              => Some(ImportVatRepaymentPage)
-      case CreatePageNames.dutyOther            => Some(OtherDutyRepaymentPage)
-      case CreatePageNames.dutySummary          => Some(ReturnAmountSummaryPage)
-      case CreatePageNames.uploadSummary        => Some(UploadPage)
-      case CreatePageNames.contactDetails       => Some(ContactDetailsPage)
-      case CreatePageNames.businessName         => Some(BusinessNamePage)
-      case CreatePageNames.contactAddress       => Some(AddressPage)
-      case CreatePageNames.importerEori         => Some(ImporterEoriNumberPage)
-      case CreatePageNames.importerBusinessName => Some(ImporterBusinessNamePage)
-      case CreatePageNames.importerDetails      => Some(ImporterContactDetailsPage)
-      case CreatePageNames.repayTo              => Some(RepayToPage)
-      case CreatePageNames.bankDetails          => Some(BankDetailsPage)
-      case CreatePageNames.checkYourAnswers     => Some(CheckYourAnswersPage)
-      case _                                    => None
-    }
-  }
-
-}
-
-object CreatePageNames {
-  val representationType   = "representation-type"
-  val claimType            = "claim-type"
-  val entryDetails         = "entry-details"
-  val itemNumbers          = "item-numbers"
-  val claimReason          = "claim-reason"
-  val dutyTypes            = "duty-types"
-  val dutyCustoms          = "duty-customs"
-  val dutyVAT              = "duty-vat"
-  val dutyOther            = "duty-other"
-  val dutySummary          = "duty-summary"
-  val uploadSummary        = "uploaded-files"
-  val contactDetails       = "contact-details"
-  val businessName         = "enter-business-name"
-  val contactAddress       = "contact-address"
-  val importerEori         = "importer-eori"
-  val importerBusinessName = "enter-importers-name"
-  val importerDetails      = "importer-details"
-  val repayTo              = "repay-to"
-  val bankDetails          = "bank-details"
-  val checkYourAnswers     = "check-answers"
 }
 
 protected trait CreateAnswerConditions {
@@ -200,11 +152,11 @@ protected trait CreateHasAnsweredConditions {
   protected val bankDetailsAnswered: CreateAnswers => Boolean = _.bankDetails.nonEmpty
 
   private val dutyPages: Set[String] = Set(
-    CreatePageNames.dutyTypes,
-    CreatePageNames.dutyCustoms,
-    CreatePageNames.dutyVAT,
-    CreatePageNames.dutyOther,
-    CreatePageNames.dutySummary
+    ReclaimDutyTypePage,
+    CustomsDutyRepaymentPage,
+    ImportVatRepaymentPage,
+    OtherDutyRepaymentPage,
+    ReturnAmountSummaryPage
   )
 
   protected val returnSummaryAnswered: CreateAnswers => Boolean = (answers: CreateAnswers) =>

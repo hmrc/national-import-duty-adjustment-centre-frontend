@@ -39,15 +39,6 @@ class AmendNavigator @Inject() ()
 
   override protected def checkYourAnswersPage: Call = routes.CheckYourAnswersController.onPageLoad
 
-  override protected def pageFor: String => Option[Page] = (pageName: String) =>
-    pageName match {
-      case AmendPageNames.claimReference      => Some(CaseReferencePage)
-      case AmendPageNames.attachMoreDocuments => Some(AttachMoreDocumentsPage)
-      case AmendPageNames.uploadSummary       => Some(UploadPage)
-      case AmendPageNames.furtherInformation  => Some(FurtherInformationPage)
-      case _                                  => None
-    }
-
 }
 
 protected trait AmendAnswerConditions {
@@ -73,11 +64,4 @@ protected trait AmendHasAnsweredConditions {
   protected val uploadSummaryPageAnswered: AmendAnswers => Boolean = (answers: AmendAnswers) =>
     answers.hasMoreDocuments.contains(true) && answers.uploads.nonEmpty && answers.uploadAnotherFile.contains(false)
 
-}
-
-object AmendPageNames {
-  val claimReference      = "claim-reference"
-  val attachMoreDocuments = "attach-more-documents"
-  val uploadSummary       = "your-uploads"
-  val furtherInformation  = "additional-information"
 }
