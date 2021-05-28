@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name     NIDAC Authorisation
 // @namespace  http://tampermonkey.net/
-// @version   0.5
+// @version   0.6
 // @description Authenticates for NIDAC
 // @author    NIDAC Team
 // @match     http*://*/auth-login-stub/gg-sign-in?continue=*apply-for-return-import-duty-paid-on-deposit-or-guarantee*
@@ -20,14 +20,15 @@
     
     document.getElementsByName("redirectionUrl")[0].value = getBaseUrl() + "/apply-for-return-import-duty-paid-on-deposit-or-guarantee";
 
-    document.getElementById('global-header').appendChild(createQuickButton())
+    document.querySelector('header').appendChild(createQuickButton())
 })();
 
 function createQuickButton() {
     let button = document.createElement('button');
     button.id = "quickSubmit";
+    button.classList.add('govuk-button', 'govuk-!-display-none-print');
     button.innerHTML = 'Quick Submit';
-    button.onclick = () => document.getElementsByClassName('button')[0].click();
+    button.onclick = () => document.getElementById('submit').click();
     return button;
 }
 
