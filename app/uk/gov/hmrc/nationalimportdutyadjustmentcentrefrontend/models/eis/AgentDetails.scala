@@ -34,6 +34,7 @@ object AgentDetails {
           Address = AgentAddress(
             AddressLine1 = claim.claimantAddress.addressLine1,
             AddressLine2 = claim.claimantAddress.addressLine2,
+            AddressLine3 = claim.claimantAddress.addressLine3,
             City = claim.claimantAddress.city,
             PostalCode = claim.claimantAddress.postCode,
             CountryCode = "GB",

@@ -104,6 +104,7 @@ class EISCreateCaseRequestSpec extends UnitSpec with TestData {
       ImporterAddress(
         "Importer Address Line 1",
         Some("Importer Address Line 2"),
+        Some("Importer Address Line 3"),
         "Importer City",
         "IM12CD",
         "GB",
@@ -118,6 +119,7 @@ class EISCreateCaseRequestSpec extends UnitSpec with TestData {
         AgentAddress(
           "Address Line 1",
           Some("Address Line 2"),
+          Some("Address Line 3"),
           "City",
           "PO12CD",
           "GB",
@@ -175,6 +177,7 @@ class EISCreateCaseRequestSpec extends UnitSpec with TestData {
       ImporterAddress(
         "Address Line 1",
         Some("Address Line 2"),
+        Some("Address Line 3"),
         "City",
         "PO12CD",
         "GB",

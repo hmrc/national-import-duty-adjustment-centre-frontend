@@ -57,6 +57,7 @@ object ImporterDetails {
       Address = ImporterAddress(
         AddressLine1 = address.addressLine1,
         AddressLine2 = address.addressLine2,
+        AddressLine3 = address.addressLine3,
         City = address.city,
         PostalCode = address.postCode,
         CountryCode = "GB",
@@ -72,6 +73,7 @@ object ImporterDetails {
       Address = ImporterAddress(
         AddressLine1 = importer.contactDetails.addressLine1,
         AddressLine2 = importer.contactDetails.addressLine2,
+        AddressLine3 = importer.contactDetails.addressLine3,
         City = importer.contactDetails.city,
         PostalCode = importer.contactDetails.postCode,
         CountryCode = "GB",
