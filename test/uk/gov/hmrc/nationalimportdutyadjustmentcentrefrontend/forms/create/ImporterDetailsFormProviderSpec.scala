@@ -31,7 +31,7 @@ class ImporterDetailsFormProviderSpec extends StringFieldBehaviours {
     val fieldName   = "addressLine1"
     val requiredKey = "address.line1.error.required"
     val lengthKey   = "address.line1.error.length"
-    val maxLength   = 100
+    val maxLength   = 256
 
     behave like fieldThatBindsValidData(form, fieldName, safeInputsWithMaxLength(maxLength))
 
@@ -49,7 +49,7 @@ class ImporterDetailsFormProviderSpec extends StringFieldBehaviours {
 
     val fieldName = "addressLine2"
     val lengthKey = "address.line2.error.length"
-    val maxLength = 50
+    val maxLength = 256
 
     behave like fieldThatBindsValidData(form, fieldName, safeInputsWithMaxLength(maxLength))
 

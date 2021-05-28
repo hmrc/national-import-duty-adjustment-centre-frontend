@@ -21,6 +21,7 @@ import play.api.libs.json.{Json, OFormat}
 case class AgentAddress(
   AddressLine1: String,
   AddressLine2: Option[String],
+  AddressLine3: Option[String],
   City: String,
   PostalCode: String,
   CountryCode: String,
