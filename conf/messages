@@ -187,9 +187,9 @@ address.change = Search for a new address
 importer.has.eori.title = Does the importer have an EORI number?
 importer.has.eori.required = Select yes if the importer has an EORI number
 
-importer.businessName.title = What is the name of the importers business?
-importer.businessName.name.error.required = Enter the importers business name
-importer.businessName.name.error.length = Importers business name must be 40 characters or fewer
+importer.businessName.title = What is the name of the importer’s business?
+importer.businessName.name.error.required = Enter the importer’s business name
+importer.businessName.name.error.length = Importer’s business name must be 40 characters or fewer
 
 importer-details.title = What is the importer’s UK correspondence address?
 importer-details.hint = We may use these details to contact the importer about this claim.
@@ -200,7 +200,7 @@ repay_to.Importer = Importer
 repay_to.Representative_of_importer = Representative
 repay_to.error.required = Select who you want HMRC to repay
 
-bankDetails.title = Enter your UK bank details
+bankDetails.title = Enter your business bank details
 bankDetails.importer.title = Enter the importer’s business bank details
 bankDetails.hint = This must be a UK business account. The bank must also accept Bacs payments.
 bankDetails.name.heading = Name on the business account
@@ -238,8 +238,8 @@ importer.eori.error.invalid = Enter an EORI number in the correct format
 
 entryDetails.title = Entry details
 entryDetails.hint = These can be found on Single Administrative Document (C88) or Import Entry Acceptance Advice (E2) documents.
-entryDetails.claimEpu.heading = Entry processing unit (EPU)
-entryDetails.claimEpu.hint = This is 3 numbers, for example 131.
+entryDetails.claimEpu.heading = Entry processing unit (EPU) number
+entryDetails.claimEpu.hint = This is 3 numbers, for example 121.
 entryDetails.claimEpu.error.required = Enter the entry processing unit (EPU) number
 entryDetails.claimEpu.error.invalid = Enter the entry processing unit (EPU) number in the correct format
 entryDetails.entryNumber.heading = Entry number
@@ -247,7 +247,7 @@ entryDetails.entryNumber.hint = This is 6 numbers and a letter, for example 1234
 entryDetails.entryNumber.error.required = Enter the entry number
 entryDetails.entryNumber.error.invalid = Enter the entry number in the correct format
 entryDetails.entryDate.heading = Entry date
-entryDetails.entryDate.hint = For example, 25 3 2019.
+entryDetails.entryDate.hint = For example,  23 9 2020
 entryDetails.claimEntryDate.error.required = Enter the entry date
 entryDetails.claimEntryDate.error.required.day = Entry date must include a day
 entryDetails.claimEntryDate.error.required.month = Entry date must include a month
@@ -356,7 +356,7 @@ amend.case.reference.hint = This is the 22-character reference number issued whe
 amend.case.reference.error.required = Enter a reference number
 amend.case.reference.error.invalid = Enter a reference number in the correct format
 
-amend.attach_more_documents.title = Do you need to attach more documents?
+amend.attach_more_documents.title = Do you need to upload more documents?
 amend.attach_more_documents.required = Select yes if you need to attach more documents
 amend.attach_more_documents.hint = You may have been asked to provide additional documents to help us complete your claim.
 
@@ -365,7 +365,7 @@ amend.upload_documents.title = Upload your additional documents
 amend.check_answers.title = Check your additional information
 amend.check_answers.information.caseReference = Claim reference number
 amend.check_answers.information.caseReference.accessible = Change your claim reference number
-amend.check_answers.information.attach_more_documents = Do you need to attach more documents?
+amend.check_answers.information.attach_more_documents = Do you need to upload more documents?
 amend.check_answers.information.attach_more_documents.accessible = Change whether you need to attach more documents
 amend.check_answers.information.attach_more_documents.false = No
 amend.check_answers.information.attach_more_documents.true = Yes
