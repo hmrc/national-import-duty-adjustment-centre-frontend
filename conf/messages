@@ -187,7 +187,7 @@ address.change = Search for a new address
 importer.has.eori.title = Does the importer have an EORI number?
 importer.has.eori.required = Select yes if the importer has an EORI number
 
-importer.businessName.title = What is the name of the importer’s business?
+importer.businessName.title = What is the importer’s business name?
 importer.businessName.name.error.required = Enter the importer’s business name
 importer.businessName.name.error.length = Importer’s business name must be 40 characters or fewer
 
