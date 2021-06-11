@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services
 
+import org.mockito.ArgumentCaptor
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{reset, verify, when}
 import org.scalatest.BeforeAndAfterEach
@@ -26,7 +27,10 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{BarsTestData, UnitSpec}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.AddressLookupConnector
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.addresslookup.AddressLookupOnRamp
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.addresslookup.{
+  AddressLookupOnRamp,
+  AddressLookupRequest
+}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.utils.Injector
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -69,7 +73,16 @@ class AddressLookupServiceSpec
 
     "initialises the journey when" in {
       service.initialiseJourney("callBackUrl", "homeUrl", "signOutUrl", "keepAliveUrl", "page.key", "hint.key")
-      verify(connector).initialiseJourney(any())(any(), any())
+      val captor: ArgumentCaptor[AddressLookupRequest] = ArgumentCaptor.forClass(classOf[AddressLookupRequest])
+      verify(connector).initialiseJourney(captor.capture())(any(), any())
+      captor.getValue.options.continueUrl must endWith("callBackUrl")
+    }
+
+    "strips query parameters from initialisation request when" in {
+      service.initialiseJourney("callBackUrl?id=", "homeUrl", "signOutUrl", "keepAliveUrl", "page.key", "hint.key")
+      val captor: ArgumentCaptor[AddressLookupRequest] = ArgumentCaptor.forClass(classOf[AddressLookupRequest])
+      verify(connector).initialiseJourney(captor.capture())(any(), any())
+      captor.getValue.options.continueUrl must endWith("callBackUrl")
     }
 
   }
