@@ -28,6 +28,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create.ImporterDetailsFormProvider
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.addresslookup.AddressLookupOnRamp
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{CreateAnswers, ImporterContactDetails}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.exceptions.MissingAddressIdException
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.ImporterContactDetailsPage
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.AddressLookupService
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.ImporterDetailsView
@@ -94,7 +95,7 @@ class ImporterDetailsControllerSpec extends ControllerSpec with TestData {
       when(addressLookupService.retrieveAddress(ArgumentMatchers.eq(addressLookupRetrieveId))(any(), any())).thenReturn(
         Future.successful(importerAddressLookupConfirmation)
       )
-      val result = controller.onUpdate(addressLookupRetrieveId)(fakeGetRequest)
+      val result = controller.onUpdate(Some(addressLookupRetrieveId))(fakeGetRequest)
       status(result) mustBe Status.SEE_OTHER
       theUpdatedCreateAnswers.importerContactDetails mustBe Some(auditableImporterContactDetails)
       redirectLocation(result) mustBe Some(navigator.nextPage(ImporterContactDetailsPage, theUpdatedCreateAnswers).url)
@@ -105,8 +106,14 @@ class ImporterDetailsControllerSpec extends ControllerSpec with TestData {
       when(addressLookupService.retrieveAddress(ArgumentMatchers.eq(addressLookupRetrieveId))(any(), any())).thenReturn(
         Future.successful(addressLookupConfirmationInvalid)
       )
-      val result = controller.onUpdate(addressLookupRetrieveId)(fakeGetRequest)
+      val result = controller.onUpdate(Some(addressLookupRetrieveId))(fakeGetRequest)
       status(result) mustEqual BAD_REQUEST
+    }
+
+    "throw exception when address lookup returns a missing id" in {
+      intercept[MissingAddressIdException] {
+        status(controller.onUpdate(None)(fakeGetRequest))
+      }
     }
 
     "display page when cache has answer" in {

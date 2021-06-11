@@ -25,6 +25,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.Naviga
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.actions.IdentifierAction
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create.AddressFormProvider
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{Address, CreateAnswers}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.exceptions.MissingAddressIdException
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.navigation.CreateNavigator
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.{AddressPage, Page}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.{AddressLookupService, CacheDataService}
@@ -79,7 +80,7 @@ class AddressController @Inject() (
 
   def onChange(): Action[AnyContent] = identify.async { implicit request =>
     addressLookupService.initialiseJourney(
-      controllers.makeclaim.routes.AddressController.onUpdate("").url,
+      controllers.makeclaim.routes.AddressController.onUpdate(None).url,
       controllers.routes.StartController.start().url,
       controllers.routes.SignOutController.signOut().url,
       controllers.routes.KeepAliveController.keepAlive().url,
@@ -90,26 +91,27 @@ class AddressController @Inject() (
     }
   }
 
-  def onUpdate(id: String): Action[AnyContent] = identify.async { implicit request =>
+  def onUpdate(id: Option[String]): Action[AnyContent] = identify.async { implicit request =>
     data.getCreateAnswers flatMap { answers =>
-      addressLookupService.retrieveAddress(id) flatMap { confirmedAddress =>
-        val el = confirmedAddress.extractAddressLines()
-        val updatedAddress = Address(
-          el._1,
-          el._2,
-          el._3,
-          el._4,
-          confirmedAddress.address.postcode.getOrElse(""),
-          Some(confirmedAddress.auditRef)
-        )
-        // Address Lookup Service may return an address that is incompatible with NIDAC, so validate it again
-        val formWithAddress = form.fillAndValidate(updatedAddress)
-        if (formWithAddress.hasErrors)
-          Future.successful(BadRequest(addressView(formWithAddress, backLink(answers))))
-        else
-          data.updateCreateAnswers(answers => answers.copy(claimantAddress = Some(updatedAddress))) map {
-            _ => Redirect(nextPage(answers))
-          }
+      addressLookupService.retrieveAddress(id.getOrElse(throw new MissingAddressIdException)) flatMap {
+        confirmedAddress =>
+          val el = confirmedAddress.extractAddressLines()
+          val updatedAddress = Address(
+            el._1,
+            el._2,
+            el._3,
+            el._4,
+            confirmedAddress.address.postcode.getOrElse(""),
+            Some(confirmedAddress.auditRef)
+          )
+          // Address Lookup Service may return an address that is incompatible with NIDAC, so validate it again
+          val formWithAddress = form.fillAndValidate(updatedAddress)
+          if (formWithAddress.hasErrors)
+            Future.successful(BadRequest(addressView(formWithAddress, backLink(answers))))
+          else
+            data.updateCreateAnswers(answers => answers.copy(claimantAddress = Some(updatedAddress))) map {
+              _ => Redirect(nextPage(answers))
+            }
       }
     }
   }

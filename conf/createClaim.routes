@@ -15,7 +15,7 @@ POST        /enter-business-name                uk.gov.hmrc.nationalimportdutyad
 GET         /your-address                       uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.AddressController.onPageLoad()
 POST        /your-address                       uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.AddressController.onSubmit()
 GET         /your-address/change                uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.AddressController.onChange()
-GET         /your-address/update                uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.AddressController.onUpdate(id: String)
+GET         /your-address/update                uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.AddressController.onUpdate(id: Option[String])
 
 GET         /required-supporting-documents      uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.RequiredDocumentsController.onPageLoad()
 
@@ -49,7 +49,7 @@ POST        /enter-importers-name                uk.gov.hmrc.nationalimportdutya
 GET         /importer-correspondence-address        uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.ImporterDetailsController.onPageLoad()
 POST        /importer-correspondence-address        uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.ImporterDetailsController.onSubmit()
 GET         /importer-correspondence-address/change uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.ImporterDetailsController.onChange()
-GET         /importer-correspondence-address/update uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.ImporterDetailsController.onUpdate(id: String)
+GET         /importer-correspondence-address/update uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.ImporterDetailsController.onUpdate(id: Option[String])
 
 GET         /bank-details                       uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.BankDetailsController.onPageLoad()
 POST        /bank-details                       uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.controllers.makeclaim.BankDetailsController.onSubmit()

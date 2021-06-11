@@ -28,6 +28,7 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.config.AppConfig
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.forms.create.AddressFormProvider
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.addresslookup.AddressLookupOnRamp
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{Address, CreateAnswers}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.exceptions.MissingAddressIdException
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.pages.AddressPage
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.AddressLookupService
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.views.html.makeclaim.AddressView
@@ -94,7 +95,7 @@ class AddressControllerSpec extends ControllerSpec with TestData {
       when(addressLookupService.retrieveAddress(ArgumentMatchers.eq(addressLookupRetrieveId))(any(), any())).thenReturn(
         Future.successful(addressLookupConfirmation)
       )
-      val result = controller.onUpdate(addressLookupRetrieveId)(fakeGetRequest)
+      val result = controller.onUpdate(Some(addressLookupRetrieveId))(fakeGetRequest)
       status(result) mustBe Status.SEE_OTHER
       theUpdatedCreateAnswers.claimantAddress mustBe Some(auditableAddress)
       redirectLocation(result) mustBe Some(navigator.nextPage(AddressPage, emptyAnswers).url)
@@ -105,8 +106,14 @@ class AddressControllerSpec extends ControllerSpec with TestData {
       when(addressLookupService.retrieveAddress(ArgumentMatchers.eq(addressLookupRetrieveId))(any(), any())).thenReturn(
         Future.successful(addressLookupConfirmationInvalid)
       )
-      val result = controller.onUpdate(addressLookupRetrieveId)(fakeGetRequest)
+      val result = controller.onUpdate(Some(addressLookupRetrieveId))(fakeGetRequest)
       status(result) mustEqual BAD_REQUEST
+    }
+
+    "throw exception when address lookup returns a missing id" in {
+      intercept[MissingAddressIdException] {
+        status(controller.onUpdate(None)(fakeGetRequest))
+      }
     }
 
     "display page when cache has answer" in {
