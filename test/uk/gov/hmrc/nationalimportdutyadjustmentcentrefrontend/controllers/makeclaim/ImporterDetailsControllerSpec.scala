@@ -81,13 +81,20 @@ class ImporterDetailsControllerSpec extends ControllerSpec with TestData {
     }
 
     "redirect to address lookup page from change, when cache is empty" in {
-      when(addressLookupService.initialiseJourney(any(), any(), any(), any(), any(), any())(any(), any())).thenReturn(
-        Future.successful(AddressLookupOnRamp("http://localhost/AddressLookupReturnedRedirect"))
-      )
+      val callBackUrlCaptor: ArgumentCaptor[String] = ArgumentCaptor.forClass(classOf[String])
+      when(
+        addressLookupService.initialiseJourney(callBackUrlCaptor.capture(), any(), any(), any(), any(), any())(
+          any(),
+          any()
+        )
+      ).thenReturn(Future.successful(AddressLookupOnRamp("http://localhost/AddressLookupReturnedRedirect")))
       val result = controller.onChange()(fakeGetRequest)
       status(result) mustBe Status.SEE_OTHER
 
       redirectLocation(result) mustBe Some("http://localhost/AddressLookupReturnedRedirect")
+
+      // make sure "id" query param is not part of the callback url
+      callBackUrlCaptor.getValue must not include "id="
     }
 
     "update cache and redirect when address lookup calls update" in {

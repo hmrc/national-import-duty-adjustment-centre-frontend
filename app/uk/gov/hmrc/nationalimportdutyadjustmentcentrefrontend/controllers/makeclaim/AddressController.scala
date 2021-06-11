@@ -80,6 +80,7 @@ class AddressController @Inject() (
 
   def onChange(): Action[AnyContent] = identify.async { implicit request =>
     addressLookupService.initialiseJourney(
+      // Note: Use 'None' to generate update url without id parameter
       controllers.makeclaim.routes.AddressController.onUpdate(None).url,
       controllers.routes.StartController.start().url,
       controllers.routes.SignOutController.signOut().url,
