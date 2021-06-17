@@ -264,11 +264,6 @@ trait TestData {
     entryDetailsAnswer,
     itemNumbersAnswer,
     Seq(uploadAnswer),
-    Seq(
-      new FileTransferResult("up-ref-1", true, 201, fixedInstant, None),
-      new FileTransferResult("up-ref-2", true, 201, fixedInstant, None),
-      new FileTransferResult("up-ref-3", true, 201, fixedInstant, None)
-    ),
     claimantEori.number,
     Some(importerEoriNumberAnswer)
   )
@@ -278,10 +273,6 @@ trait TestData {
     claimantEori.number,
     "NID21134557697RM8WIB13",
     Seq(uploadAnswer, uploadAnswer2),
-    Seq(
-      new FileTransferResult("up-ref-1", true, 201, fixedInstant, None),
-      new FileTransferResult("up-ref-2", true, 201, fixedInstant, None)
-    ),
     furtherInformationAnswer.info
   )
 

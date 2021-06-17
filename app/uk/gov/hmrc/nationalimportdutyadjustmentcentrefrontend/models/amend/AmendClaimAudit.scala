@@ -25,7 +25,6 @@ case class AmendClaimAudit(
   claimantEori: String,
   caseReferenceNumber: String,
   uploads: Seq[UploadedFile],
-  fileTransferResults: Seq[FileTransferResult],
   furtherInformation: String
 )
 
@@ -44,7 +43,6 @@ object AmendClaimAudit {
       claimantEori.number,
       claim.caseReference.number,
       claim.uploads,
-      claimResponse.result.map(result => result.fileTransferResults).getOrElse(Seq.empty),
       claim.furtherInformation.info
     )
 
