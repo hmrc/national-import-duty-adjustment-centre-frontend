@@ -86,7 +86,8 @@ class AddressController @Inject() (
       controllers.routes.SignOutController.signOut().url,
       controllers.routes.KeepAliveController.keepAlive().url,
       "address.title",
-      "address.hint"
+      "address.hint",
+      "address.confirmation.heading"
     ) map {
       response => Redirect(response.redirectUrl)
     }

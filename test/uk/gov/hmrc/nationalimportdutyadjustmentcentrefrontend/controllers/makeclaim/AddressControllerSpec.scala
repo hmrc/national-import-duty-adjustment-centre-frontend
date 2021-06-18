@@ -83,7 +83,7 @@ class AddressControllerSpec extends ControllerSpec with TestData {
     "redirect to address lookup page from change, when cache is empty" in {
       val callBackUrlCaptor: ArgumentCaptor[String] = ArgumentCaptor.forClass(classOf[String])
       when(
-        addressLookupService.initialiseJourney(callBackUrlCaptor.capture(), any(), any(), any(), any(), any())(
+        addressLookupService.initialiseJourney(callBackUrlCaptor.capture(), any(), any(), any(), any(), any(), any())(
           any(),
           any()
         )

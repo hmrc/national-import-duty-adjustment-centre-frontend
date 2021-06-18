@@ -39,22 +39,6 @@ class AddressLookupRequestSpec extends UnitSpec with MockitoSugar with Injector 
   val realMessagesApi: MessagesApi = instanceOf[MessagesApi]
   val appConfig: AppConfig         = instanceOf[AppConfig]
 
-  "AddressLookupRequest" should {
-    "create properly for Address Lookup initialisation " in {
-
-      val request = AddressLookupRequest(
-        continueUrl = "http://continue",
-        homeUrl = "http://start",
-        signOutUrl = "http://leave",
-        keepAliveUrl = "http://keepalive",
-        lookupPageHeadingKey = "address.title",
-        hintKey = "address.hint"
-      )(realMessagesApi, appConfig)
-
-      request mustBe expectedRequest
-    }
-  }
-
   val expectedRequest = new AddressLookupRequest(
     2,
     Options(
@@ -80,7 +64,10 @@ class AddressLookupRequestSpec extends UnitSpec with MockitoSugar with Injector 
             heading = Some("What is your UK correspondence address?"),
             afterHeadingText = Some("We will use this to send letters about this claim.")
           ),
-          ConfirmPageLabels(title = Some("Confirm your address"), heading = Some("Confirm your address")),
+          ConfirmPageLabels(
+            title = Some("Confirm your UK correspondence address"),
+            heading = Some("Confirm your UK correspondence address")
+          ),
           EditPageLabels(
             title = Some("What is your UK correspondence address?"),
             heading = Some("What is your UK correspondence address?"),
@@ -97,5 +84,22 @@ class AddressLookupRequestSpec extends UnitSpec with MockitoSugar with Injector 
         )
     )
   )
+
+  "AddressLookupRequest" should {
+    "create properly for Address Lookup initialisation " in {
+
+      val request = AddressLookupRequest(
+        continueUrl = "http://continue",
+        homeUrl = "http://start",
+        signOutUrl = "http://leave",
+        keepAliveUrl = "http://keepalive",
+        lookupPageHeadingKey = "address.title",
+        hintKey = "address.hint",
+        confirmationHeadingKey = "address.confirmation.heading"
+      )(realMessagesApi, appConfig)
+
+      request mustBe expectedRequest
+    }
+  }
 
 }
