@@ -39,22 +39,6 @@ class AddressLookupRequestSpec extends UnitSpec with MockitoSugar with Injector 
   val realMessagesApi: MessagesApi = instanceOf[MessagesApi]
   val appConfig: AppConfig         = instanceOf[AppConfig]
 
-  "AddressLookupRequest" should {
-    "create properly for Address Lookup initialisation " in {
-
-      val request = AddressLookupRequest(
-        continueUrl = "http://continue",
-        homeUrl = "http://start",
-        signOutUrl = "http://leave",
-        keepAliveUrl = "http://keepalive",
-        lookupPageHeadingKey = "address.title",
-        hintKey = "address.hint"
-      )(realMessagesApi, appConfig)
-
-      request mustBe expectedRequest
-    }
-  }
-
   val expectedRequest = new AddressLookupRequest(
     2,
     Options(
@@ -80,7 +64,10 @@ class AddressLookupRequestSpec extends UnitSpec with MockitoSugar with Injector 
             heading = Some("What is your UK correspondence address?"),
             afterHeadingText = Some("We will use this to send letters about this claim.")
           ),
-          ConfirmPageLabels(title = Some("Confirm your address"), heading = Some("Confirm your address")),
+          ConfirmPageLabels(
+            title = Some("Confirm your UK correspondence address"),
+            heading = Some("Confirm your UK correspondence address")
+          ),
           EditPageLabels(
             title = Some("What is your UK correspondence address?"),
             heading = Some("What is your UK correspondence address?"),
@@ -97,5 +84,69 @@ class AddressLookupRequestSpec extends UnitSpec with MockitoSugar with Injector 
         )
     )
   )
+
+  val expectedImportsAddressRequest: AddressLookupRequest = expectedRequest.copy(labels =
+    Labels(
+      en =
+        AddressLookupRequest.Labels.Language(
+          AppLevelLabels(navTitle = Some("Apply for return of import duty secured by deposit or guarantee")),
+          SelectPageLabels(title = Some("Select an address"), heading = Some("Select an address")),
+          LookupPageLabels(
+            title = Some("What is the importer’s UK correspondence address?"),
+            heading = Some("What is the importer’s UK correspondence address?"),
+            afterHeadingText = Some("We may use these details to contact the importer about this claim.")
+          ),
+          ConfirmPageLabels(
+            title = Some("Confirm the importer’s UK correspondence address"),
+            heading = Some("Confirm the importer’s UK correspondence address")
+          ),
+          EditPageLabels(
+            title = Some("What is the importer’s UK correspondence address?"),
+            heading = Some("What is the importer’s UK correspondence address?"),
+            postcodeLabel = Some("UK postcode")
+          )
+        ),
+      cy =
+        AddressLookupRequest.Labels.Language(
+          AppLevelLabels(navTitle = Some("Apply for return of import duty secured by deposit or guarantee")),
+          SelectPageLabels(),
+          LookupPageLabels(heading = Some("What is the importer’s UK correspondence address?")),
+          ConfirmPageLabels(),
+          EditPageLabels()
+        )
+    )
+  )
+
+  "AddressLookupRequest" should {
+    "create properly for Address Lookup initialisation " in {
+
+      val request = AddressLookupRequest(
+        continueUrl = "http://continue",
+        homeUrl = "http://start",
+        signOutUrl = "http://leave",
+        keepAliveUrl = "http://keepalive",
+        lookupPageHeadingKey = "address.title",
+        hintKey = "address.hint",
+        confirmationHeadingKey = "address.confirmation.heading"
+      )(realMessagesApi, appConfig)
+
+      request mustBe expectedRequest
+    }
+
+    "create properly for importer's Address Lookup initialisation " in {
+
+      val request = AddressLookupRequest(
+        continueUrl = "http://continue",
+        homeUrl = "http://start",
+        signOutUrl = "http://leave",
+        keepAliveUrl = "http://keepalive",
+        lookupPageHeadingKey = "importer-details.title",
+        hintKey = "importer-details.hint",
+        confirmationHeadingKey = "importer-details.confirmation.heading"
+      )(realMessagesApi, appConfig)
+
+      request mustBe expectedImportsAddressRequest
+    }
+  }
 
 }

@@ -86,7 +86,8 @@ class ImporterDetailsController @Inject() (
       controllers.routes.SignOutController.signOut().url,
       controllers.routes.KeepAliveController.keepAlive().url,
       "importer-details.title",
-      "importer-details.hint"
+      "importer-details.hint",
+      "importer-details.confirmation.heading"
     ) map {
       response => Redirect(response.redirectUrl)
     }

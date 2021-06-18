@@ -44,7 +44,8 @@ class AddressLookupService @Inject() (
     signOutUrl: String,
     keepAliveUrl: String,
     lookupPageHeadingKey: String,
-    hintKey: String
+    hintKey: String,
+    confirmationHeadingKey: String
   )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AddressLookupOnRamp] =
     addressLookupConnector.initialiseJourney(
       AddressLookupRequest(
@@ -53,7 +54,8 @@ class AddressLookupService @Inject() (
         appConfig.selfUrl(signOutUrl),
         appConfig.selfUrl(keepAliveUrl),
         lookupPageHeadingKey,
-        hintKey
+        hintKey,
+        confirmationHeadingKey
       )
     )
 

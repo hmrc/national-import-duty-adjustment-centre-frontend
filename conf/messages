@@ -164,6 +164,7 @@ businessName.name.error.required = Enter your business name
 businessName.name.error.length = Business name must be 40 characters or fewer
 
 address.title = What is your UK correspondence address?
+address.confirmation.heading = Confirm your UK correspondence address
 address.hint = We will use this to send letters about this claim.
 address.line1.heading = Address line 1
 address.line1.hidden = line 1 of 3
@@ -192,6 +193,7 @@ importer.businessName.name.error.required = Enter the importer’s business name
 importer.businessName.name.error.length = Importer’s business name must be 40 characters or fewer
 
 importer-details.title = What is the importer’s UK correspondence address?
+importer-details.confirmation.heading = Confirm the importer’s UK correspondence address
 importer-details.hint = We may use these details to contact the importer about this claim.
 importer-details.change = Search for a new address
 
