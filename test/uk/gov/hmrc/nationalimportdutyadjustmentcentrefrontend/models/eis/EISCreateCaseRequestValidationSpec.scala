@@ -21,8 +21,11 @@ import java.util.UUID
 import play.api.libs.json.Json
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{JsonSchemaValidation, TestData, UnitSpec}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create._
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.utils.Injector
 
-class EISCreateCaseRequestValidationSpec extends UnitSpec with JsonSchemaValidation with TestData {
+class EISCreateCaseRequestValidationSpec extends UnitSpec with JsonSchemaValidation with Injector with TestData {
+
+  val builder = instanceOf[EISCreateCaseContentBuilder]
 
   private val jsonSchema = loadSchema("/pega-create-case-spec/RequestJSONSchemaV0.4.JSON")
 
@@ -83,7 +86,7 @@ class EISCreateCaseRequestValidationSpec extends UnitSpec with JsonSchemaValidat
       AcknowledgementReference = UUID.randomUUID().toString.replace("-", "").takeRight(32),
       ApplicationType = "NIDAC",
       OriginatingSystem = "Digital",
-      Content = EISCreateCaseRequest.Content(Claim(claimantEori, answers))
+      Content = builder.build(Claim(claimantEori, answers))
     )
 
   private def validationErrors(eisRequest: EISCreateCaseRequest) =

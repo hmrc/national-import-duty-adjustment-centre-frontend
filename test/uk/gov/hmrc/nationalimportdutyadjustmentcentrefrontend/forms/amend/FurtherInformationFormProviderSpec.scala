@@ -28,7 +28,7 @@ class FurtherInformationFormProviderSpec extends StringFieldBehaviours {
     val fieldName   = "furtherInformation"
     val requiredKey = "further_information.error.required"
     val lengthKey   = "further_information.error.length"
-    val maxLength   = 1024
+    val maxLength   = 1000
 
     behave like fieldThatBindsValidData(form, fieldName, safeInputsWithMaxLength(maxLength))
 

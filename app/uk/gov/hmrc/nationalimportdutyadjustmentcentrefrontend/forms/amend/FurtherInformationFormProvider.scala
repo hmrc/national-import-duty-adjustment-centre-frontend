@@ -28,7 +28,7 @@ class FurtherInformationFormProvider @Inject() extends Mappings {
   def apply(): Form[FurtherInformation] = Form(
     mapping(
       "furtherInformation" -> text("further_information.error.required")
-        .verifying(firstError(maxLength(1024, "further_information.error.length")))
+        .verifying(firstError(maxLength(1000, "further_information.error.length")))
     )(FurtherInformation.apply)(FurtherInformation.unapply)
   )
 

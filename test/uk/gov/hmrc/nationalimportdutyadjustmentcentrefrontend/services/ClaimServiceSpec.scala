@@ -28,6 +28,10 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.connectors.NIDACCo
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.EoriNumber
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.AmendClaimAudit
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.CreateClaimAudit
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.eis.{
+  EISAmendCaseContentBuilder,
+  EISCreateCaseContentBuilder
+}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -42,7 +46,11 @@ class ClaimServiceSpec extends UnitSpec with BeforeAndAfterEach with TestData {
   private val auditConnector = mock[AuditConnector]
   private val nidacConnector = mock[NIDACConnector]
 
-  private def service = new ClaimService(auditConnector, nidacConnector)
+  private val createCaseContentBuilder = mock[EISCreateCaseContentBuilder]
+  private val amendCaseContentBuilder  = mock[EISAmendCaseContentBuilder]
+
+  private def service =
+    new ClaimService(auditConnector, nidacConnector, createCaseContentBuilder, amendCaseContentBuilder)
 
   override protected def beforeEach(): Unit = {
     super.beforeEach()
@@ -52,17 +60,23 @@ class ClaimServiceSpec extends UnitSpec with BeforeAndAfterEach with TestData {
   }
 
   override protected def afterEach(): Unit = {
-    reset(nidacConnector, auditConnector)
+    reset(nidacConnector, auditConnector, createCaseContentBuilder, amendCaseContentBuilder)
     super.afterEach()
   }
 
   "ClaimService" should {
 
-    "return valid response when claim is submitted succesfully" in {
+    "return valid response when claim is submitted successfully" in {
       service.submitClaim(claim).futureValue.correlationId mustBe "123456"
     }
 
-    "audit Create Claim when claim is submitted succesfully" in {
+    "use create case builder" in {
+      service.submitClaim(claim)
+
+      verify(createCaseContentBuilder).build(claim)
+    }
+
+    "audit Create Claim when claim is submitted successfully" in {
 
       service.submitClaim(claim).futureValue.result
 
@@ -82,11 +96,17 @@ class ClaimServiceSpec extends UnitSpec with BeforeAndAfterEach with TestData {
 
     }
 
-    "return valid response when claim is amended succesfully" in {
+    "return valid response when claim is amended successfully" in {
       service.amendClaim(EoriNumber(""), amendClaim).futureValue.correlationId mustBe "123456"
     }
 
-    "audit Amend Claim when claim is amended succesfully" in {
+    "use amend case builder" in {
+      service.amendClaim(EoriNumber(""), amendClaim)
+
+      verify(amendCaseContentBuilder).build(amendClaim)
+    }
+
+    "audit Amend Claim when claim is amended successfully" in {
 
       service.amendClaim(claimantEori, amendClaim).futureValue.result
 

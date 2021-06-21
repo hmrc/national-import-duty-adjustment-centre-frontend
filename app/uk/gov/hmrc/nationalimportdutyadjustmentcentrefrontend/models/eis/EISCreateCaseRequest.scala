@@ -16,11 +16,14 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.eis
 
+import java.time.format.DateTimeFormatter
+
+import javax.inject.Inject
 import play.api.libs.json.{Format, Json}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.Claim
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.RepayTo.Importer
-
-import java.time.format.DateTimeFormatter
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.eis.EISCreateCaseRequest.Content
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.eis.EISCreateCaseRequest.Content.eisDateFormatter
 
 /**
   * Create specified case in the PEGA system.
@@ -60,25 +63,29 @@ object EISCreateCaseRequest {
 
     val eisDateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd")
 
-    def apply(claim: Claim): Content =
-      Content(
-        RepresentationType = claim.representationType.toString,
-        ClaimType = claim.claimType.toString,
-        ImporterDetails = ImporterDetails.forClaim(claim),
-        AgentDetails = AgentDetails.forClaim(claim),
-        EntryProcessingUnit = claim.entryDetails.entryProcessingUnit,
-        EntryNumber = claim.entryDetails.entryNumber,
-        EntryDate = eisDateFormatter.format(claim.entryDetails.entryDate),
-        DutyDetails = claim.reclaimDutyPayments.map(entry => DutyDetail(entry._1, entry._2)).toSeq,
-        PayTo = claim.importerBeingRepresentedDetails.map(_.repayTo).getOrElse(Importer).toString,
-        PaymentDetails = Some(PaymentDetails(claim.bankDetails)),
-        ItemNumber = claim.itemNumbers.numbers,
-        ClaimReason = claim.claimReason.reason,
-        FirstName = claim.contactDetails.firstName,
-        LastName = claim.contactDetails.lastName,
-        SubmissionDate = eisDateFormatter.format(claim.submissionDate)
-      )
-
   }
+
+}
+
+class EISCreateCaseContentBuilder @Inject() (quoteFormatter: QuoteFormatter) {
+
+  def build(claim: Claim): Content =
+    Content(
+      RepresentationType = claim.representationType.toString,
+      ClaimType = claim.claimType.toString,
+      ImporterDetails = ImporterDetails.forClaim(claim),
+      AgentDetails = AgentDetails.forClaim(claim),
+      EntryProcessingUnit = claim.entryDetails.entryProcessingUnit,
+      EntryNumber = claim.entryDetails.entryNumber,
+      EntryDate = eisDateFormatter.format(claim.entryDetails.entryDate),
+      DutyDetails = claim.reclaimDutyPayments.map(entry => DutyDetail(entry._1, entry._2)).toSeq,
+      PayTo = claim.importerBeingRepresentedDetails.map(_.repayTo).getOrElse(Importer).toString,
+      PaymentDetails = Some(PaymentDetails(claim.bankDetails)),
+      ItemNumber = claim.itemNumbers.numbers,
+      ClaimReason = quoteFormatter.format(claim.claimReason.reason),
+      FirstName = claim.contactDetails.firstName,
+      LastName = claim.contactDetails.lastName,
+      SubmissionDate = eisDateFormatter.format(claim.submissionDate)
+    )
 
 }

@@ -18,6 +18,8 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.eis
 
 import java.time.LocalDate
 
+import org.mockito.Mockito
+import org.scalatestplus.mockito.MockitoSugar
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{TestData, UnitSpec}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ClaimType.AntiDumping
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.ReclaimDutyType.{Customs, Other, Vat}
@@ -38,19 +40,32 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{
   Address => UkAddress
 }
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.{create, EoriNumber}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.utils.Injector
 
-class EISCreateCaseRequestSpec extends UnitSpec with TestData {
+class EISCreateCaseContentBuilderSpec extends UnitSpec with Injector with MockitoSugar with TestData {
 
-  "EISCreateCaseRequest" should {
+  "EISCreateCaseContentBuilder" should {
+
+    val builder = instanceOf[EISCreateCaseContentBuilder]
 
     "create Content for Representative Claim" in {
 
-      EISCreateCaseRequest.Content(claimByRepresentative) must be(contentForRepresentativeClaim)
+      builder.build(claimByRepresentative) must be(contentForRepresentativeClaim)
     }
 
     "create Content for Importer Claim" in {
 
-      EISCreateCaseRequest.Content(claimByImporter) must be(contentForImporterClaim)
+      builder.build(claimByImporter) must be(contentForImporterClaim)
+    }
+
+    "use QuoteFormatter to format the claim description" in {
+
+      val quoteFormatter = mock[QuoteFormatter]
+      val builder        = new EISCreateCaseContentBuilder(quoteFormatter)
+
+      builder.build(claimByImporter)
+
+      Mockito.verify(quoteFormatter).format(claimByImporter.claimReason.reason)
     }
   }
 

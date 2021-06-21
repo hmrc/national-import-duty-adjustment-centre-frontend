@@ -19,10 +19,13 @@ package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.eis
 import play.api.libs.json.Json
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.{JsonSchemaValidation, TestData, UnitSpec}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend._
-
 import java.util.UUID
 
-class EISAmendCaseRequestValidationSpec extends UnitSpec with JsonSchemaValidation with TestData {
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.utils.Injector
+
+class EISAmendCaseRequestValidationSpec extends UnitSpec with Injector with JsonSchemaValidation with TestData {
+
+  val contentBuilder = instanceOf[EISAmendCaseContentBuilder]
 
   private val jsonSchema = loadSchema("/pega-update-case-spec/RequestJSONSchemaV0.1.JSON")
 
@@ -61,7 +64,7 @@ class EISAmendCaseRequestValidationSpec extends UnitSpec with JsonSchemaValidati
       AcknowledgementReference = UUID.randomUUID().toString.replace("-", "").takeRight(32),
       ApplicationType = "NIDAC",
       OriginatingSystem = "Digital",
-      Content = EISAmendCaseRequest.Content(AmendClaim(answers))
+      Content = contentBuilder.build(AmendClaim(answers))
     )
 
   private def validationErrors(eisRequest: EISAmendCaseRequest) =

@@ -16,8 +16,10 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.eis
 
+import javax.inject.Inject
 import play.api.libs.json.{Format, Json}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.AmendClaim
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.eis.EISAmendCaseRequest.Content
 
 /**
   * Amend specified case in the PEGA system.
@@ -38,10 +40,16 @@ object EISAmendCaseRequest {
 
   object Content {
     implicit val formats: Format[Content] = Json.format[Content]
-
-    def apply(amendClaim: AmendClaim): Content =
-      Content(CaseID = amendClaim.caseReference.number, Description = amendClaim.furtherInformation.info)
-
   }
+
+}
+
+class EISAmendCaseContentBuilder @Inject() (quoteFormatter: QuoteFormatter) {
+
+  def build(amendClaim: AmendClaim): Content =
+    Content(
+      CaseID = amendClaim.caseReference.number,
+      Description = quoteFormatter.format(amendClaim.furtherInformation.info)
+    )
 
 }

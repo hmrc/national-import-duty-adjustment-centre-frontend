@@ -16,20 +16,36 @@
 
 package uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.eis
 
+import org.mockito.Mockito.verify
+import org.scalatestplus.mockito.MockitoSugar
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.base.UnitSpec
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.amend.{
   AmendClaim,
   CaseReference,
   FurtherInformation
 }
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.utils.Injector
 
-class EISAmendCaseRequestSpec extends UnitSpec {
+class EISAmendCaseContentBuilderSpec extends UnitSpec with Injector with MockitoSugar {
 
-  "EISCreateCaseRequest" should {
+  "EISAmendCaseContentBuilder" should {
 
     "create Content for Representative Claim" in {
 
-      EISAmendCaseRequest.Content(amendClaim) must be(contentForAmendClaim)
+      val quoteFormatter = instanceOf[QuoteFormatter]
+      val builder        = new EISAmendCaseContentBuilder(quoteFormatter)
+
+      builder.build(amendClaim) must be(contentForAmendClaim)
+    }
+
+    "use QuoteFormatter to format the claim description" in {
+
+      val quoteFormatter = mock[QuoteFormatter]
+      val builder        = new EISAmendCaseContentBuilder(quoteFormatter)
+
+      builder.build(amendClaim)
+
+      verify(quoteFormatter).format(amendClaim.furtherInformation.info)
     }
 
   }

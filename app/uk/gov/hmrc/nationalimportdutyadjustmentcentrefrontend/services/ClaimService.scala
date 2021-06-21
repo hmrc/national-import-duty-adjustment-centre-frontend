@@ -32,7 +32,12 @@ import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.create.{
   CreateClaimAudit,
   CreateClaimResponse
 }
-import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.eis.{EISAmendCaseRequest, EISCreateCaseRequest}
+import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.models.eis.{
+  EISAmendCaseContentBuilder,
+  EISAmendCaseRequest,
+  EISCreateCaseContentBuilder,
+  EISCreateCaseRequest
+}
 import uk.gov.hmrc.nationalimportdutyadjustmentcentrefrontend.services.requests.{
   AmendEISClaimRequest,
   CreateEISClaimRequest
@@ -41,7 +46,12 @@ import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class ClaimService @Inject() (auditConnector: AuditConnector, connector: NIDACConnector) {
+class ClaimService @Inject() (
+  auditConnector: AuditConnector,
+  connector: NIDACConnector,
+  createCaseContentBuilder: EISCreateCaseContentBuilder,
+  amendCaseContentBuilder: EISAmendCaseContentBuilder
+) {
 
   private val APPLICATION_TYPE_NIDAC            = "NIDAC"
   private val ORIGINATING_SYSTEM_DIGITAL        = "Digital"
@@ -54,7 +64,7 @@ class ClaimService @Inject() (auditConnector: AuditConnector, connector: NIDACCo
       AcknowledgementReference = correlationId.replace("-", "").takeRight(acknowledgementReferenceMaxLength),
       ApplicationType = APPLICATION_TYPE_NIDAC,
       OriginatingSystem = ORIGINATING_SYSTEM_DIGITAL,
-      Content = EISCreateCaseRequest.Content(claim)
+      Content = createCaseContentBuilder.build(claim)
     )
 
     connector.submitClaim(CreateEISClaimRequest(eisRequest, claim.uploads), correlationId)
@@ -75,7 +85,7 @@ class ClaimService @Inject() (auditConnector: AuditConnector, connector: NIDACCo
       AcknowledgementReference = correlationId.replace("-", "").takeRight(acknowledgementReferenceMaxLength),
       ApplicationType = APPLICATION_TYPE_NIDAC,
       OriginatingSystem = ORIGINATING_SYSTEM_DIGITAL,
-      Content = EISAmendCaseRequest.Content(amendClaim)
+      Content = amendCaseContentBuilder.build(amendClaim)
     )
 
     connector.amendClaim(AmendEISClaimRequest(eisRequest, amendClaim.uploads), correlationId)
